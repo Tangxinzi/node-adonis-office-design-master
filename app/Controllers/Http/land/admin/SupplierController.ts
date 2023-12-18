@@ -82,7 +82,7 @@ export default class SupplierController {
   public async edit({ params, request, view, session }: HttpContextContract) {
     try {
       const all = request.all(), supplier = session.get('adonis-cookie-supplier')
-      const good = await Database.from('land_goods').where({ id: params.id, good_supplier_id: supplier.id }).first()
+      const good = await Database.from('land_goods').where({ id: params.id, good_supplier_id: supplier.id }).first() || {}
       good.good_theme_url = good.good_theme_url ? JSON.parse(good.good_theme_url) : []
 
       const catalog = await Database.from('land_goods_catalog').select('*').where({ level: 1, status: 1 }).orderBy('created_at', 'desc')
