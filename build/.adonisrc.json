@@ -3,7 +3,8 @@
   "commands": [
     "./commands",
     "@adonisjs/core/build/commands/index.js",
-    "@adonisjs/repl/build/commands"
+    "@adonisjs/repl/build/commands",
+    "@adonisjs/lucid/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -21,7 +22,8 @@
     "@adonisjs/core",
     "@adonisjs/session",
     "@adonisjs/view",
-    "@adonisjs/shield"
+    "@adonisjs/shield",
+    "@adonisjs/lucid"
   ],
   "metaFiles": [
     {
@@ -50,5 +52,5 @@
   "testProviders": [
     "@japa/preset-adonis/TestsProvider"
   ],
-  "lastCompiledAt": "2023-12-18T05:40:07.216Z"
+  "lastCompiledAt": "2023-12-18T06:39:09.535Z"
 }
