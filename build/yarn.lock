@@ -260,7 +260,7 @@
 
 "@adonisjs/shield@^7.1.1":
   version "7.1.1"
-  resolved "https://registry.npmmirror.com/@adonisjs/shield/-/shield-7.1.1.tgz"
+  resolved "https://registry.npmmirror.com/@adonisjs/shield/-/shield-7.1.1.tgz#4c88a34f3a836c7decd9abfc9c9f8a86cf628252"
   integrity sha512-y1YzXwravcS/A1yxcyfSD/UrRi2+H9v0ntX9NgVhLYvBF5eHuPzQKgv9sICVjmj2z7n94HzcTAio0Rc32EX51Q==
   dependencies:
     "@poppinss/utils" "^4.0.4"
@@ -3450,14 +3450,9 @@ lru-cache@^8.0.0:
   resolved "https://registry.npmmirror.com/lru-cache/-/lru-cache-8.0.5.tgz"
   integrity sha512-MhWWlVnuab1RG5/zMRRcVGXZLCXrZTgfwMikgzCegsPnG62yDQo5JnqKkrK4jO5iKqDAZGItAqN5CtKBCBWRUA==
 
-luxon@^3.0.4, luxon@^3.3.0, luxon@^3.4.1:
+luxon@^3.0.4, luxon@^3.3.0, luxon@^3.4.1, luxon@^3.4.4:
   version "3.4.4"
   resolved "https://registry.npmmirror.com/luxon/-/luxon-3.4.4.tgz"
-  integrity sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==
-
-luxon@^3.4.4:
-  version "3.4.4"
-  resolved "https://registry.npmmirror.com/luxon/-/luxon-3.4.4.tgz#cf20dc27dc532ba41a169c43fdcc0063601577af"
   integrity sha512-zobTr7akeGHnv7eBOXcRgMeCP6+uyYsczwmeRCauvpvaAltgNyTbLH/+VaEAPUeWBT+1GuNmz4wC/6jtQzbbVA==
 
 macroable@^7.0.1, macroable@^7.0.2:
