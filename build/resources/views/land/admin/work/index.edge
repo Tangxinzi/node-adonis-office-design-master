@@ -1,0 +1,87 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+        <a href="{{ route('land/admin/WorkController.create') }}">添加</a>
+      </div>
+      <table class="ui celled center aligned table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>类型</th>
+            <th>作品名称</th>
+            <th>项目地址</th>
+            <th>面积</th>
+            <th>设计团队</th>
+            <th>作品时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(row in data.works)
+            <tr>
+              <td class="td">{{ row.id }}</td>
+              <td class="td">{{ row.catalog || '' }}</td>
+              <td class="td">
+                <img class="ui avatar bordered image" src="{{ row.theme_url }}" alt="" >
+                <span>
+                  <a href="{{ route('land/admin/WorkController.edit', { id: row.id }) }}">{{ row.title }}</a>
+                </span>
+              </td>
+              <td class="td">{{ row.location || '' }}</td>
+              <td class="td">{{ row.area || '' }}</td>
+              <td class="td">{{ row.team || '' }}</td>
+              <td class="td">{{ row.work_time || '' }}</td>
+              <td class="td">
+                <a onclick="modalDelete({{ row.id }})">删除</a>
+              </td>
+            </tr>
+          @endeach
+        </tbody>
+      </table>
+      @!component('land/components/pagination', all=data.all)
+    </div>
+  </div>
+  <form class="ui mini modal form" action="{{ route('land/admin/WorkController.delete') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">确定删除后内容将无法恢复！</h3>
+    <input type="number" id="id" name="id" value="" hidden />
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui black deny button">
+        取消
+      </div>
+      <button class="ui red right labeled icon button">
+        确认
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  function modalDelete(id) {
+    $('#id').val(id)
+    $('.ui.modal.form').modal('show')
+  }
+</script>
+@endsection

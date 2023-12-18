@@ -1,0 +1,148 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<link href="/lib/wangeditor/index.css" rel="stylesheet">
+@endsection
+
+@section('content')
+<div class="ui stackable four column grid">
+  <div class="three wide column">
+    @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+  </div>
+  <div class="thirteen wide column">
+    <div class="flex-between">
+      <b>{{ data.title }}</b>
+    </div>
+    <div class="ui segment">
+      <form class="ui form" method="post" action="{{ route('land/admin/GoodController.catalog') }}" enctype="multipart/form-data">
+        <div class="three fields">
+          <div class="field">
+            <label>目录名称</label>
+            <input placeholder="" name="name" value="{{ data.log.name || '' }}" type="text" />
+          </div>
+          <div class="field">
+            <label>一级目录</label>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="is_catalog" value="{{ data.log.level == 1 ? 1 : 0 }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">点击选择</div>
+              <div class="menu">
+                <div class="item" data-value="1">是</div>
+                <div class="item" data-value="0">否</div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>一级目录列表</label>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="parent_catalog_id" value="{{ data.log.parent_catalog_id || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">点击选择</div>
+              <div class="menu">
+                @each(item in data.catalog)
+                <div class="item" data-value="{{ item.id }}">{{ item.name }}</div>
+                @endeach
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="three fields">
+          <div class="field">
+            <label>
+              目录图片
+              @if(data.log.theme_url)
+                <a href="{{ data.log.theme_url }}" target="_blank">查看图片</a>
+              @endif
+            </label>
+            <input placeholder="" name="theme_url" value="{{ data.log.theme_url || ''}}" type="file" />
+          </div>
+          <div class="field">
+            <label>排序</label>
+            <input placeholder="1000" name="sort" value="{{ data.log.sort }}" type="number" />
+          </div>
+          @if(data.all.id)
+            <div class="field" hidden>
+              <label>ID</label>
+              <input name="id" value="{{ data.all.id }}" type="number"  />
+            </div>
+          @endif
+        </div>
+        {{ csrfField() }}
+        <button class="ui tiny button" type="submit" name="button" value="{{ data.all.id ? 'update' : 'save' }}">{{ data.all.id ? '更新' : '提交' }}</button>
+      </form>
+    </div>
+    <table class="ui segment striped table">
+      <thead>
+        <tr>
+          <th colspan="4">
+            目录结构
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        @each(catalog in data.catalog)
+          <tr>
+            <td class="collapsing">
+              <img class="ui tiny bordered rounded image" style="height: 40px;" src="{{ catalog.theme_url || '' }}" alt="">
+            </td>
+            <td class="collapsing">
+              <i class="folder icon"></i> {{ catalog.name }}
+            </td>
+            <td class="collapsing">{{ catalog.sort }}</td>
+            <td class="center aligned collapsing">
+              <a href="?id={{ catalog.id }}">编辑</a>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <a onclick="modalDelete({{ catalog.id }})">删除</a>
+            </td>
+          </tr>
+          @each(sub_catalog in catalog.sub_catalog)
+            <tr>
+              <td class="collapsing">
+                <img class="ui tiny bordered rounded image" style="height: 40px;" src="{{ sub_catalog.theme_url || '' }}" alt="">
+              </td>
+              <td class="collapsing">
+                └─ <i class="file outline icon"> {{ sub_catalog.name }}
+              </td>
+              <td class="collapsing">{{ sub_catalog.sort }}</td>
+              <td class="center aligned collapsing">
+                <a href="?id={{ sub_catalog.id }}">编辑</a>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a onclick="modalDelete({{ sub_catalog.id }})">删除</a>
+              </td>
+            </tr>
+          @endeach
+        @endeach
+      </tbody>
+    </table>
+  </div>
+  <form class="ui mini modal form" action="{{ route('land/admin/GoodController.delete') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">确定删除后内容将无法恢复！</h3>
+    <input type="number" id="id" name="id" value="" hidden />
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui black deny button">
+        取消
+      </div>
+      <button class="ui red right labeled icon button" name="button" value="catalog">
+        确认
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  function modalDelete(id) {
+    $('#id').val(id)
+    $('.ui.modal.form').modal('show')
+  }
+</script>
+@endsection

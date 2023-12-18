@@ -1,0 +1,57 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+      </div>
+      <table class="ui celled center aligned table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>头像 - 昵称</th>
+            <th>手机号</th>
+            <th>收藏数量</th>
+            <th>推荐人 (ID)</th>
+            <th>推荐数量</th>
+            <th>注册时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(row in data.users)
+            <tr>
+              <td class="td">{{ row.id }}</td>
+              <td class="td" title="{{ row.wechat_open_id }}">
+                @if(row.avatar_url)
+                  <img class="ui avatar bordered image" src="{{ row.avatar_url }}" alt="" />
+                @endif
+                {{ row.nickname || '' }}</td>
+              <td class="td">{{ row.phone || '' }}</td>
+              <td class="td">{{ row.collection_num }}</td>
+              <td class="td">{{ row.recommend ? (row.recommend.nickname || row.recommend.id) : '' }}</td>
+              <td class="td">{{ row.recommend_num }}</td>
+              <td class="td">{{ row.created_at || '' }}</td>
+            </tr>
+          @endeach
+        </tbody>
+      </table>
+      @!component('land/components/pagination', all=data.all)
+    </div>
+  </div>
+@endsection

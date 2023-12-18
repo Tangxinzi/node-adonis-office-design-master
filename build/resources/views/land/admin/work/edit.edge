@@ -1,0 +1,155 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<link href="/lib/wangeditor/index.css" rel="stylesheet">
+<style media="screen">
+  .meta {color: rgba(0,0,0,.4);}
+  .jobs .ui.divider:last-child {display: none !important;}
+  .job p {margin-bottom: 0.75rem;}
+  .ui.message>.close.icon {position: absolute; margin: 0; top: 14px; right: 1.3em;}
+  #editor—wrapper { border: 1px solid #ccc; z-index: 100; }
+  #toolbar-container { border-bottom: 1px solid #ccc; }
+  #editor-container { height: 500px; }
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+      </div>
+      <form class="ui segment form" method="post" action="{{ route('land/admin/WorkController.save') }}" enctype="multipart/form-data">
+        <div class="field" hidden>
+          <label>ID</label>
+          <input type="text" name="id" value="{{ data.work.id || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <div class="field">
+            <label>类型</label>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="catalog" value="{{ data.work.catalog }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">点击选择</div>
+              <div class="menu">
+                <div class="item" data-value="1">办公室项目分享</div>
+                <div class="item" data-value="3">设计师作品集</div>
+                <div class="item" data-value="2">优秀案例</div>
+                <div class="item" data-value="0">其它</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>作品名称</label>
+          <input type="text" name="title" value="{{ data.work.title || '' }}" placeholder="" />
+        </div>
+        <div class="field" hidden>
+          <label>主题 URL</label>
+          <input type="text" name="theme" value="{{ data.work.theme_url || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>主题图片（图片文件建议 2M 内）</label>
+            @if(data.work.theme_url)
+              <a href="{{ data.work.theme_url }}" target="_blank">查看图片</a>
+            @endif
+          </label>
+          <input type="file" name="theme" value="" placeholder="" />
+        </div>
+        <div class="field">
+          <label>项目地址</label>
+          <input type="text" name="location" value="{{ data.work.location || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>面积</label>
+          <input type="number" name="area" value="{{ data.work.area || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>设计团队</label>
+          <input type="text" name="team" value="{{ data.work.team || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>作品时间</label>
+          <input type="date" name="work_time" value="{{ data.work.work_time || '' }}" placeholder="" />
+        </div>
+        <div class="field" style="display: none">
+          <label>设计理念</label>
+          <textarea name="introduction" rows="8" cols="80">{{ data.work.introduction || '' }}</textarea>
+        </div>
+        <div class="field">
+          <label>标签</label>
+          <input type="text" name="labels" value="{{ data.work.labels || '' }}" placeholder="标签之间以英文逗号 , 分割" />
+        </div>
+        <div class="field">
+          <label>页面详细内容</label>
+          <div class="ui segment" style="padding: 0;">
+            <div id="editor—wrapper">
+              <div id="toolbar-container"><!-- 工具栏 --></div>
+              <div id="editor-container"><!-- 编辑器 --></div>
+            </div>
+            <input id="detail" type="text" name="detail" value="{{ data.work.detail || '' }}" hidden />
+          </div>
+        </div>
+        {{ csrfField() }}
+        <button class="ui tiny button" type="submit" name="button" value="update">提交</button>
+      </form>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+<script src="/lib/wangeditor/index.js"></script>
+<script type="text/javascript">
+  const { createEditor, createToolbar } = window.wangEditor
+
+  const editor = createEditor({
+    selector: '#editor-container',
+    html: $('#detail').val() || '',
+    config: {
+      placeholder: '请输入内容...',
+      MENU_CONF: {
+        uploadImage: {
+          server: '/land/file/upload',
+          fieldName: 'files',
+          maxFileSize: 10 * 1024 * 1024
+        },
+        uploadVideo: {
+          server: '/land/file/upload',
+          fieldName: 'files',
+          maxFileSize: 100 * 1024 * 1024
+        },
+      },
+      onChange(editor) {
+        $('#detail').val(editor.getHtml())
+      }
+    },
+    mode: 'simple', // or 'simple'
+  })
+
+  const toolbarConfig = {}
+
+  const toolbar = createToolbar({
+    editor,
+    selector: '#toolbar-container',
+    config: toolbarConfig,
+    mode: 'simple', // or 'simple'
+  })
+
+  var reads = new FileReader()
+  function change(input, src) {
+    reads.readAsDataURL($(input)[0].files[0])
+    reads.onload = function(e) {
+      $(src).attr("src", this.result)
+    }
+  }
+</script>
+@endsection

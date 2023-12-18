@@ -1,0 +1,194 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<link href="/lib/wangeditor/index.css" rel="stylesheet">
+<style media="screen">
+  .meta {color: rgba(0,0,0,.4);}
+  .jobs .ui.divider:last-child {display: none !important;}
+  .job p {margin-bottom: 0.75rem;}
+  .ui.message>.close.icon {position: absolute; margin: 0; top: 14px; right: 1.3em;}
+  #editor—wrapper { border: 1px solid #ccc; z-index: 100; }
+  #toolbar-container { border-bottom: 1px solid #ccc; }
+  #editor-container { height: 500px; }
+
+  .ui.images .ui.image { height: 80px; background-size: cover; background-position: center; background-repeat: no-repeat; cursor: move; }
+  .ui.images .ui.image { position: relative; }
+  .ui.images .ui.image .icon { position: absolute; right: 0; top: 0; opacity: 0; text-shadow: 0 0 5px #333; }
+  .ui.images .ui.image:hover .icon { opacity: 1; color: #FFF; }
+  .ui.images .ui.image .ignore-elements { cursor: none; }
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+      </div>
+      <form class="ui segment form" method="post" action="{{ route('land/admin/GoodController.save') }}" enctype="multipart/form-data">
+        <div class="field" hidden>
+          <label>ID</label>
+          <input type="text" name="id" value="{{ data.good.id || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>状态</label>
+          <div class="ui selection dropdown">
+            <input type="hidden" name="status" value="{{ data.good.status }}" />
+            <i class="dropdown icon"></i>
+            <div class="default text">点击选择</div>
+            <div class="menu">
+              <div class="item" data-value="0">待发布（草稿）</div>
+              <div class="item" data-value="1">已发布</div>
+            </div>
+          </div>
+        </div>
+        <div class="two fields">
+          <div class="field">
+            <label>一级目录</label>
+            <div class="ui level-0 selection dropdown">
+              <input type="hidden" name="good_parent_catalog" value="" />
+              <i class="dropdown icon"></i>
+              <div class="default text">点击选择</div>
+              <div class="menu">
+                @each(catalog in data.catalog)
+                  <div class="item item-catalog-{{ catalog.id }}" data-value="{{ catalog.id }}">- {{ catalog.name }}</div>
+                @endeach
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>二级目录</label>
+            <div class="ui level-1 selection dropdown">
+              <input type="hidden" name="good_catalog" value="{{ data.good.good_catalog }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">点击选择</div>
+              <div class="menu">
+                @each(catalog in data.catalog)
+                  @each(sub_catalog in catalog.sub_catalog)
+                    <div class="item item-parent-catalog-{{ sub_catalog.parent_catalog_id }}" data-value="{{ sub_catalog.id }}">-- {{ sub_catalog.name }}</div>
+                  @endeach
+                @endeach
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>名称</label>
+          <input type="text" name="good_name" value="{{ data.good.good_name || '' }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>品牌</label>
+          <input type="text" name="good_brand" value="{{ data.good.good_brand || '' }}" placeholder="" />
+        </div>
+        <div class="field" hidden>
+          <label>主图 array</label>
+          <input type="text" name="" value="{{ JSON.stringify(data.good.good_theme_url) }}" placeholder="" />
+        </div>
+        <div class="field">
+          <label>商品图片集（单张图片上传大小 2M 内）</label>
+          <div class="ui tiny rounded bordered images" id="draggable">
+            @each((row, index) in data.good.good_theme_url)
+            <div class="ui image image-{{ index }}" style="background-image: url({{ row }})" id="image{{ index }}">
+              <input type="text" name="theme_url[]" value="{{ row }}" id="upload_file_{{ index }}" onchange="change('#upload_file_{{ index }}', '#upload_file_tmp_{{ index }}');" hidden />
+              <i class="close link icon" onclick="removeImage('image-{{ index }}')"></i>
+            </div>
+            @endeach
+            <img class="ignore-elements ui small rounded bordered image" onclick="upload_file.click()" id="upload_file_tmp" src="https://semantic-ui.com/images/wireframe/white-image.png">
+            <input type="file" name="theme_url[]" value="{{ data.good.good_theme_url || '' }}" id="upload_file" onchange="change('#upload_file', '#upload_file_tmp');" hidden />
+          </div>
+        </div>
+        {{--  <div class="field">
+          <label>主图
+            @if(data.good.good_theme_url)
+              <a href="{{ data.good.good_theme_url }}" target="_blank">查看图片</a>
+            @endif
+          </label>
+          <input type="file" name="theme" value="{{ data.good.good_theme_url }}" placeholder="" />
+        </div>  --}}
+        <div class="field">
+          <label>页面详细内容</label>
+          <div class="ui segment" style="padding: 0;">
+            <div id="editor—wrapper">
+              <div id="toolbar-container"><!-- 工具栏 --></div>
+              <div id="editor-container"><!-- 编辑器 --></div>
+            </div>
+            <input id="detail" type="text" name="detail" value="{{ data.good.detail || '' }}" hidden />
+          </div>
+        </div>
+        {{ csrfField() }}
+        <button class="ui tiny button" type="submit" name="button" value="update">提交</button>
+      </form>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+<script src="/lib/wangeditor/index.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.8.3/Sortable.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+  new Sortable(document.getElementById('draggable'), { animation: 150, ghostClass: 'blue-background-class', filter: ".ignore-elements", });
+
+  function removeImage (className) {
+    $('.ui.image.' + className).remove()
+  }
+
+  $('.level-0.dropdown').dropdown({
+    onChange: function(value, text, $selectedItem) {
+      $('.level-1 .item').hide()
+      $('.level-1 .item-parent-catalog-' + value).show()
+    }
+  })
+
+  const { createEditor, createToolbar } = window.wangEditor
+
+  const editor = createEditor({
+    selector: '#editor-container',
+    html: $('#detail').val() || '',
+    config: {
+      placeholder: '请输入内容...',
+      MENU_CONF: {
+        uploadImage: {
+          server: '/land/file/upload',
+          fieldName: 'files',
+          maxFileSize: 10 * 1024 * 1024
+        },
+        uploadVideo: {
+          server: '/land/file/upload',
+          fieldName: 'files',
+          maxFileSize: 100 * 1024 * 1024
+        },
+      },
+      onChange(editor) {
+        $('#detail').val(editor.getHtml())
+      }
+    },
+    mode: 'simple', // or 'simple'
+  })
+
+  const toolbarConfig = {}
+
+  const toolbar = createToolbar({
+    editor,
+    selector: '#toolbar-container',
+    config: toolbarConfig,
+    mode: 'simple', // or 'simple'
+  })
+
+  var reads = new FileReader()
+  function change(input, src) {
+    reads.readAsDataURL($(input)[0].files[0])
+    reads.onload = function(e) {
+      $(src).attr("src", this.result)
+    }
+  }
+</script>
+@endsection

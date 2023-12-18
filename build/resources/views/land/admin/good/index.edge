@@ -1,0 +1,91 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+        <div>
+          <a href="?status=0" style="margin-right: 2em; display: inline-block;">待发布</a>
+          <a href="{{ route('land/admin/GoodController.create') }}">添加</a>
+        </div>
+      </div>
+      <table class="ui celled center aligned table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>供应商</th>
+            <th class="center aligned one wide">图片</th>
+            <th>名称</th>
+            <th>品牌</th>
+            <th>类别</th>
+            <th>状态</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(row in data.goods)
+            <tr>
+              <td class="td">{{ row.id }}</td>
+              <td class="td">{{ row.good_supplier.supplier_name || '平台发布' }}</td>
+              <td class="center aligned td">
+                <!-- <img class="ui tiny bordered rounded image" style="margin: 0 auto;" src="{{ row.good_theme_url || '' }}" alt="" /> -->
+                {{ row.good_theme_url.length || 0 }}
+              </td>
+              <td class="td">{{ row.good_name || '' }}</td>
+              <td class="td">{{ row.good_brand || '' }}</td>
+              <td class="td">{{ row.catalog.name || '' }}</td>
+              <td class="td">{{ row.status == 1 ? '已发布' : '' }}{{ row.status == 0 ? '草稿' : '' }}</td>
+              <td class="td">{{ row.created_at }}</td>
+              <td class="td">
+                <a target="_blank" href="{{ route('land/admin/GoodController.edit', { id: row.id }) }}">编辑</a>
+                &nbsp;&nbsp;
+                <a onclick="modalDelete({{ row.id }})">删除</a>
+              </td>
+            </tr>
+          @endeach
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <form class="ui mini modal form" action="{{ route('land/admin/GoodController.delete') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">确定删除后内容将无法恢复！</h3>
+    <input type="number" id="id" name="id" value="" hidden />
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui black deny button">
+        取消
+      </div>
+      <button class="ui red right labeled icon button" name="button" value="good">
+        确认
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  function modalDelete(id) {
+    $('#id').val(id)
+    $('.ui.modal.form').modal('show')
+  }
+</script>
+@endsection

@@ -1,0 +1,5 @@
+<div class="ui pagination menu">
+  @each((row, index) in [0, 1, 2, 3, 4, 5, 6])
+  <a class="item {{ (index + 1) == (all.page || 1) ? 'active' : '' }}" href="?page={{ index + 1 }}">{{ index + 1 }}</a>
+  @endeach
+</div>

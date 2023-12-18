@@ -1,0 +1,17 @@
+<b>平台管理</b>
+<div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'article' ? 'item active' : 'item' }}" href="{{ route('land/admin/ArticleController.index') }}">文章</a>
+  <a class="{{ data.active == 'designer' ? 'item active' : 'item' }}" href="{{ route('land/admin/DesignerController.index') }}">设计师</a>
+  <a class="{{ data.active == 'work' ? 'item active' : 'item' }}" href="{{ route('land/admin/WorkController.index') }}">作品</a>
+  <a class="{{ data.active == 'user' ? 'item active' : 'item' }}" href="{{ route('land/admin/UserController.index') }}">用户</a>
+</div>
+<b>商城</b>
+<div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'good' ? 'item active' : 'item' }}" href="{{ route('land/admin/GoodController.index') }}">商品</a>
+  <a class="{{ data.active == 'catalog' ? 'item active' : 'item' }}" href="{{ route('land/admin/GoodController.catalog') }}">目录</a>
+  <a class="{{ data.active == 'supplier' ? 'item active' : 'item' }}" href="{{ route('land/admin/GoodController.supplier') }}">供应商</a>
+</div>
+<b>系统设置</b>
+<div class="ui vertical pointing menu">
+  <a class="item" href="">退出</a>
+</div>
