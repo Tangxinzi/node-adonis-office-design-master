@@ -214,8 +214,7 @@ class GoodController {
                 });
                 for (let index = 0; index < themes.length; index++) {
                     let theme = themes[index];
-                    let RandomString = require('RandomString');
-                    const profileName = `${RandomString.generate(32)}.${theme.extname}`;
+                    const profileName = `${randomstring_1.default.generate(32)}.${theme.extname}`;
                     const profilePath = `/uploads/themes/`;
                     let file = {
                         fileName: theme.clientName,

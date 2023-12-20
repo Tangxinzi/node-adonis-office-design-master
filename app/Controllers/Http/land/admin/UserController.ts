@@ -50,7 +50,9 @@ export default class UserController {
       const all = request.all()
       if (request.method() == 'GET') {
         const user = await Database.from('land_users').where('wechat_open_id', all.openid).first()
-        user.collection_num = (await Database.from('land_collection').where({ wechat_open_id: all.openid, status: 1 }).count('* as total'))[0].total || 0
+        if (all.openid) {
+          user.collection_num = (await Database.from('land_collection').where({ wechat_open_id: all.openid, status: 1 }).count('* as total'))[0].total || 0
+        }
         return user
       } else {
         const result = await jscode2session(all.code)

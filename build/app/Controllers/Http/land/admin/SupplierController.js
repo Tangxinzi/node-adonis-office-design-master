@@ -127,8 +127,8 @@ class SupplierController {
                         session.flash('message', { type: 'error', header: '上传错误', message: `上传图片格式遇到问题。` });
                         return response.redirect('back');
                     }
-                    let RandomString = require('RandomString');
-                    const profileName = `${RandomString.generate(32)}.${theme.extname}`;
+                    let randomstring = require('randomstring');
+                    const profileName = `${randomstring.generate(32)}.${theme.extname}`;
                     const profilePath = `/uploads/supplier/themes/`;
                     let file = {
                         fileName: theme.clientName,

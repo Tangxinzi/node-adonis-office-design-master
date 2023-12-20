@@ -234,7 +234,6 @@ export default class GoodController {
 
         for (let index = 0; index < themes.length; index++) {
           let theme = themes[index];
-          let randomstring = require('randomstring')
           const profileName = `${randomstring.generate(32)}.${theme.extname}`
           const profilePath = `/uploads/themes/`
 
