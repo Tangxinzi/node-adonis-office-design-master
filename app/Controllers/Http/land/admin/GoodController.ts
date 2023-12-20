@@ -1,6 +1,7 @@
 import Database from '@ioc:Adonis/Lucid/Database';
 import Application from '@ioc:Adonis/Core/Application';
 import Moment from 'moment';
+import RandomString from 'randomstring';
 
 export default class GoodController {
   public async index({ request, view, response }: HttpContextContract) {
@@ -104,7 +105,6 @@ export default class GoodController {
       if (request.method() == 'POST' && all.button == 'save') {
         let theme_url = all.theme_url || ''
         if (request.file('theme_url')) {
-          const RandomString = require('RandomString')
           const profile = request.file('theme_url', { type: ['image', 'video'], size: '10mb' })
           const profileName = `${RandomString.generate(32)}.${profile.extname}`
           const profilePath = `/uploads/catalogs/`
@@ -132,7 +132,6 @@ export default class GoodController {
       if (request.method() == 'POST' && all.button == 'update') {
         let theme_url = all.theme_url || ''
         if (request.file('theme_url')) {
-          const RandomString = require('RandomString')
           const profile = request.file('theme_url', { type: ['image', 'video'], size: '10mb' })
           const profileName = `${RandomString.generate(32)}.${profile.extname}`
           const profilePath = `/uploads/catalogs/`

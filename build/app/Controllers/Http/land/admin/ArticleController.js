@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Database_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
 const Application_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Application"));
 const moment_1 = __importDefault(require("moment"));
+const randomstring_1 = __importDefault(require("randomstring"));
 class ArticleController {
     async index({ request, view, response }) {
         try {
@@ -113,9 +114,8 @@ class ArticleController {
             let all = request.all();
             let article_theme_url = all.theme_url || '';
             if (request.file('theme')) {
-                const RandomString = require('RandomString');
                 const profile = request.file('theme', { type: ['image', 'video'], size: '10mb' });
-                const profileName = `${RandomString.generate(32)}.${profile.extname}`;
+                const profileName = `${randomstring_1.default.generate(32)}.${profile.extname}`;
                 const profilePath = `/uploads/themes/`;
                 let file = {};
                 file.fileName = profile.clientName;

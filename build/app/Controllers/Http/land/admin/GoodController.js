@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Database_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
 const Application_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Core/Application"));
 const moment_1 = __importDefault(require("moment"));
+const randomstring_1 = __importDefault(require("randomstring"));
 class GoodController {
     async index({ request, view, response }) {
         try {
@@ -102,9 +103,8 @@ class GoodController {
             if (request.method() == 'POST' && all.button == 'save') {
                 let theme_url = all.theme_url || '';
                 if (request.file('theme_url')) {
-                    const RandomString = require('RandomString');
                     const profile = request.file('theme_url', { type: ['image', 'video'], size: '10mb' });
-                    const profileName = `${RandomString.generate(32)}.${profile.extname}`;
+                    const profileName = `${randomstring_1.default.generate(32)}.${profile.extname}`;
                     const profilePath = `/uploads/catalogs/`;
                     let file = {};
                     file.fileName = profile.clientName;
@@ -125,9 +125,8 @@ class GoodController {
             if (request.method() == 'POST' && all.button == 'update') {
                 let theme_url = all.theme_url || '';
                 if (request.file('theme_url')) {
-                    const RandomString = require('RandomString');
                     const profile = request.file('theme_url', { type: ['image', 'video'], size: '10mb' });
-                    const profileName = `${RandomString.generate(32)}.${profile.extname}`;
+                    const profileName = `${randomstring_1.default.generate(32)}.${profile.extname}`;
                     const profilePath = `/uploads/catalogs/`;
                     let file = {};
                     file.fileName = profile.clientName;
