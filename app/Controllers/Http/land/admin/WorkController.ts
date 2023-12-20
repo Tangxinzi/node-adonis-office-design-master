@@ -1,7 +1,7 @@
 import Database from '@ioc:Adonis/Lucid/Database';
 import Application from '@ioc:Adonis/Core/Application';
 import Moment from 'moment';
-import RandomString from 'randomstring';
+import randomstring from 'randomstring';
 
 export default class WorkController {
   public async index({ request, response, view, session }: HttpContextContract) {
@@ -119,7 +119,7 @@ export default class WorkController {
       let theme_url = all.theme_url || ''
       if (request.file('theme')) {
         const profile = request.file('theme', { type: ['image'], size: '2mb' })
-        const profileName = `${RandomString.generate(32)}.${profile.extname}`
+        const profileName = `${randomstring.generate(32)}.${profile.extname}`
         const profilePath = `/uploads/theme_urls/`
 
         let file = {}

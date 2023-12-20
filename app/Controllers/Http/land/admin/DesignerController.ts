@@ -1,7 +1,7 @@
 import Database from '@ioc:Adonis/Lucid/Database';
 import Application from '@ioc:Adonis/Core/Application';
 import Moment from 'moment';
-import RandomString from 'randomstring';
+import randomstring from 'randomstring';
 
 export default class DesignerController {
   public async index({ request, response, view, session }: HttpContextContract) {
@@ -126,7 +126,7 @@ export default class DesignerController {
       let avatar_url = all.avatar_url || ''
       if (request.file('avatar')) {
         const profile = request.file('avatar', { type: ['image'], size: '2mb' })
-        const profileName = `${RandomString.generate(32)}.${profile.extname}`
+        const profileName = `${randomstring.generate(32)}.${profile.extname}`
         const profilePath = `/uploads/avatars/`
 
         let file = {}

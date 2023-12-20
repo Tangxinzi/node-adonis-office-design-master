@@ -1,7 +1,7 @@
 import Database from '@ioc:Adonis/Lucid/Database';
 import Application from '@ioc:Adonis/Core/Application';
 import Moment from 'moment';
-import RandomString from 'randomstring';
+import randomstring from 'randomstring';
 
 export default class GoodController {
   public async index({ request, view, response }: HttpContextContract) {
@@ -106,7 +106,7 @@ export default class GoodController {
         let theme_url = all.theme_url || ''
         if (request.file('theme_url')) {
           const profile = request.file('theme_url', { type: ['image', 'video'], size: '10mb' })
-          const profileName = `${RandomString.generate(32)}.${profile.extname}`
+          const profileName = `${randomstring.generate(32)}.${profile.extname}`
           const profilePath = `/uploads/catalogs/`
 
           let file = {}
@@ -133,7 +133,7 @@ export default class GoodController {
         let theme_url = all.theme_url || ''
         if (request.file('theme_url')) {
           const profile = request.file('theme_url', { type: ['image', 'video'], size: '10mb' })
-          const profileName = `${RandomString.generate(32)}.${profile.extname}`
+          const profileName = `${randomstring.generate(32)}.${profile.extname}`
           const profilePath = `/uploads/catalogs/`
 
           let file = {}
@@ -234,8 +234,8 @@ export default class GoodController {
 
         for (let index = 0; index < themes.length; index++) {
           let theme = themes[index];
-          let RandomString = require('RandomString')
-          const profileName = `${RandomString.generate(32)}.${theme.extname}`
+          let randomstring = require('randomstring')
+          const profileName = `${randomstring.generate(32)}.${theme.extname}`
           const profilePath = `/uploads/themes/`
 
           let file = {

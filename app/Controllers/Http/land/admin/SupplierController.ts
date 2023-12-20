@@ -129,8 +129,8 @@ export default class SupplierController {
             return response.redirect('back')
           }
 
-          let RandomString = require('RandomString')
-          const profileName = `${RandomString.generate(32)}.${theme.extname}`
+          let randomstring = require('randomstring')
+          const profileName = `${randomstring.generate(32)}.${theme.extname}`
           const profilePath = `/uploads/supplier/themes/`
 
           let file = {

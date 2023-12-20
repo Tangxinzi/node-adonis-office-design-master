@@ -1,6 +1,6 @@
 import Database from '@ioc:Adonis/Lucid/Database'
 import Application from '@ioc:Adonis/Core/Application'
-import RandomString from 'randomstring';
+import randomstring from 'randomstring';
 
 export default class FilesController {
   public async upload({ request, session }: HttpContextContract) {
@@ -8,7 +8,7 @@ export default class FilesController {
       if (request.file('files')) {
         let file = {}
         const profile = request.file('files', { type: ['image', 'video'], size: '100mb' })
-        const profileName = `${RandomString.generate(32)}.${profile.extname}`
+        const profileName = `${randomstring.generate(32)}.${profile.extname}`
         const profilePath = `/uploads/files/land/`
 
         file.fileName = profile.clientName
