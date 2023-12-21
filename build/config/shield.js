@@ -8,9 +8,7 @@ exports.csp = {
 };
 exports.csrf = {
     enabled: true,
-    exceptRoutes: [
-        exceptRoutes, ({ request }) => request.url().includes('/api')
-    ],
+    exceptRoutes: ({ request }) => request.url().includes('/api'),
     enableXsrfCookie: true,
     methods: ['POST', 'PUT', 'PATCH', 'DELETE'],
 };
