@@ -11,7 +11,7 @@ class ArticleController {
     async index({ request, view, response }) {
         try {
             const all = request.all(), catalog = ['其它', '活动资讯'];
-            const articles = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'status', 'target', 'created_at').where('status', all.status == 0 ? 0 : 1).whereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+            const articles = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'status', 'target', 'created_at').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             for (let index = 0; index < articles.length; index++) {
                 articles[index].catalog = catalog[articles[index].article_catalog];
                 articles[index].created_at = (0, moment_1.default)(articles[index].created_at).format('YYYY-MM-DD H:mm:ss');
@@ -126,7 +126,7 @@ class ArticleController {
             if (request.method() == 'POST' && all.button == 'update') {
                 await Database_1.default.from('land_articles').where('id', all.id).update({ status: all.status, target: all.target, article_catalog: all.catalog, article_title: all.title, article_author: all.author, article_detail: all.detail, article_original_url: all.original_url, article_theme_url });
                 session.flash('message', { type: 'success', header: '更新成功', message: `` });
-                return response.redirect('back');
+                return response.redirect().toRoute('land/admin/ArticleController.edit', { id: all.id });
             }
             const id = await Database_1.default.table('land_articles').returning('id').insert({
                 status: all.status,
@@ -139,7 +139,7 @@ class ArticleController {
                 article_theme_url
             });
             session.flash('message', { type: 'success', header: '创建成功', message: `` });
-            return response.redirect('back');
+            return response.redirect().toRoute('land/admin/ArticleController.edit', { id });
         }
         catch (error) {
             console.log(error);
@@ -151,7 +151,7 @@ class ArticleController {
             const all = request.all();
             await Database_1.default.from('land_articles').where('id', all.id).update({ status: 0, deleted_at: (0, moment_1.default)().format('YYYY-MM-DD HH:mm:ss') });
             session.flash('message', { type: 'success', header: '文章已删除成功！', message: `` });
-            return response.redirect('back');
+            return response.redirect().toRoute('land/admin/ArticleController.index');
         }
         catch (error) {
             console.log(error);
