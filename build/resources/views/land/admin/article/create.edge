@@ -29,17 +29,28 @@
         <b>{{ data.title }}</b>
       </div>
       <form class="ui segment form" method="post" action="{{ route('land/admin/ArticleController.save') }}" enctype="multipart/form-data">
-        <div class="field">
+        <div class="two fields">
           <div class="field">
             <label>状态</label>
             <div class="ui selection dropdown">
-              <input type="hidden" name="catalog" value="" />
+              <input type="hidden" name="status" value="0" />
               <i class="dropdown icon"></i>
               <div class="default text">点击选择</div>
               <div class="menu">
                 <div class="item" data-value="1">发布</div>
-                <div class="item" data-value="0">删除</div>
-                <div class="item" data-value="">草稿</div>
+                <div class="item" data-value="0">草稿</div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>打开方式</label>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="target" value="0" />
+              <i class="dropdown icon"></i>
+              <div class="default text">点击选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">URL 跳转</div>
+                <div class="item" data-value="1">小程序页面</div>
               </div>
             </div>
           </div>
@@ -53,7 +64,7 @@
               <div class="default text">点击选择</div>
               <div class="menu">
                 <div class="item" data-value="1">活动资讯</div>
-                <div class="item" data-value="">其它</div>
+                <div class="item" data-value="0">其它</div>
               </div>
             </div>
           </div>

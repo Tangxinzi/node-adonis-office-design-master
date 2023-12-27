@@ -11,10 +11,10 @@ class ArticleController {
     async index({ request, view, response }) {
         try {
             const all = request.all(), catalog = ['其它', '活动资讯'];
-            const articles = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'status', 'created_at').where('status', all.status == 0 ? 0 : 1).forPage(request.input('page', 1), 20);
+            const articles = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'status', 'target', 'created_at').where('status', all.status == 0 ? 0 : 1).whereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             for (let index = 0; index < articles.length; index++) {
                 articles[index].catalog = catalog[articles[index].article_catalog];
-                articles[index]['created_at'] = (0, moment_1.default)(articles[index]['created_at']).format('YYYY-MM-DD H:mm:ss');
+                articles[index].created_at = (0, moment_1.default)(articles[index].created_at).format('YYYY-MM-DD H:mm:ss');
             }
             if (all.type == 'json') {
                 return response.json({
@@ -124,12 +124,14 @@ class ArticleController {
                 article_theme_url = file.fileSrc;
             }
             if (request.method() == 'POST' && all.button == 'update') {
-                await Database_1.default.from('land_articles').where('id', all.id).update({ article_catalog: all.catalog, article_title: all.title, article_author: all.author, article_detail: all.detail, article_original_url: all.original_url, article_theme_url });
+                await Database_1.default.from('land_articles').where('id', all.id).update({ status: all.status, target: all.target, article_catalog: all.catalog, article_title: all.title, article_author: all.author, article_detail: all.detail, article_original_url: all.original_url, article_theme_url });
                 session.flash('message', { type: 'success', header: '更新成功', message: `` });
                 return response.redirect('back');
             }
             const id = await Database_1.default.table('land_articles').returning('id').insert({
-                article_catalog: all.catalog || '',
+                status: all.status,
+                target: all.target || '',
+                article_catalog: all.catalog || 0,
                 article_title: all.title || '',
                 article_author: all.author || '',
                 article_detail: all.detail || '',

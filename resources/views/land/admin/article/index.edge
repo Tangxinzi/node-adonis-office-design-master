@@ -32,6 +32,7 @@
             <th>类型</th>
             <th>标题</th>
             <th>作者</th>
+            <th>打开</th>
             <th>状态</th>
             <th>时间</th>
             <th>操作</th>
@@ -44,7 +45,8 @@
               <td class="td">{{ row.catalog }}</td>
               <td class="td">{{ row.article_title }}</td>
               <td class="td">{{ row.article_author || '' }}</td>
-              <td class="td">{{ row.status == '' ? '草稿' : '' }}{{ row.status == 0 ? '删除' : '' }}{{ row.status == 1 ? '发布' : '' }}</td>
+              <td class="td">[{{ row.target == 0 ? 'URL 跳转' : '小程序页面' }}]</td>
+              <td class="td">{{ row.status == 0 ? '草稿' : '' }}{{ row.status == 1 ? '发布' : '' }}</td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">
                 <a href="{{ route('land/admin/ArticleController.edit', { id: row.id }) }}">编辑</a>
