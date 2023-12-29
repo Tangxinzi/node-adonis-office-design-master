@@ -13,13 +13,13 @@ class GoodController {
             let goods = [];
             const all = request.all();
             if (all.search) {
-                goods = await Database_1.default.from('land_goods').select('*').where('status', 1).where('good_name', 'like', `%${all.search}%`).orWhere('good_brand', 'like', `%${all.search}%`).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+                goods = await Database_1.default.from('land_goods').select('*').where('status', 1).where('good_name', 'like', `%${all.search}%`).orWhere('good_brand', 'like', `%${all.search}%`).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             }
             else if (all.catalog) {
-                goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: all.catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+                goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: all.catalog }).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             }
             else {
-                goods = await Database_1.default.from('land_goods').select('*').where('status', all.status == 0 ? 0 : 1).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+                goods = await Database_1.default.from('land_goods').select('*').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
                 for (let index = 0; index < goods.length; index++) {
                     if (goods[index].good_supplier_id) {
                         goods[index].good_supplier = await Database_1.default.from('land_supplier').select('*').where('id', goods[index].good_supplier_id).first() || {};
@@ -152,10 +152,10 @@ class GoodController {
     async show({ params, request, view, response }) {
         try {
             const all = request.all();
-            const good = await Database_1.default.from('land_goods').where('id', params.id).first();
+            const good = await Database_1.default.from('land_goods').where({ id: params.id, status: 1 }).first() || {};
             good.created_at = (0, moment_1.default)(good.created_at).format('YYYY-MM-DD H:mm:ss');
             good.good_theme_url = good.good_theme_url ? JSON.parse(good.good_theme_url) : [];
-            const catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 1, status: 1 }).orderBy('created_at', 'desc');
+            const catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 1, status: 1 }).orderBy('created_at', 'desc') || {};
             for (let index = 0; index < catalog.length; index++) {
                 catalog[index].sub_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ parent_catalog_id: catalog[index].id, level: 2, status: 1 });
             }
