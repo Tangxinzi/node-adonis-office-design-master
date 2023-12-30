@@ -63,9 +63,9 @@ export default class DesignerController {
     try {
       const all = request.all()
       if (all.search) {
-        var data = await Database.from('land_designers').where({ status: 1, catalog: params.catalog }).where('nickname', 'like', `%${ all.search }%`).orderBy('created_at', 'desc')
+        var data = await Database.from('land_designers').where({ status: 1, catalog: params.catalog }).where('nickname', 'like', `%${ all.search }%`).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
       } else {
-        var data = await Database.from('land_designers').where({ status: 1, catalog: params.catalog }).orderBy('created_at', 'desc').limit(8)
+        var data = await Database.from('land_designers').where({ status: 1, catalog: params.catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
       }
 
       for (let index = 0; index < data.length; index++) {

@@ -41,7 +41,7 @@ class ArticleController {
             if (all.search) {
             }
             else {
-                var data = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'target', 'created_at').where({ status: 1, article_catalog: params.catalog }).orderBy('created_at', 'desc').limit(8);
+                var data = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'target', 'created_at').where({ status: 1, article_catalog: params.catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8);
             }
             for (let index = 0; index < data.length; index++) {
                 data[index].created_at = (0, moment_1.default)(data[index].created_at).format('YYYY-MM-DD');

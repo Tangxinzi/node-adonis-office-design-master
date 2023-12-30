@@ -74,7 +74,7 @@ class GoodController {
     async catalog({ request, response, view, session }) {
         try {
             const all = request.all();
-            const catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 1, status: 1 }).orderBy('sort', 'asc');
+            const catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 1, status: 1 }).orderBy('sort', 'asc').forPage(request.input('page', 1), 8);
             for (let index = 0; index < catalog.length; index++) {
                 catalog[index].sub_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ parent_catalog_id: catalog[index].id, level: 2, status: 1 }).orderBy('sort', 'asc');
             }
