@@ -37,6 +37,7 @@ Route.group(() => {
   Route.post('/user/info/upload', 'land/admin/UserController.userinfo')
   Route.get('/user/like/:id', 'land/admin/UserController.like')
   Route.post('/user/like/:id', 'land/admin/UserController.like')
+  Route.post('/user/calculator-log', 'land/admin/UserController.calculatorLog')
 
   Route.get('/designer', 'land/admin/DesignerController.index')
   Route.get('/designer/catalog/:catalog', 'land/admin/DesignerController.catalog')
@@ -53,6 +54,8 @@ Route.group(() => {
   Route.get('/work/edit/:id', 'land/admin/WorkController.edit')
   Route.post('/work/save', 'land/admin/WorkController.save')
   Route.post('/work/delete', 'land/admin/WorkController.delete')
+
+  Route.get('/calculator', 'land/admin/CalculatorController.index')
 
   Route.get('/article', 'land/admin/ArticleController.index')
   Route.get('/article/catalog/:catalog', 'land/admin/ArticleController.catalog')

@@ -1,0 +1,63 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+      </div>
+      <table class="ui celled center aligned table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户</th>
+            <th>办公面积</th>
+            <th>预估面积</th>
+            <th>预估价格</th>
+            <th>时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(row in data.calculator)
+            <tr>
+              <td class="td">{{ row.id }}</td>
+              <td class="td" title="{{ row.wechat_open_id }}">
+                <a href="?user_id={{ row.wechat_open_id }}">{{ row.user.nickname || row.user.phone }}</a>
+              </td>
+              <td class="td">{{ row.area || 0 }}㎡</td>
+              <td class="td">{{ row.countArea }}㎡</td>
+              <td class="td">
+                <span class="activating click one-line" data-html="人工费：¥{{ row.estimatedNumber[0] }}<br/><br/>辅材费：¥{{ row.estimatedNumber[1] }}<br/><br/>主材费：¥{{ row.estimatedNumber[2] }}" data-position="bottom center" data-inverted="">¥{{ row.count }}</span>
+              </td>
+              <td class="td">{{ row.created_at }}</td>
+            </tr>
+          @endeach
+        </tbody>
+      </table>
+      @!component('land/components/pagination', all=data.all)
+    </div>
+  </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  $('.activating').popup({
+    on: 'click'
+  })
+</script>
+@endsection

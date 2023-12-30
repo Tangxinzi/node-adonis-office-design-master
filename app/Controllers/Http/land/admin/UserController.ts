@@ -1,6 +1,7 @@
 import Database from '@ioc:Adonis/Lucid/Database';
 import Application from '@ioc:Adonis/Core/Application';
 import Moment from 'moment';
+import randomstring from 'randomstring';
 const { jscode2session, token, getUserPhoneNumber } = require('./Weixin');
 
 export default class UserController {
@@ -12,7 +13,7 @@ export default class UserController {
       if (user) {
         return user
       } else if (result.openid) {
-        const id = await Database.table('land_users').insert({ wechat_open_id: result.openid, recommend: all.recommend || '', ip: request.ip() }).returning('id')
+        const id = await Database.table('land_users').insert({ nickname: `微信用户_${randomstring.generate(6)}`, wechat_open_id: result.openid, recommend: all.recommend || '', ip: request.ip() }).returning('id')
         return await Database.from('land_users').where('id', id[0]).first()
       }
     } catch (error) {
@@ -111,6 +112,23 @@ export default class UserController {
       return response.json({ status: 200, message: "ok", data: phone.phone_info })
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  public async calculatorLog({ params, request, response, session }: HttpContextContract) {
+    try {
+      const all = request.all()
+      console.log(all);
+      return await Database.table('land_calculator').insert({
+        wechat_open_id: all.openid || '',
+        count: all.count || '',
+        countArea: all.countArea || '',
+        estimatedNumber: JSON.stringify(all.estimatedNumber) || '[]',
+        multiValue: JSON.stringify(all.multiValue) || '[]',
+        area: all.input.area
+      })
+    } catch (error) {
+
     }
   }
 

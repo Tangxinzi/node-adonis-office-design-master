@@ -18,6 +18,7 @@ Route_1.default.group(() => {
     Route_1.default.post('/user/info/upload', 'land/admin/UserController.userinfo');
     Route_1.default.get('/user/like/:id', 'land/admin/UserController.like');
     Route_1.default.post('/user/like/:id', 'land/admin/UserController.like');
+    Route_1.default.post('/user/calculator-log', 'land/admin/UserController.calculatorLog');
     Route_1.default.get('/designer', 'land/admin/DesignerController.index');
     Route_1.default.get('/designer/catalog/:catalog', 'land/admin/DesignerController.catalog');
     Route_1.default.get('/designer/create', 'land/admin/DesignerController.create');
@@ -32,6 +33,7 @@ Route_1.default.group(() => {
     Route_1.default.get('/work/edit/:id', 'land/admin/WorkController.edit');
     Route_1.default.post('/work/save', 'land/admin/WorkController.save');
     Route_1.default.post('/work/delete', 'land/admin/WorkController.delete');
+    Route_1.default.get('/calculator', 'land/admin/CalculatorController.index');
     Route_1.default.get('/article', 'land/admin/ArticleController.index');
     Route_1.default.get('/article/catalog/:catalog', 'land/admin/ArticleController.catalog');
     Route_1.default.get('/article/create', 'land/admin/ArticleController.create');

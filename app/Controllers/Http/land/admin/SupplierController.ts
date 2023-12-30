@@ -107,7 +107,7 @@ export default class SupplierController {
       let all = request.all(), supplier = session.get('adonis-cookie-supplier')
       // 限制供应商添加商品数量
       const goods = await Database.from('land_goods').select('*').where({ good_supplier_id: supplier.id, status: 1 }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
-      if (goods.length >= supplier.number) {
+      if (goods.length > supplier.number) {
         session.flash('message', { type: 'error', header: '提交失败', message: `管理员限制「${ supplier.supplier_name }」供应商上传商品数量 ${ supplier.number }。` })
         return response.redirect('back')
       }

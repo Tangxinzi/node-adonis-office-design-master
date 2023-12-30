@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const Database_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
 const moment_1 = __importDefault(require("moment"));
+const randomstring_1 = __importDefault(require("randomstring"));
 const { jscode2session, token, getUserPhoneNumber } = require('./Weixin');
 class UserController {
     async wxLogin({ request, response, view, session }) {
@@ -16,7 +17,7 @@ class UserController {
                 return user;
             }
             else if (result.openid) {
-                const id = await Database_1.default.table('land_users').insert({ wechat_open_id: result.openid, recommend: all.recommend || '', ip: request.ip() }).returning('id');
+                const id = await Database_1.default.table('land_users').insert({ nickname: `微信用户_${randomstring_1.default.generate(6)}`, wechat_open_id: result.openid, recommend: all.recommend || '', ip: request.ip() }).returning('id');
                 return await Database_1.default.from('land_users').where('id', id[0]).first();
             }
         }
@@ -116,6 +117,22 @@ class UserController {
         }
         catch (error) {
             console.log(error);
+        }
+    }
+    async calculatorLog({ params, request, response, session }) {
+        try {
+            const all = request.all();
+            console.log(all);
+            return await Database_1.default.table('land_calculator').insert({
+                wechat_open_id: all.openid || '',
+                count: all.count || '',
+                countArea: all.countArea || '',
+                estimatedNumber: JSON.stringify(all.estimatedNumber) || '[]',
+                multiValue: JSON.stringify(all.multiValue) || '[]',
+                area: all.input.area
+            });
+        }
+        catch (error) {
         }
     }
     async like({ params, request, response, session }) {
