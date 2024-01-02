@@ -163,6 +163,15 @@ class GoodController {
             for (let index = 0; index < good.catalog_goods.length; index++) {
                 good.catalog_goods[index].good_theme_url = good.catalog_goods[index].good_theme_url ? JSON.parse(good.catalog_goods[index].good_theme_url) : [];
             }
+            if (good.catalog_goods.length < 4) {
+                const par_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 2, status: 1, id: good.good_catalog }).first() || {};
+                const parent = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 2, status: 1, parent_catalog_id: par_catalog.parent_catalog_id }).orderBy('sort', 'desc') || {};
+                let parent_array = [];
+                for (let index = 0; index < parent.length; index++) {
+                    parent_array.push(parent[index].id);
+                }
+                good.catalog_goods = await Database_1.default.from('land_goods').whereIn('good_catalog', parent_array);
+            }
             const data = {
                 status: 200,
                 message: "ok",
