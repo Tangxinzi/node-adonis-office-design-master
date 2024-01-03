@@ -175,7 +175,7 @@ export default class GoodController {
         catalog[index].sub_catalog = await Database.from('land_goods_catalog').select('*').where({ parent_catalog_id: catalog[index].id, level: 2, status: 1 })
       }
 
-      good.catalog_goods = await Database.from('land_goods').select('*').where({ status: 1, good_catalog: good.good_catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
+      good.catalog_goods = await Database.from('land_goods').select('*').where({ status: 1, good_catalog: good.good_catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 4)
 
       if (good.catalog_goods.length < 4) {
         const par_catalog = await Database.from('land_goods_catalog').select('*').where({ level: 2, status: 1, id: good.good_catalog }).first() || {}
