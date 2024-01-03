@@ -45,7 +45,8 @@ class GoodController {
                 data: {
                     title: '商城商品',
                     active: 'good',
-                    goods
+                    goods,
+                    all
                 }
             });
         }
@@ -160,9 +161,6 @@ class GoodController {
                 catalog[index].sub_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ parent_catalog_id: catalog[index].id, level: 2, status: 1 });
             }
             good.catalog_goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: good.good_catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
-            for (let index = 0; index < good.catalog_goods.length; index++) {
-                good.catalog_goods[index].good_theme_url = good.catalog_goods[index].good_theme_url ? JSON.parse(good.catalog_goods[index].good_theme_url) : [];
-            }
             if (good.catalog_goods.length < 4) {
                 const par_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 2, status: 1, id: good.good_catalog }).first() || {};
                 const parent = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 2, status: 1, parent_catalog_id: par_catalog.parent_catalog_id }).orderBy('sort', 'desc') || {};
@@ -170,7 +168,10 @@ class GoodController {
                 for (let index = 0; index < parent.length; index++) {
                     parent_array.push(parent[index].id);
                 }
-                good.catalog_goods = await Database_1.default.from('land_goods').whereIn('good_catalog', parent_array);
+                good.catalog_goods = await Database_1.default.from('land_goods').where({ status: 1 }).whereIn('good_catalog', parent_array).orderBy('created_at', 'desc').limit(4);
+            }
+            for (let index = 0; index < good.catalog_goods.length; index++) {
+                good.catalog_goods[index].good_theme_url = good.catalog_goods[index].good_theme_url ? JSON.parse(good.catalog_goods[index].good_theme_url) : [];
             }
             const data = {
                 status: 200,
