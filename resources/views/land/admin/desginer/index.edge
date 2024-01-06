@@ -20,7 +20,7 @@
     <div class="thirteen wide column">
       <div class="flex-between">
         <b>{{ data.title }}</b>
-        <a href="{{ route('land/admin/DesignerController.create') }}">添加</a>
+        <a href="{{ route('land/admin/DesginerController.create') }}">添加</a>
       </div>
       <table class="ui celled center aligned table">
         <thead>
@@ -35,7 +35,7 @@
           </tr>
         </thead>
         <tbody>
-          @each(row in data.designers)
+          @each(row in data.desginers)
             <tr>
               <td class="td">{{ row.id }}</td>
               <td class="td">{{ row.catalog || '' }}</td>
@@ -49,7 +49,7 @@
               <td class="td">{{ row.labels.length || 0 }}</td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">
-                <a href="{{ route('land/admin/DesignerController.edit', { id: row.id }) }}">编辑</a>
+                <a href="{{ route('land/admin/DesginerController.edit', { id: row.id }) }}">编辑</a>
                 &nbsp;&nbsp;
                 <a onclick="modalDelete({{ row.id }})">删除</a>
               </td>
@@ -60,7 +60,7 @@
       @!component('land/components/pagination', all=data.all)
     </div>
   </div>
-  <form class="ui mini modal form" action="{{ route('land/admin/DesignerController.delete') }}" method="post">
+  <form class="ui mini modal form" action="{{ route('land/admin/DesginerController.delete') }}" method="post">
     <i class="close icon"></i>
     <h3 class="header">确定删除后内容将无法恢复！</h3>
     <input type="number" id="id" name="id" value="" hidden />

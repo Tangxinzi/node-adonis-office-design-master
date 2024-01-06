@@ -1,0 +1,75 @@
+@layout('land/components/layouts/desginer')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    @if(data.data.works.length)
+      <div class="ui segment">
+        <div class="ui link four doubling cards">
+          @each(row in data.data.works)
+            <a class="card" href="{{ route('land/admin/DesginerManageController.edit', { id: row.id }) }}">
+              <div class="image">
+                @if(row.theme_url)
+                  <img src="https://mini.landtower.co{{ row.theme_url }}" />
+                @else
+                  <img src="https://semantic-ui.com/images/wireframe/white-image.png" />
+                @endif
+              </div>
+              <div class="content">
+                <div class="header">{{ row.title }}</div>
+                <div class="description">
+                  {{ row.labels }}
+                </div>
+              </div>
+              <div class="extra content">
+                <span class="right floated">Joined in 2013</span>
+                <span>
+                  <i class="time icon"></i> {{ row.work_time || '' }}
+                </span>
+              </div>
+            </a>
+          @endeach
+        </div>
+      </div>
+    @else
+      <div style="width: 100%; height: 400px; line-height: 400px; text-align: center;">
+        您还没有上传个人作品，去<a href="{{ route('land/admin/DesginerManageController.create') }}">添加</a>
+      </div>
+    @endif
+  </div>
+  <form class="ui mini modal form" action="{{ route('land/admin/SupplierController.delete') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">确定删除后内容将无法恢复！</h3>
+    <input type="number" id="id" name="id" value="" hidden />
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui black deny button">
+        取消
+      </div>
+      <button class="ui red right labeled icon button" name="button" value="good">
+        确认
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  function modalDelete(id) {
+    $('#id').val(id)
+    $('.ui.modal.form').modal('show')
+  }
+</script>
+@endsection

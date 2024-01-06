@@ -15,8 +15,8 @@ export default class SupplierController {
           } else {
             session.flash('message', { type: 'error', header: '登录失败', message: `请检查您的账号，或者联系管理员处理。` })
             return response.redirect('back')
-            console.log('login error');
-            return response.redirect().status(301).toRoute('land/admin/SupplierController.login')
+            // console.log('login error');
+            // return response.redirect().status(301).toRoute('land/admin/SupplierController.login')
           }
         } else {
           session.forget('adonis-cookie-supplier')

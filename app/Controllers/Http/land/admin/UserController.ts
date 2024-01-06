@@ -68,11 +68,11 @@ export default class UserController {
   public async collection({ request, response, view, session }: HttpContextContract) {
     try {
       const all = request.all()
-      if (all.type == 'designer') {
+      if (all.type == 'desginer') {
         if (all.search) {
-          var data = await Database.from('land_collection').join('land_designers', 'land_collection.relation_type_id', 'land_designers.id').where({ 'land_collection.type': all.type, 'land_collection.wechat_open_id': all.openid, 'land_collection.status': 1, 'land_designers.status': 1 }).select('land_designers.id', 'land_designers.avatar_url', 'land_designers.nickname', 'land_designers.labels').where('land_designers.title', 'like', `%${ all.search }%`).orderBy('land_designers.created_at', 'desc')
+          var data = await Database.from('land_collection').join('land_desginers', 'land_collection.relation_type_id', 'land_desginers.id').where({ 'land_collection.type': all.type, 'land_collection.wechat_open_id': all.openid, 'land_collection.status': 1, 'land_desginers.status': 1 }).select('land_desginers.id', 'land_desginers.avatar_url', 'land_desginers.nickname', 'land_desginers.labels').where('land_desginers.title', 'like', `%${ all.search }%`).orderBy('land_desginers.created_at', 'desc')
         } else {
-          var data = await Database.from('land_collection').join('land_designers', 'land_collection.relation_type_id', 'land_designers.id').where({ 'land_collection.type': all.type, 'land_collection.wechat_open_id': all.openid, 'land_collection.status': 1, 'land_designers.status': 1 }).select('land_designers.id', 'land_designers.avatar_url', 'land_designers.nickname', 'land_designers.labels')
+          var data = await Database.from('land_collection').join('land_desginers', 'land_collection.relation_type_id', 'land_desginers.id').where({ 'land_collection.type': all.type, 'land_collection.wechat_open_id': all.openid, 'land_collection.status': 1, 'land_desginers.status': 1 }).select('land_desginers.id', 'land_desginers.avatar_url', 'land_desginers.nickname', 'land_desginers.labels')
         }
       }
 

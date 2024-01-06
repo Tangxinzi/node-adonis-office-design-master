@@ -24,12 +24,20 @@
       <div class="flex-between">
         <b>{{ data.title }}</b>
       </div>
-      <form class="ui segment form" method="post" action="{{ route('land/admin/DesignerController.save') }}" enctype="multipart/form-data">
+      <form class="ui segment form" method="post" action="{{ route('land/admin/DesginerController.save') }}" enctype="multipart/form-data">
+        <div class="field" hidden>
+          <label>ID</label>
+          <input type="text" name="id" value="{{ data.desginer.id || '' }}" placeholder="" />
+        </div>
+        <div class="field" hidden>
+          <label>头像 URL</label>
+          <input type="text" name="avatar_url" value="{{ data.desginer.avatar_url || '' }}" placeholder="" />
+        </div>
         <div class="field">
           <div class="field">
             <label>类型</label>
             <div class="ui selection dropdown">
-              <input type="hidden" name="catalog" value="" />
+              <input type="hidden" name="catalog" value="{{ data.desginer.catalog || '' }}" />
               <i class="dropdown icon"></i>
               <div class="default text">点击选择</div>
               <div class="menu">
@@ -42,16 +50,20 @@
         </div>
         <div class="field">
           <label>姓名</label>
-          <input type="text" name="nickname" placeholder="" />
+          <input type="text" name="nickname" value="{{ data.desginer.nickname }}" placeholder="" />
         </div>
         <div class="field">
-          <label>头像（图片文件建议 2M 内）</label>
+          <label>头像（图片文件建议 2M 内）
+            @if(data.desginer.avatar_url)
+              <a href="{{ data.desginer.avatar_url }}" target="_blank">查看图片</a>
+            @endif
+          </label>
           <input type="file" name="avatar" value="" placeholder="" />
         </div>
         <div class="field" style="display: none;">
           <label>性别</label>
           <div class="ui selection dropdown">
-            <input type="hidden" name="sex" />
+            <input type="hidden" name="sex" value="{{ data.desginer.sex }}" />
             <i class="dropdown icon"></i>
             <div class="default text">点击选择</div>
             <div class="menu">
@@ -62,12 +74,12 @@
         </div>
         <div class="field">
           <label>个人标签</label>
-          <input type="text" name="labels" placeholder="标签之间以英文逗号 , 分割" />
+          <input type="text" name="labels" value="{{ data.desginer.labels || '' }}" placeholder="标签之间以英文逗号 , 分割" />
         </div>
         <div class="field">
           <label>个人作品</label>
           <div class="ui selection multiple dropdown">
-            <input type="hidden" name="works" />
+            <input type="hidden" name="works" value="{{ data.desginer.works }}" />
             <i class="dropdown icon"></i>
             <div class="default text">点击关联</div>
             <div class="menu">
@@ -84,11 +96,11 @@
               <div id="toolbar-container"><!-- 工具栏 --></div>
               <div id="editor-container"><!-- 编辑器 --></div>
             </div>
-            <input id="detail" type="text" name="detail" value="" hidden />
+            <input id="detail" type="text" name="detail" value="{{ data.desginer.detail || '' }}" hidden />
           </div>
         </div>
         {{ csrfField() }}
-        <button class="ui tiny button" type="submit" name="button" value="save">提交</button>
+        <button class="ui tiny button" type="submit" name="button" value="update">提交</button>
       </form>
     </div>
   </div>

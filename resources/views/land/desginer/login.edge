@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>登录</title>
+    <link rel="stylesheet" href="https://semantic-ui.com/dist/semantic.min.css" />
+    <style media="screen">
+      img {
+        position: fixed;
+        left: 0;
+        bottom: 0;
+        width: 100%;
+        z-index: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="ui container" style="padding-top: 1em;">
+      @if(flashMessages.get('message'))
+        @!component('land/components/alert', {
+          type: [flashMessages.get('message.type')],
+          header: [flashMessages.get('message.header')],
+          message: [flashMessages.get('message.message')]
+        })
+      @endif
+      <div class="ui middle aligned center aligned grid" style="margin: 0 auto; padding-top: 200px; width: 440px;">
+        <div class="column">
+          <h2 class="ui teal image header">
+            <!-- <img src="assets/images/logo.png" class="image" /> -->
+            <div class="content">设计师登录</div>
+          </h2>
+          <form class="ui large form" action="#" method="post">
+            <div class="ui segment">
+              <div class="field">
+                <div class="ui left icon input">
+                  <i class="lock icon"></i>
+                  <input type="password" name="password" placeholder="密码" />
+                </div>
+              </div>
+              {{ csrfField() }}
+              <button class="ui fluid large teal submit button" type="submit" name="button" value="login">登录</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
