@@ -7,7 +7,7 @@ export default class WorkController {
   public async index({ request, response, view, session }: HttpContextContract) {
     try {
       const all = request.all(), catalog = ['其它', '办公室项目分享', '优秀案例', '设计师作品集']
-      const works = await Database.from('land_works').select('id', 'catalog', 'title', 'team', 'location', 'theme_url', 'area', 'work_time', 'created_at', 'labels').where('status', 1).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
+      const works = await Database.from('land_works').select('id', 'catalog', 'title', 'team', 'location', 'theme_url', 'area', 'work_time', 'created_at', 'labels', 'status').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
       for (let index = 0; index < works.length; index++) {
         works[index].labels = works[index].labels ? works[index].labels.split(',') : []
         works[index].catalog = catalog[works[index].catalog]
@@ -15,7 +15,7 @@ export default class WorkController {
       }
 
       if (all.type == 'json') {
-        const works = await Database.from('land_works').select('id', 'catalog', 'title', 'team', 'location', 'theme_url', 'area', 'work_time', 'created_at', 'labels').where('status', 1).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
+        const works = await Database.from('land_works').select('id', 'catalog', 'title', 'team', 'location', 'theme_url', 'area', 'work_time', 'created_at', 'labels').where('status', 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
         for (let index = 0; index < works.length; index++) {
           works[index].labels = works[index].labels ? works[index].labels.split(',') : []
           works[index].catalog = catalog[works[index].catalog]
@@ -131,13 +131,13 @@ export default class WorkController {
       }
 
       if (request.method() == 'POST' && all.button == 'update') {
-        await Database.from('land_works').where('id', all.id).update({ catalog: all.catalog, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url })
+        await Database.from('land_works').where('id', all.id).update({ status: all.status, catalog: all.catalog, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url })
         session.flash('message', { type: 'success', header: '更新成功', message: `` })
         return response.redirect('back')
       }
 
       const id = await Database.table('land_works').returning('id').insert({
-        catalog: all.catalog, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url
+        status: all.status, catalog: all.catalog, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url
       })
 
       session.flash('message', { type: 'success', header: '创建成功', message: `` })

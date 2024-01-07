@@ -29,6 +29,18 @@
           <label>ID</label>
           <input type="text" name="id" value="{{ data.desginer.id || '' }}" placeholder="" />
         </div>
+        <div class="field">
+          <label>状态</label>
+          <div class="ui selection dropdown">
+            <input type="hidden" name="status" value="{{ data.desginer.status }}" />
+            <i class="dropdown icon"></i>
+            <div class="default text">点击选择</div>
+            <div class="menu">
+              <div class="item" data-value="1">发布</div>
+              <div class="item" data-value="0">草稿</div>
+            </div>
+          </div>
+        </div>
         <div class="field" hidden>
           <label>头像 URL</label>
           <input type="text" name="avatar_url" value="{{ data.desginer.avatar_url || '' }}" placeholder="" />

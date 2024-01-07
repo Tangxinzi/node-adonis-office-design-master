@@ -47,6 +47,7 @@ Route.group(() => {
   Route.get('/desginer/edit/:id', 'land/admin/DesginerController.edit')
   Route.post('/desginer/save', 'land/admin/DesginerController.save')
   Route.post('/desginer/delete', 'land/admin/DesginerController.delete')
+  Route.post('/desginer/desginerSave', 'land/admin/DesginerController.desginerSave')
 
   Route.get('/work', 'land/admin/WorkController.index')
   Route.get('/work/catalog/:catalog', 'land/admin/WorkController.catalog')
@@ -79,12 +80,17 @@ Route.group(() => {
 }).prefix('/land')
 
 Route.group(() => {
-  Route.get('/login/:desginer_name_login', 'land/admin/DesginerController.login')
-  Route.post('/login/:desginer_name_login', 'land/admin/DesginerController.login')
-  Route.post('/manage/desginerSave', 'land/admin/DesginerManageController.desginerSave')
+  Route.get('/login/:desginer_name_login', 'land/admin/DesginerManageController.login')
+  Route.post('/login/:desginer_name_login', 'land/admin/DesginerManageController.login')
   Route.get('/manage', 'land/admin/DesginerManageController.manage')
+  Route.post('/manage/update', 'land/admin/DesginerManageController.update')
   Route.get('/manage/work/create', 'land/admin/DesginerManageController.create')
   Route.get('/manage/work/edit/:id', 'land/admin/DesginerManageController.edit')
+  Route.post('/manage/work/save', 'land/admin/DesginerManageController.save')
+
+  Route.get('/manage/user/edit', 'land/admin/DesginerManageController.editUserinfo')
+  Route.post('/manage/user/save', 'land/admin/DesginerManageController.updateUserinfo')
+  Route.get('/manage/user/qrcode', 'land/admin/DesginerManageController.qrcode')
 }).prefix('/land-desginer')
 
 Route.group(() => {

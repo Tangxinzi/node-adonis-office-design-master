@@ -20,7 +20,11 @@
     <div class="thirteen wide column">
       <div class="flex-between">
         <b>{{ data.title }}</b>
-        <a href="{{ route('land/admin/DesginerController.create') }}">添加</a>
+        <div>
+          <a href="{{ route('land/admin/DesginerController.manage') }}" style="margin-right: 2em; display: inline-block;">账号管理</a>
+          <a href="?status=0" style="margin-right: 2em; display: inline-block;">待发布</a>
+          <a href="{{ route('land/admin/DesginerController.create') }}">添加</a>
+        </div>
       </div>
       <table class="ui celled center aligned table">
         <thead>
@@ -30,6 +34,7 @@
             <th>姓名</th>
             <th>作品数量</th>
             <th>标签集</th>
+            <th>状态</th>
             <th>发布时间</th>
             <th>操作</th>
           </tr>
@@ -47,6 +52,7 @@
               </td>
               <td class="td">{{ row.works.length || 0 }}</td>
               <td class="td">{{ row.labels.length || 0 }}</td>
+              <td class="td">{{ row.status == 0 ? '草稿' : '' }}{{ row.status == 1 ? '发布' : '' }}</td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">
                 <a href="{{ route('land/admin/DesginerController.edit', { id: row.id }) }}">编辑</a>

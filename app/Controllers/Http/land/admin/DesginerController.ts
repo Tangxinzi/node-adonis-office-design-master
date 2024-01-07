@@ -4,46 +4,13 @@ import Moment from 'moment';
 import randomstring from 'randomstring';
 
 export default class DesginerController {
-  public async login({ params, request, response, view, session }: HttpContextContract) {
-    try {
-      if (request.method() == 'POST') {
-        const all = request.all()
-        if (params.desginer_name_login && all.password) {
-          const desginer = await Database.from('land_desginers_manage').where({ status: 1, desginer_name_login: params.desginer_name_login, desginer_name_password: all.password }).first() || {}
-          if (desginer.id) {
-            session.put('adonis-cookie-desginer', desginer)
-            return response.redirect().status(301).toRoute('land/admin/DesginerManageController.manage')
-          } else {
-            session.flash('message', { type: 'error', header: '登录失败', message: `请检查您的账号，或者联系管理员处理。` })
-            return response.redirect('back')
-          }
-        } else {
-          session.forget('adonis-cookie-desginer')
-          return view.render('land/desginer/login', {
-            data: {
-              title: '登录'
-            }
-          })
-        }
-      } else {
-        session.forget('adonis-cookie-desginer')
-        return view.render('land/desginer/login', {
-          data: {
-            title: '登录'
-          }
-        })
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
   public async manage({ session, request, response, view }: HttpContextContract) {
     try {
       const all = request.all()
       const manages = await Database.from('land_desginers_manage').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
       for (let index = 0; index < manages.length; index++) {
-        manages[index].desginer = await Database.from('land_desginers').select('nickname').where({ status: 1, id: manages[index].desginer_relation_id }).first() || {}
+        manages[index].desginer = await Database.from('land_desginers').select('nickname').where({ status: 1, id: manages[index].relation_desginer_id }).first() || {}
+        manages[index].number = (await Database.from('land_works').where({ status: 1, relation_desginer_id: manages[index].relation_desginer_id }).count('* as total'))[0].total || 0
         manages[index].created_at = Moment(manages[index].created_at).format('YYYY-MM-DD H:mm:ss')
       }
       return view.render('land/admin/desginer/manages', {
@@ -62,18 +29,18 @@ export default class DesginerController {
   public async index({ request, response, view, session }: HttpContextContract) {
     try {
       const all = request.all(), catalog = ['其它', '设计团队', '工程管理团队']
-      const desginers = await Database.from('land_desginers').where('status', 1).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
+      const desginers = await Database.from('land_desginers').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
       for (let index = 0; index < desginers.length; index++) {
-        desginers[index].works = desginers[index].works ? desginers[index].works.split(',') : []
+        desginers[index].works = await Database.from('land_works').where({ status: 1, relation_desginer_id: desginers[index].id }).andWhereNull('deleted_at').orderBy('created_at', 'desc')
         desginers[index].labels = desginers[index].labels ? desginers[index].labels.split(',') : []
         desginers[index].catalog = catalog[desginers[index].catalog]
         desginers[index].created_at = Moment(desginers[index].created_at).format('YYYY-MM-DD H:mm:ss')
       }
 
       if (all.type == 'json') {
-        const desginers = await Database.from('land_desginers').where('status', 1).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
+        const desginers = await Database.from('land_desginers').where('status', 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
         for (let index = 0; index < desginers.length; index++) {
-          desginers[index].works = desginers[index].works ? desginers[index].works.split(',') : []
+          desginers[index].works = await Database.from('land_works').where({ status: 1, relation_desginer_id: desginers[index].id }).andWhereNull('deleted_at').orderBy('created_at', 'desc')
           desginers[index].labels = desginers[index].labels ? desginers[index].labels.split(',') : []
           desginers[index].catalog = catalog[desginers[index].catalog]
           desginers[index].created_at = Moment(desginers[index].created_at).format('YYYY-MM-DD H:mm:ss')
@@ -118,9 +85,9 @@ export default class DesginerController {
     try {
       const all = request.all()
       if (all.search) {
-        var data = await Database.from('land_desginers').where({ status: 1, catalog: params.catalog }).where('nickname', 'like', `%${ all.search }%`).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
+        var data = await Database.from('land_desginers').where({ status: 1, catalog: params.catalog }).where('nickname', 'like', `%${ all.search }%`).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
       } else {
-        var data = await Database.from('land_desginers').where({ status: 1, catalog: params.catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
+        var data = await Database.from('land_desginers').where({ status: 1, catalog: params.catalog }).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
       }
 
       for (let index = 0; index < data.length; index++) {
@@ -144,8 +111,8 @@ export default class DesginerController {
       const all = request.all()
       const data = await Database.from('land_desginers').where('id', params.id).first()
       data.labels = data.labels ? data.labels.split(',') : []
-      data.works = await Database.from('land_works').select('id', 'title', 'labels', 'theme_url').where('status', 1).whereIn('id', data.works ? data.works.split(',') : [])
-      data.works.labels = data.works.labels ? data.works.labels.split(',') : []
+      data.works = await Database.from('land_works').select('id', 'title', 'labels', 'theme_url').where({ status: 1, relation_desginer_id: data.id }).andWhereNull('deleted_at')
+      // data.works.labels = data.works.labels ? data.works.labels.split(',') : []
 
       if (all.type == 'json') {
         return response.json({
@@ -193,15 +160,15 @@ export default class DesginerController {
       }
 
       if (request.method() == 'POST' && all.button == 'update') {
-        await Database.from('land_desginers').where('id', all.id).update({ catalog: all.catalog, nickname: all.nickname, sex: all.sex, works: all.works, labels: all.labels, detail: all.detail, avatar_url })
+        await Database.from('land_desginers').where('id', all.id).update({ status: all.status, catalog: all.catalog, nickname: all.nickname, labels: all.labels, detail: all.detail, avatar_url })
         session.flash('message', { type: 'success', header: '更新成功', message: `` })
         return response.redirect('back')
       }
 
       const id = await Database.table('land_desginers').returning('id').insert({
+        status: all.status,
         catalog: all.catalog,
         nickname: all.nickname,
-        sex: all.sex,
         labels: all.labels,
         detail: all.detail,
         avatar_url
@@ -212,6 +179,38 @@ export default class DesginerController {
     } catch (error) {
       console.log(error)
       session.flash('message', { type: 'error', header: '提交失败', message: `捕获错误信息 ${ JSON.stringify(error) }。` })
+    }
+  }
+
+  public async desginerSave({ view, session, request, response }: HttpContextContract) {
+    try {
+      const all = request.all(), data = session.get('adonis-cookie-desginer')
+      switch (all.button) {
+        case 'add':
+          await Database.table('land_desginers_manage').insert({
+            relation_desginer_id: all.relation_desginer_id,
+            desginer_name_login: all.desginer_name_login,
+            desginer_name_password: all.desginer_name_password,
+            status: parseInt(all.status || 0),
+          })
+          break;
+        case 'save':
+          await Database.from('land_desginers_manage').where({ id: all.id }).update({
+            relation_desginer_id: all.relation_desginer_id,
+            desginer_name_login: all.desginer_name_login,
+            desginer_name_password: all.desginer_name_password,
+            status: parseInt(all.status || 0),
+          })
+          break;
+        case 'delete':
+          await Database.from('land_desginers_manage').where({ id: all.id }).update({ status: 0, deleted_at: Moment().format('YYYY-MM-DD HH:mm:ss') })
+          break;
+      }
+
+      session.flash('message', { type: 'success', header: '操作成功', message: `` })
+      return response.redirect('back')
+    } catch (error) {
+      console.log(error)
     }
   }
 

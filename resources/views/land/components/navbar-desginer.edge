@@ -16,21 +16,21 @@
       </div>
       <div class="q-lists right items">
         <div class="item">
-          <a href="{{ route('land/admin/DesginerManageController.create') }}">
-            <i class="list alternate outline icon"></i>
-            添加作品
-          </a>
-        </div>
-        <div class="item">
           <a href="{{ route('land/admin/DesginerManageController.manage') }}">
             <i class="list alternate outline icon"></i>
             作品列表
           </a>
         </div>
         <div class="item">
-          <a>
+          <a href="{{ route('land/admin/DesginerManageController.editUserinfo') }}">
+            <i class="user outline icon"></i>
+            个人资料
+          </a>
+        </div>
+        <div class="item">
+          <a href="{{ route('land/admin/DesginerManageController.qrcode') }}">
             <i class="qrcode icon"></i>
-            二维码
+            主页二维码
           </a>
         </div>
       </div>

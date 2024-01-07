@@ -40,8 +40,41 @@ function getUserPhoneNumber(access_token, data) {
   });
 }
 
+// 小程序码
+function getWxacode(data) {
+  try {
+    return new Promise(async (resolve, reject) => {
+      const token = await this.token()
+      return await axios({
+        url: `https://api.weixin.qq.com/wxa/getwxacode?access_token=${ token.access_token }`,
+        method: 'post',
+        data: JSON.stringify({
+          "width": "300",
+          "path": data.path,
+          "is_hyaline": false,
+          "env_version": "trial" // 体验版
+        }),
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
+        },
+        responseType: 'arraybuffer'
+      }).then(response => {
+        const base64Image = Buffer.from(response.data).toString('base64');
+        const image = `<img src="data:image/jpeg;base64,${base64Image}" alt="QR Code"/>`;
+        resolve(image)
+      }).catch(function (error) {
+        console.log(error)
+        reject(false)
+      })
+    });
+  } catch (e) {
+    console.log(e);
+  }
+}
+
 module.exports = {
   jscode2session,
   token,
-  getUserPhoneNumber
+  getUserPhoneNumber,
+  getWxacode
 }

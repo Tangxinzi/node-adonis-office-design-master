@@ -39,14 +39,14 @@
           @each(row in data.manages)
             <tr>
               <td class="td">{{ row.id }}</td>
-              <td class="td">[ID {{ row.desginer_relation_id }}] {{ row.desginer ? row.desginer.nickname : '' }}</td>
+              <td class="td">[ID {{ row.relation_desginer_id }}] {{ row.desginer ? row.desginer.nickname : '' }}</td>
               <td class="td">{{ row.number || 0 }}</td>
               <td class="td">{{ row.desginer_name_login || '' }}</td>
               <td class="td">{{ row.desginer_name_password || '' }}</td>
               <td class="td">{{ row.status == 0 ? '禁用' : '正常' }}</td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">
-                <a target="_blank" href="{{ route('land/admin/DesginerController.login', { desginer_name_login: row.desginer_name_login }) }}">登录</a>
+                <a target="_blank" href="{{ route('land/admin/DesginerManageController.login', { desginer_name_login: row.desginer_name_login }) }}">登录</a>
                 &nbsp;&nbsp;
                 <a onclick="modalEdit({{ row.id }}, '{{ row.desginer_name_login }}', '{{ row.desginer_name_password }}', {{ row.status }})">编辑</a>
               </td>
@@ -56,13 +56,13 @@
       </table>
     </div>
   </div>
-  <form class="ui modal add form" action="{{ route('land/admin/DesginerManageController.desginerSave') }}" method="post">
+  <form class="ui modal add form" action="{{ route('land/admin/DesginerController.desginerSave') }}" method="post">
     <i class="close icon"></i>
     <h3 class="header">添加设计师</h3>
     <div class="content">
       <div class="field">
         <label>设计师 ID</label>
-        <input type="text" placeholder="填写设计师 ID" id="edit-desginer_relation_id" name="desginer_relation_id" value="" />
+        <input type="text" placeholder="填写设计师 ID" id="edit-relation_desginer_id" name="relation_desginer_id" value="" />
       </div>
       <div class="field">
         <label>登录账号</label>
@@ -96,7 +96,7 @@
       </button>
     </div>
   </form>
-  <form class="ui modal edit form" action="{{ route('land/admin/DesginerManageController.desginerSave') }}" method="post">
+  <form class="ui modal edit form" action="{{ route('land/admin/DesginerController.desginerSave') }}" method="post">
     <i class="close icon"></i>
     <h3 class="header">编辑设计师</h3>
     <div class="content">
@@ -136,7 +136,7 @@
       </button>
     </div>
   </form>
-  <form class="ui mini modal delete form" action="{{ route('land/admin/DesginerManageController.desginerSave') }}" method="post">
+  <form class="ui mini modal delete form" action="{{ route('land/admin/DesginerController.desginerSave') }}" method="post">
     <i class="close icon"></i>
     <h3 class="header">确定删除后内容将无法恢复！</h3>
     <input type="number" id="id" name="id" value="" hidden />
