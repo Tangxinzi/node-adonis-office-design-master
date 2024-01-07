@@ -19,13 +19,15 @@ Route_1.default.group(() => {
     Route_1.default.get('/user/like/:id', 'land/admin/UserController.like');
     Route_1.default.post('/user/like/:id', 'land/admin/UserController.like');
     Route_1.default.post('/user/calculator-log', 'land/admin/UserController.calculatorLog');
-    Route_1.default.get('/designer', 'land/admin/DesignerController.index');
-    Route_1.default.get('/designer/catalog/:catalog', 'land/admin/DesignerController.catalog');
-    Route_1.default.get('/designer/create', 'land/admin/DesignerController.create');
-    Route_1.default.get('/designer/show/:id', 'land/admin/DesignerController.show');
-    Route_1.default.get('/designer/edit/:id', 'land/admin/DesignerController.edit');
-    Route_1.default.post('/designer/save', 'land/admin/DesignerController.save');
-    Route_1.default.post('/designer/delete', 'land/admin/DesignerController.delete');
+    Route_1.default.get('/desginer', 'land/admin/DesginerController.index');
+    Route_1.default.get('/desginer/manage', 'land/admin/DesginerController.manage');
+    Route_1.default.get('/desginer/catalog/:catalog', 'land/admin/DesginerController.catalog');
+    Route_1.default.get('/desginer/create', 'land/admin/DesginerController.create');
+    Route_1.default.get('/desginer/show/:id', 'land/admin/DesginerController.show');
+    Route_1.default.get('/desginer/edit/:id', 'land/admin/DesginerController.edit');
+    Route_1.default.post('/desginer/save', 'land/admin/DesginerController.save');
+    Route_1.default.post('/desginer/delete', 'land/admin/DesginerController.delete');
+    Route_1.default.post('/desginer/desginerSave', 'land/admin/DesginerController.desginerSave');
     Route_1.default.get('/work', 'land/admin/WorkController.index');
     Route_1.default.get('/work/catalog/:catalog', 'land/admin/WorkController.catalog');
     Route_1.default.get('/work/create', 'land/admin/WorkController.create');
@@ -53,12 +55,24 @@ Route_1.default.group(() => {
     Route_1.default.post('/good/delete', 'land/admin/GoodController.delete');
 }).prefix('/land');
 Route_1.default.group(() => {
-    Route_1.default.get('/supplier/login/:supplier_name_login', 'land/admin/SupplierController.login');
-    Route_1.default.post('/supplier/login/:supplier_name_login', 'land/admin/SupplierController.login');
-    Route_1.default.get('/supplier/goods', 'land/admin/SupplierController.index');
-    Route_1.default.get('/supplier/goods/create', 'land/admin/SupplierController.create');
-    Route_1.default.get('/supplier/goods/edit/:id', 'land/admin/SupplierController.edit');
-    Route_1.default.post('/supplier/goods/create', 'land/admin/SupplierController.save');
-    Route_1.default.post('/supplier/goods/delete', 'land/admin/SupplierController.delete');
-}).prefix('/land');
+    Route_1.default.get('/login/:desginer_name_login', 'land/admin/DesginerManageController.login');
+    Route_1.default.post('/login/:desginer_name_login', 'land/admin/DesginerManageController.login');
+    Route_1.default.get('/manage', 'land/admin/DesginerManageController.manage');
+    Route_1.default.post('/manage/update', 'land/admin/DesginerManageController.update');
+    Route_1.default.get('/manage/work/create', 'land/admin/DesginerManageController.create');
+    Route_1.default.get('/manage/work/edit/:id', 'land/admin/DesginerManageController.edit');
+    Route_1.default.post('/manage/work/save', 'land/admin/DesginerManageController.save');
+    Route_1.default.get('/manage/user/edit', 'land/admin/DesginerManageController.editUserinfo');
+    Route_1.default.post('/manage/user/save', 'land/admin/DesginerManageController.updateUserinfo');
+    Route_1.default.get('/manage/user/qrcode', 'land/admin/DesginerManageController.qrcode');
+}).prefix('/land-desginer');
+Route_1.default.group(() => {
+    Route_1.default.get('/login/:supplier_name_login', 'land/admin/SupplierController.login');
+    Route_1.default.post('/login/:supplier_name_login', 'land/admin/SupplierController.login');
+    Route_1.default.get('/goods', 'land/admin/SupplierController.index');
+    Route_1.default.get('/goods/create', 'land/admin/SupplierController.create');
+    Route_1.default.get('/goods/edit/:id', 'land/admin/SupplierController.edit');
+    Route_1.default.post('/goods/create', 'land/admin/SupplierController.save');
+    Route_1.default.post('/goods/delete', 'land/admin/SupplierController.delete');
+}).prefix('/land-supplier');
 //# sourceMappingURL=routes.js.map

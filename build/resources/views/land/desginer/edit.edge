@@ -1,4 +1,4 @@
-@layout('land/components/layouts/main')
+@layout('land/components/layouts/desginer')
 
 @section('title')
 <meta name="keywords" content="" />
@@ -21,10 +21,7 @@
 
 @section('content')
   <div class="ui stackable four column grid">
-    <div class="three wide column">
-      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
-    </div>
-    <div class="thirteen wide column">
+    <div class="sixteen wide column">
       <div class="flex-between">
         <b>{{ data.title }}</b>
       </div>
@@ -32,18 +29,6 @@
         <div class="field" hidden>
           <label>ID</label>
           <input type="text" name="id" value="{{ data.work.id || '' }}" placeholder="" />
-        </div>
-        <div class="field">
-          <label>状态</label>
-          <div class="ui selection dropdown">
-            <input type="hidden" name="status" value="{{ data.work.status }}" />
-            <i class="dropdown icon"></i>
-            <div class="default text">点击选择</div>
-            <div class="menu">
-              <div class="item" data-value="1">发布</div>
-              <div class="item" data-value="0">草稿</div>
-            </div>
-          </div>
         </div>
         <div class="field">
           <div class="field">

@@ -5,7 +5,8 @@ coverage
 .env
 tmp
 flynat
-/public/pem
+/public
+/build/public
 build/node_modules
 build/public/uploads
 build/public/pem

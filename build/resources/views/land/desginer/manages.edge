@@ -1,0 +1,88 @@
+@layout('land/components/layouts/desginer')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+  .background-image {
+    background-image: url(https://semantic-ui.com/images/wireframe/white-image.png);
+    height: 200px;
+    background-size: cover;
+    background-position: center center;
+  }
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="sixteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+        <a href="{{ route('land/admin/DesginerManageController.create') }}">添加作品</a>
+      </div>
+      @if(data.data.works.length)
+        <div style="margin-left: -.75em; margin-right: -.75em;">
+          <div class="ui link five doubling cards">
+            @each(row in data.data.works)
+              <div class="card">
+                <a class="image" href="{{ route('land/admin/DesginerManageController.edit', { id: row.id }) }}">
+                  @if(row.theme_url)
+                    <div class="background-image" style="background-image: url({{ row.theme_url }})"></div>
+                  @else
+                    <div class="background-image" style="background-image: url(https://semantic-ui.com/images/wireframe/white-image.png)"></div>
+                  @endif
+                </a>
+                <a class="content" href="{{ route('land/admin/DesginerManageController.edit', { id: row.id }) }}">
+                  <div class="header">{{ row.title }}</div>
+                  <div class="description">
+                    {{ row.labels || '' }}
+                  </div>
+                </a>
+                <div class="extra content">
+                  <span>
+                    {{ row.status == 0 ? '管理员待审核' : '' }}
+                    {{ row.status == 1 ? '已发布' : '' }}
+                  </span>
+                  <span class="right floated" onclick="modalDelete({{ row.id }})">
+                    <i class="trash alternate outline icon"></i>
+                    {{ row.work_time || '' }}
+                  </span>
+                </div>
+              </div>
+            @endeach
+          </div>
+        </div>
+      @else
+        <p style="width: 100%; height: 400px; line-height: 400px; text-align: center;">您还没有上传个人作品，去<a href="{{ route('land/admin/DesginerManageController.create') }}">添加</a>。</p>
+      @endif
+    </div>
+  </div>
+  <form class="ui mini modal form" action="{{ route('land/admin/DesginerManageController.update') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">确定删除后内容将无法恢复！</h3>
+    <input type="number" id="id" name="id" value="" hidden />
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui black deny button">
+        取消
+      </div>
+      <button class="ui red right labeled icon button" name="button" value="delete">
+        确认
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  function modalDelete(id) {
+    $('#id').val(id)
+    $('.ui.modal.form').modal('show')
+  }
+</script>
+@endsection

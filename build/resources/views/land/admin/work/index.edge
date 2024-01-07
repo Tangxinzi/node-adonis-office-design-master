@@ -20,7 +20,10 @@
     <div class="thirteen wide column">
       <div class="flex-between">
         <b>{{ data.title }}</b>
-        <a href="{{ route('land/admin/WorkController.create') }}">添加</a>
+        <div>
+          <a href="?status=0" style="margin-right: 2em; display: inline-block;">待发布</a>
+          <a href="{{ route('land/admin/WorkController.create') }}">添加</a>
+        </div>
       </div>
       <table class="ui celled center aligned table">
         <thead>
@@ -32,6 +35,7 @@
             <th>面积</th>
             <th>设计团队</th>
             <th>作品时间</th>
+            <th>状态</th>
             <th>操作</th>
           </tr>
         </thead>
@@ -50,6 +54,7 @@
               <td class="td">{{ row.area || '' }}</td>
               <td class="td">{{ row.team || '' }}</td>
               <td class="td">{{ row.work_time || '' }}</td>
+              <td class="td">{{ row.status == 0 ? '草稿' : '' }}{{ row.status == 1 ? '发布' : '' }}</td>
               <td class="td">
                 <a onclick="modalDelete({{ row.id }})">删除</a>
               </td>
