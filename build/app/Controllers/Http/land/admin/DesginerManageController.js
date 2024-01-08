@@ -67,7 +67,7 @@ class DesginerManageController {
         try {
             const data = session.get('adonis-cookie-desginer');
             const image = await Weixin_1.default.getWxacode({
-                path: 'pages/designer-detail/designer-detail?id=' + data.id
+                path: 'pages/desginer-detail/desginer-detail?id=' + data.id
             });
             return view.render('land/desginer/qrcode', {
                 data: {
@@ -141,12 +141,12 @@ class DesginerManageController {
                 theme_url = file.fileSrc;
             }
             if (request.method() == 'POST' && all.button == 'update') {
-                await Database_1.default.from('land_works').where({ id: all.id, relation_desginer_id: data.relation_desginer_id }).update({ catalog: all.catalog, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url });
+                await Database_1.default.from('land_works').where({ id: all.id, relation_desginer_id: data.relation_desginer_id }).update({ labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url });
                 session.flash('message', { type: 'success', header: '更新成功', message: `` });
                 return response.redirect('back');
             }
             const id = await Database_1.default.table('land_works').returning('id').insert({
-                relation_desginer_id: data.relation_desginer_id, catalog: all.catalog, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url
+                relation_desginer_id: data.relation_desginer_id, labels: all.labels, title: all.title, area: all.area, team: all.team, introduction: all.introduction, work_time: all.work_time, location: all.location, detail: all.detail, theme_url
             });
             session.flash('message', { type: 'success', header: '创建成功', message: `` });
             return response.redirect('back');
