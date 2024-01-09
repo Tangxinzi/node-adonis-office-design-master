@@ -61,14 +61,15 @@ export default class DesginerManageController {
     try {
       const data = session.get('adonis-cookie-desginer')
       const image = await Weixin.getWxacode({
-        path: 'pages/desginer-detail/desginer-detail?id=' + data.id
+        path: 'pages/desginer-detail/desginer-detail?id=' + data.relation_desginer_id
       })
 
       return view.render('land/desginer/qrcode', {
         data: {
           title: '设计师',
           active: 'desginer',
-          image
+          image,
+          desginer: await Database.from('land_desginers').where({ status: 1, id: data.relation_desginer_id }).first() || {}
         }
       })
     } catch (error) {

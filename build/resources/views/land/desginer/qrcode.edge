@@ -22,7 +22,7 @@
         {{{ data.image }}}
         <br />
         <br />
-        微信扫一扫
+        {{ data.desginer.status == 0 ? '您当前的资料为待审核状态，请联系管理员审核。' : '微信扫一扫' }}
       </p>
     </div>
   </div>
