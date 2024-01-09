@@ -78,6 +78,9 @@ class GoodController {
             const catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 1, status: 1 }).orderBy('sort', 'asc').forPage(request.input('page', 1), 8);
             for (let index = 0; index < catalog.length; index++) {
                 catalog[index].sub_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ parent_catalog_id: catalog[index].id, level: 2, status: 1 }).orderBy('sort', 'asc');
+                for (let log = 0; log < catalog[index].sub_catalog.length; log++) {
+                    catalog[index].sub_catalog[log].number = (await Database_1.default.from('land_goods').where({ good_catalog: catalog[index].sub_catalog[log].id, status: 1 }).count('* as total'))[0].total || 0;
+                }
             }
             if (request.method() == 'GET') {
                 let log = {};

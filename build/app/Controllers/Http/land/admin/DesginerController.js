@@ -13,7 +13,7 @@ class DesginerController {
             const all = request.all();
             const manages = await Database_1.default.from('land_desginers_manage').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             for (let index = 0; index < manages.length; index++) {
-                manages[index].desginer = await Database_1.default.from('land_desginers').select('nickname').where({ status: 1, id: manages[index].relation_desginer_id }).first() || {};
+                manages[index].desginer = await Database_1.default.from('land_desginers').select('nickname').where({ id: manages[index].relation_desginer_id }).andWhereNull('deleted_at').first() || {};
                 manages[index].number = (await Database_1.default.from('land_works').where({ status: 1, relation_desginer_id: manages[index].relation_desginer_id }).count('* as total'))[0].total || 0;
                 manages[index].created_at = (0, moment_1.default)(manages[index].created_at).format('YYYY-MM-DD H:mm:ss');
             }
@@ -178,6 +178,20 @@ class DesginerController {
     async desginerSave({ view, session, request, response }) {
         try {
             const all = request.all(), data = session.get('adonis-cookie-desginer');
+            const desginer = await Database_1.default.from('land_desginers').where('id', all.relation_desginer_id).first() || {};
+            if (!desginer.id) {
+                session.flash('message', { type: 'error', header: '操作失败', message: `[ID ${all.relation_desginer_id || ''}] 设计师未找到，请检查。` });
+                return response.redirect('back');
+            }
+            const desginer_manage = await Database_1.default.from('land_desginers_manage').where('relation_desginer_id', all.relation_desginer_id).first() || {};
+            if (desginer_manage.id) {
+                session.flash('message', { type: 'error', header: '操作失败', message: `[ID ${all.relation_desginer_id || ''}] 设计师已存在，请检查。` });
+                return response.redirect('back');
+            }
+            if (!all.desginer_name_login || !all.desginer_name_password) {
+                session.flash('message', { type: 'error', header: '操作失败', message: `账号或密码不能为空，请重新填写表单。` });
+                return response.redirect('back');
+            }
             switch (all.button) {
                 case 'add':
                     await Database_1.default.table('land_desginers_manage').insert({
