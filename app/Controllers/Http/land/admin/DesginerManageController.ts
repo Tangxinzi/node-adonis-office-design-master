@@ -192,7 +192,7 @@ export default class DesginerManageController {
       }
 
       if (request.method() == 'POST' && all.button == 'update') {
-        await Database.from('land_desginers').where('id', data.id).update({ catalog: all.catalog, nickname: all.nickname, labels: all.labels, detail: all.detail, avatar_url })
+        await Database.from('land_desginers').where('id', data.relation_desginer_id).update({ catalog: all.catalog, nickname: all.nickname, labels: all.labels, detail: all.detail, avatar_url })
         session.flash('message', { type: 'success', header: '更新成功', message: `` })
         return response.redirect('back')
       }

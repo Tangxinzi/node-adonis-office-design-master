@@ -37,20 +37,12 @@
           <label>头像 URL（图片上传大小 2M 内）</label>
           <div class="ui tiny rounded bordered images">
             <img class="ui small rounded bordered image" onclick="upload_file_0.click()" id="upload_file_tmp_0" src="{{ data.desginer.avatar_url ? data.desginer.avatar_url : 'https://semantic-ui.com/images/wireframe/white-image.png' }}">
-            <input type="file" name="theme_url[]" value="{{ data.desginer.avatar_url || '' }}" id="upload_file_0" onchange="change('#upload_file_0', '#upload_file_tmp_0');" hidden />
+            <input type="file" name="avatar" value="{{ data.desginer.avatar_url || '' }}" id="upload_file_0" onchange="change('#upload_file_0', '#upload_file_tmp_0');" hidden />
           </div>
         </div>
         <div class="field">
           <label>姓名</label>
           <input type="text" name="nickname" value="{{ data.desginer.nickname }}" placeholder="" />
-        </div>
-        <div class="field">
-          <label>头像（图片文件建议 2M 内）
-            @if(data.desginer.avatar_url)
-              <a href="{{ data.desginer.avatar_url }}" target="_blank">查看图片</a>
-            @endif
-          </label>
-          <input type="file" name="avatar" value="" placeholder="" />
         </div>
         <div class="field" style="display: none;">
           <label>性别</label>

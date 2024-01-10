@@ -49,6 +49,8 @@
                 <a target="_blank" href="{{ route('land/admin/DesginerManageController.login', { desginer_name_login: row.desginer_name_login }) }}">登录</a>
                 &nbsp;&nbsp;
                 <a onclick="modalEdit({{ row.id }}, '{{ row.desginer_name_login }}', '{{ row.desginer_name_password }}', {{ row.status }})">编辑</a>
+                &nbsp;&nbsp;
+                <a onclick="modalDelete({{ row.id }})">删除</a>
               </td>
             </tr>
           @endeach

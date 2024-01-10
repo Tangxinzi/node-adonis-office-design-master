@@ -47,7 +47,7 @@ class SupplierController {
     async index({ request, view, response, session }) {
         try {
             const all = request.all(), supplier = session.get('adonis-cookie-supplier');
-            const goods = await Database_1.default.from('land_goods').select('*').where({ good_supplier_id: supplier.id }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+            const goods = await Database_1.default.from('land_goods').select('*').where({ good_supplier_id: supplier.id }).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             for (let index = 0; index < goods.length; index++) {
                 goods[index].good_theme_url = goods[index].good_theme_url ? JSON.parse(goods[index].good_theme_url) : [];
                 goods[index].catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ id: goods[index].good_catalog, status: 1 }).first();

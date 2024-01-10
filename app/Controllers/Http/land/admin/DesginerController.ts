@@ -185,21 +185,27 @@ export default class DesginerController {
   public async desginerSave({ view, session, request, response }: HttpContextContract) {
     try {
       const all = request.all(), data = session.get('adonis-cookie-desginer')
-
-      const desginer = await Database.from('land_desginers').where('id', all.relation_desginer_id).first() || {}
-      if (!desginer.id) {
-        session.flash('message', { type: 'error', header: '操作失败', message: `[ID ${ all.relation_desginer_id || '' }] 设计师未找到，请检查。` })
+      if (all.button == 'delete') {
+        const id = await Database.from('land_desginers_manage').where({ id: all.id }).delete()
+        const message = id ? { type: 'success', header: '操作成功', message: `` } : { type: 'error', header: '操作成功', message: `` }
+        session.flash('message', message)
         return response.redirect('back')
       }
 
-      const desginer_manage = await Database.from('land_desginers_manage').where('relation_desginer_id', all.relation_desginer_id).first() || {}
-      if (desginer_manage.id) {
-        session.flash('message', { type: 'error', header: '操作失败', message: `[ID ${ all.relation_desginer_id || '' }] 设计师已存在，请检查。` })
+      const desginer_manage_id = await Database.from('land_desginers_manage').where('relation_desginer_id', all.relation_desginer_id).where('desginer_name_login', all.desginer_name_login).first() || {}
+      if (desginer_manage_id.id) {
+        session.flash('message', { type: 'error', header: '操作失败', message: `[ID ${ all.relation_desginer_id || '' }] ${ all.relation_desginer_id }设计师已存在，请检查。` })
         return response.redirect('back')
       }
 
       if (!all.desginer_name_login || !all.desginer_name_password) {
         session.flash('message', { type: 'error', header: '操作失败', message: `账号或密码不能为空，请重新填写表单。` })
+        return response.redirect('back')
+      }
+
+      const desginer = await Database.from('land_desginers').where('id', all.relation_desginer_id).first() || {}
+      if (!desginer.id) {
+        session.flash('message', { type: 'error', header: '操作失败', message: `[ID ${ all.relation_desginer_id || '' }] 设计师未找到，请检查。` })
         return response.redirect('back')
       }
 
@@ -219,9 +225,6 @@ export default class DesginerController {
             desginer_name_password: all.desginer_name_password,
             status: parseInt(all.status || 0),
           })
-          break;
-        case 'delete':
-          await Database.from('land_desginers_manage').where({ id: all.id }).update({ status: 0, deleted_at: Moment().format('YYYY-MM-DD HH:mm:ss') })
           break;
       }
 
