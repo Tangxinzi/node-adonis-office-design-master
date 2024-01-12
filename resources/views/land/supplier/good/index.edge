@@ -43,7 +43,7 @@
               </td>
               <td class="td">{{ row.good_name || '' }}</td>
               <td class="td">{{ row.good_brand || '' }}</td>
-              <td class="td">{{ row.catalog.name || '' }}</td>
+              <td class="td">{{ row.catalog && row.catalog.name ? row.catalog.name : '' }}</td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">
                 <a href="{{ route('land/admin/SupplierController.edit', { id: row.id }) }}">编辑</a>
