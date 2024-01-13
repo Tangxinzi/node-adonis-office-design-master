@@ -1,9 +1,10 @@
 <b>平台管理</b>
 <div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'user' ? 'item active' : 'item' }}" href="{{ route('land/admin/UserController.index') }}">用户</a>
+  <a class="{{ data.active == 'feedback' ? 'item active' : 'item' }}" href="{{ route('land/admin/FeedbackController.index') }}">咨询反馈</a>
   <a class="{{ data.active == 'article' ? 'item active' : 'item' }}" href="{{ route('land/admin/ArticleController.index') }}">文章</a>
   <a class="{{ data.active == 'desginer' ? 'item active' : 'item' }}" href="{{ route('land/admin/DesginerController.index') }}">设计师</a>
   <a class="{{ data.active == 'work' ? 'item active' : 'item' }}" href="{{ route('land/admin/WorkController.index') }}">作品</a>
-  <a class="{{ data.active == 'user' ? 'item active' : 'item' }}" href="{{ route('land/admin/UserController.index') }}">用户</a>
   <a class="{{ data.active == 'calculator' ? 'item active' : 'item' }}" href="{{ route('land/admin/CalculatorController.index') }}">计算器</a>
 </div>
 <b>商城</b>

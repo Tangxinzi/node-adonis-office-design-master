@@ -118,7 +118,6 @@ export default class UserController {
   public async calculatorLog({ params, request, response, session }: HttpContextContract) {
     try {
       const all = request.all()
-      console.log(all);
       return await Database.table('land_calculator').insert({
         wechat_open_id: all.openid || '',
         count: all.count || '',

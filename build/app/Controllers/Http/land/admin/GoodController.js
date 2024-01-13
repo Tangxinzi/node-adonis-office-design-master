@@ -13,13 +13,13 @@ class GoodController {
             let goods = [];
             const all = request.all();
             if (all.search) {
-                goods = await Database_1.default.from('land_goods').select('*').where('status', 1).where('good_name', 'like', `%${all.search}%`).orWhere('good_brand', 'like', `%${all.search}%`).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+                goods = await Database_1.default.from('land_goods').select('*').where('status', 1).where('good_name', 'like', `%${all.search}%`).orWhere('good_brand', 'like', `%${all.search}%`).andWhereNull('deleted_at').orderBy('sort', 'asc').forPage(request.input('page', 1), 20);
             }
             else if (all.catalog) {
-                goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: all.catalog }).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+                goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: all.catalog }).andWhereNull('deleted_at').orderBy('sort', 'asc').forPage(request.input('page', 1), 20);
             }
             else {
-                goods = await Database_1.default.from('land_goods').select('*').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
+                goods = await Database_1.default.from('land_goods').select('*').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('sort', 'asc').forPage(request.input('page', 1), 20);
                 for (let index = 0; index < goods.length; index++) {
                     if (goods[index].good_supplier_id) {
                         goods[index].good_supplier = await Database_1.default.from('land_supplier').select('*').where('id', goods[index].good_supplier_id).first() || {};
@@ -163,7 +163,7 @@ class GoodController {
             for (let index = 0; index < catalog.length; index++) {
                 catalog[index].sub_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ parent_catalog_id: catalog[index].id, level: 2, status: 1 });
             }
-            good.catalog_goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: good.good_catalog }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 4);
+            good.catalog_goods = await Database_1.default.from('land_goods').select('*').where({ status: 1, good_catalog: good.good_catalog }).orderBy('sort', 'asc').forPage(request.input('page', 1), 4);
             if (good.catalog_goods.length < 4) {
                 const par_catalog = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 2, status: 1, id: good.good_catalog }).first() || {};
                 const parent = await Database_1.default.from('land_goods_catalog').select('*').where({ level: 2, status: 1, parent_catalog_id: par_catalog.parent_catalog_id }).orderBy('sort', 'desc') || {};
@@ -171,7 +171,7 @@ class GoodController {
                 for (let index = 0; index < parent.length; index++) {
                     parent_array.push(parent[index].id);
                 }
-                good.catalog_goods = await Database_1.default.from('land_goods').where({ status: 1 }).whereIn('good_catalog', parent_array).orderBy('created_at', 'desc').limit(4);
+                good.catalog_goods = await Database_1.default.from('land_goods').where({ status: 1 }).whereIn('good_catalog', parent_array).orderBy('sort', 'asc').limit(4);
             }
             for (let index = 0; index < good.catalog_goods.length; index++) {
                 good.catalog_goods[index].good_theme_url = good.catalog_goods[index].good_theme_url ? JSON.parse(good.catalog_goods[index].good_theme_url) : [];
@@ -213,6 +213,40 @@ class GoodController {
         }
         catch (error) {
             console.log(error);
+        }
+    }
+    async sort({ view, request, response, session }) {
+        try {
+            if (request.method() == 'GET') {
+                const goods = await Database_1.default.from('land_goods').whereIn('status', [1]).andWhereNull('deleted_at').orderBy('sort', 'asc');
+                for (let index = 0; index < goods.length; index++) {
+                    if (goods[index].good_supplier_id) {
+                        goods[index].good_supplier = await Database_1.default.from('land_supplier').select('*').where('id', goods[index].good_supplier_id).first() || {};
+                    }
+                    else {
+                        goods[index].good_supplier = {};
+                    }
+                }
+                return view.render('land/admin/good/sort', {
+                    data: {
+                        title: '商品排序',
+                        active: 'good',
+                        goods
+                    }
+                });
+            }
+            if (request.method() == 'POST') {
+                let all = request.all();
+                for (let index = 0; index < all.id.length; index++) {
+                    await Database_1.default.from('land_goods').where('id', all.id[index]).update({ sort: parseInt(all.sort[index]) + index });
+                }
+                session.flash('message', { type: 'success', header: '排序更新成功', message: `` });
+                return response.redirect('back');
+            }
+        }
+        catch (error) {
+            console.log(error);
+            session.flash('message', { type: 'error', header: '提交失败', message: `捕获错误信息 ${JSON.stringify(error)}。` });
         }
     }
     async save({ request, response, session }) {

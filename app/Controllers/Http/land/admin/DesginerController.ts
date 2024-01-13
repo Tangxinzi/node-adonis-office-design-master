@@ -29,7 +29,7 @@ export default class DesginerController {
   public async index({ request, response, view, session }: HttpContextContract) {
     try {
       const all = request.all(), catalog = ['其它', '设计团队', '工程管理团队']
-      const desginers = await Database.from('land_desginers').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
+      const desginers = await Database.from('land_desginers').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('sort', 'asc').forPage(request.input('page', 1), 20)
       for (let index = 0; index < desginers.length; index++) {
         desginers[index].works = await Database.from('land_works').where({ status: 1, relation_desginer_id: desginers[index].id }).andWhereNull('deleted_at').orderBy('created_at', 'desc')
         desginers[index].labels = desginers[index].labels ? desginers[index].labels.split(',') : []
@@ -38,7 +38,7 @@ export default class DesginerController {
       }
 
       if (all.type == 'json') {
-        const desginers = await Database.from('land_desginers').where('status', 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 8)
+        const desginers = await Database.from('land_desginers').where('status', 1).andWhereNull('deleted_at').orderBy('sort', 'asc').forPage(request.input('page', 1), 8)
         for (let index = 0; index < desginers.length; index++) {
           desginers[index].works = await Database.from('land_works').where({ status: 1, relation_desginer_id: desginers[index].id }).andWhereNull('deleted_at').orderBy('created_at', 'desc')
           desginers[index].labels = desginers[index].labels ? desginers[index].labels.split(',') : []
@@ -139,6 +139,38 @@ export default class DesginerController {
       })
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  public async sort({ view, request, response, session }: HttpContextContract) {
+    try {
+      if (request.method() == 'GET') {
+        const catalog = ['其它', '设计团队', '工程管理团队']
+        const desginers = await Database.from('land_desginers').whereIn('status', [1]).andWhereNull('deleted_at').orderBy('sort', 'asc')
+        for (let index = 0; index < desginers.length; index++) {
+          desginers[index].catalog = catalog[desginers[index].catalog]
+        }
+
+        return view.render('land/admin/desginer/sort', {
+          data: {
+            title: '设计师排序',
+            active: 'desginer',
+            desginers
+          }
+        })
+      }
+
+      if (request.method() == 'POST') {
+        let all = request.all()
+        for (let index = 0; index < all.id.length; index++) {
+          await Database.from('land_desginers').where('id', all.id[index]).update({ sort: parseInt(all.sort[index]) + index })
+        }
+        session.flash('message', { type: 'success', header: '排序更新成功', message: `` })
+        return response.redirect('back')
+      }
+    } catch (error) {
+      console.log(error)
+      session.flash('message', { type: 'error', header: '提交失败', message: `捕获错误信息 ${ JSON.stringify(error) }。` })
     }
   }
 

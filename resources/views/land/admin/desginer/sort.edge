@@ -1,0 +1,75 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+  .segments .segment { cursor: move; }
+  .desginer { margin-right: 10px; }
+  .sort { flex: 1; text-align: right; }
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <form class="ui form" action="{{ route('land/admin/DesginerController.sort') }}" method="post">
+        <div class="flex-between">
+          <b>{{ data.title }}</b>
+          {{ csrfField() }}
+          <button class="ui small blue label" type="submit">
+            提交
+          </button>
+        </div>
+        <div id="draggable" class="ui segments">
+          @each(row in data.desginers)
+            <div class="ui segment flex-between">
+              <div class="desginer">
+                <img class="ui avatar bordered image" src="{{ row.avatar_url }}" alt="" >
+                <span>
+                  <a href="{{ route('land/admin/WorkController.edit', { id: row.id }) }}">{{ row.nickname }}</a>
+                </span>
+                {{ row.status == 0 ? '[草稿]' : '' }}
+              </div>
+              <span class="ui mini label">{{ row.catalog }}</span>
+              <div hidden>
+                <input type="id" name="id[]" value="{{ row.id }}" />
+                <input type="number" name="sort[]" value="{{ row.sort }}" />
+              </div>
+              <span class="sort">{{ row.sort }}</span>
+            </div>
+          @endeach
+        </div>
+      </form>
+    </div>
+  </div>
+  <form class="ui mini modal form" action="{{ route('land/admin/DesginerController.delete') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">确定删除后内容将无法恢复！</h3>
+    <input type="number" id="id" name="id" value="" hidden />
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui black deny button">
+        取消
+      </div>
+      <button class="ui red right labeled icon button">
+        确认
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('script')
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.8.3/Sortable.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+  new Sortable(document.getElementById('draggable'), { animation: 150, ghostClass: 'blue-background-class', filter: ".ignore-elements", });
+</script>
+@endsection

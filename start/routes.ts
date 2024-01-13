@@ -40,6 +40,8 @@ Route.group(() => {
   Route.post('/user/calculator-log', 'land/admin/UserController.calculatorLog')
 
   Route.get('/desginer', 'land/admin/DesginerController.index')
+  Route.get('/desginer/sort', 'land/admin/DesginerController.sort')
+  Route.post('/desginer/sort', 'land/admin/DesginerController.sort')
   Route.get('/desginer/manage', 'land/admin/DesginerController.manage')
   Route.get('/desginer/catalog/:catalog', 'land/admin/DesginerController.catalog')
   Route.get('/desginer/create', 'land/admin/DesginerController.create')
@@ -59,6 +61,9 @@ Route.group(() => {
 
   Route.get('/calculator', 'land/admin/CalculatorController.index')
 
+  Route.get('/feedback', 'land/admin/FeedbackController.index')
+  Route.post('/feedback/submit', 'land/admin/FeedbackController.save')
+
   Route.get('/article', 'land/admin/ArticleController.index')
   Route.get('/article/catalog/:catalog', 'land/admin/ArticleController.catalog')
   Route.get('/article/create', 'land/admin/ArticleController.create')
@@ -68,6 +73,8 @@ Route.group(() => {
   Route.post('/article/delete', 'land/admin/ArticleController.delete')
 
   Route.get('/good', 'land/admin/GoodController.index')
+  Route.get('/good/sort', 'land/admin/GoodController.sort')
+  Route.post('/good/sort', 'land/admin/GoodController.sort')
   Route.get('/good/catalog', 'land/admin/GoodController.catalog')
   Route.get('/good/supplier', 'land/admin/GoodController.supplier')
   Route.post('/good/supplier/save', 'land/admin/GoodController.supplierSave')

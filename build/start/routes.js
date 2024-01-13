@@ -20,6 +20,8 @@ Route_1.default.group(() => {
     Route_1.default.post('/user/like/:id', 'land/admin/UserController.like');
     Route_1.default.post('/user/calculator-log', 'land/admin/UserController.calculatorLog');
     Route_1.default.get('/desginer', 'land/admin/DesginerController.index');
+    Route_1.default.get('/desginer/sort', 'land/admin/DesginerController.sort');
+    Route_1.default.post('/desginer/sort', 'land/admin/DesginerController.sort');
     Route_1.default.get('/desginer/manage', 'land/admin/DesginerController.manage');
     Route_1.default.get('/desginer/catalog/:catalog', 'land/admin/DesginerController.catalog');
     Route_1.default.get('/desginer/create', 'land/admin/DesginerController.create');
@@ -36,6 +38,8 @@ Route_1.default.group(() => {
     Route_1.default.post('/work/save', 'land/admin/WorkController.save');
     Route_1.default.post('/work/delete', 'land/admin/WorkController.delete');
     Route_1.default.get('/calculator', 'land/admin/CalculatorController.index');
+    Route_1.default.get('/feedback', 'land/admin/FeedbackController.index');
+    Route_1.default.post('/feedback/submit', 'land/admin/FeedbackController.save');
     Route_1.default.get('/article', 'land/admin/ArticleController.index');
     Route_1.default.get('/article/catalog/:catalog', 'land/admin/ArticleController.catalog');
     Route_1.default.get('/article/create', 'land/admin/ArticleController.create');
@@ -44,6 +48,8 @@ Route_1.default.group(() => {
     Route_1.default.post('/article/save', 'land/admin/ArticleController.save');
     Route_1.default.post('/article/delete', 'land/admin/ArticleController.delete');
     Route_1.default.get('/good', 'land/admin/GoodController.index');
+    Route_1.default.get('/good/sort', 'land/admin/GoodController.sort');
+    Route_1.default.post('/good/sort', 'land/admin/GoodController.sort');
     Route_1.default.get('/good/catalog', 'land/admin/GoodController.catalog');
     Route_1.default.get('/good/supplier', 'land/admin/GoodController.supplier');
     Route_1.default.post('/good/supplier/save', 'land/admin/GoodController.supplierSave');

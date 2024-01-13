@@ -1,0 +1,69 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+      </div>
+      <div class="ui segments">
+        @each(row in data.feedbacks)
+        <div class="ui segment">
+          <p class="flex-between">
+            <b>{{ row.contact.name }}</b>
+            <span>{{ row.created_at }}</span>
+          </p>
+          <p>{{ row.detail.content || '' }}</p>
+          @if(row.user.id)
+            <span class="ui label">用户：{{ row.user.nickname || '' }} [ID {{ row.user.id }}]</span>
+          @endif
+          @if(row.detail.city)
+            <span class="ui label">城市：{{ row.detail.city }}</span>
+          @endif
+          @if(row.detail.area)
+            <span class="ui label">面积：{{ row.detail.area }}㎡</span>
+          @endif
+          @if(row.contact.phone)
+            <span class="ui label">手机：{{ row.detail.phone }}</span>
+          @endif
+          @if(row.contact.email)
+            <span class="ui label">邮箱：{{ row.contact.email }}</span>
+          @endif
+          @if(row.contact.wechat)
+            <span class="ui label">微信：{{ row.contact.wechat }}</span>
+          @endif
+          @if(row.contact.qq)
+            <span class="ui label">QQ：{{ row.contact.qq }}</span>
+          @endif
+        </div>
+        @endeach
+      </div>
+      @if(data.feedbacks.length)
+      @!component('land/components/pagination', all=data.all)
+      @endif
+    </div>
+  </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  $('.activating').popup({
+    on: 'click'
+  })
+</script>
+@endsection
