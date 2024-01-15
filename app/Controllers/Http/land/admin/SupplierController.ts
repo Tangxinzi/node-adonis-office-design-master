@@ -112,6 +112,16 @@ export default class SupplierController {
         return response.redirect('back')
       }
 
+      if (!all.good_name) {
+        session.flash('message', { type: 'error', header: '提交失败', message: `您尚未填写标题，请填写。` })
+        return response.redirect('back')
+      }
+
+      if (!all.detail) {
+        session.flash('message', { type: 'error', header: '提交失败', message: `您尚未填写内容，请填写。` })
+        return response.redirect('back')
+      }
+
       let good_theme_url = all.theme_url || []
       good_theme_url = good_theme_url.filter(item => item !== null && item !== ''); // 整理图片集
 
@@ -173,6 +183,7 @@ export default class SupplierController {
     } catch (error) {
       console.log(error)
       session.flash('message', { type: 'error', header: '提交失败', message: `捕获错误信息 ${ JSON.stringify(error) }。` })
+      return response.redirect('back')
     }
   }
 

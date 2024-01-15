@@ -111,6 +111,14 @@ class SupplierController {
                 session.flash('message', { type: 'error', header: '提交失败', message: `管理员限制「${supplier.supplier_name}」供应商上传商品数量 ${supplier.number}。` });
                 return response.redirect('back');
             }
+            if (!all.good_name) {
+                session.flash('message', { type: 'error', header: '提交失败', message: `您尚未填写标题，请填写。` });
+                return response.redirect('back');
+            }
+            if (!all.detail) {
+                session.flash('message', { type: 'error', header: '提交失败', message: `您尚未填写内容，请填写。` });
+                return response.redirect('back');
+            }
             let good_theme_url = all.theme_url || [];
             good_theme_url = good_theme_url.filter(item => item !== null && item !== '');
             if (request.file('theme_url')) {
@@ -163,6 +171,7 @@ class SupplierController {
         catch (error) {
             console.log(error);
             session.flash('message', { type: 'error', header: '提交失败', message: `捕获错误信息 ${JSON.stringify(error)}。` });
+            return response.redirect('back');
         }
     }
     async delete({ session, request, response }) {

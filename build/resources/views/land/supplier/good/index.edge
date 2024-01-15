@@ -24,26 +24,31 @@
       <table class="ui celled center aligned table">
         <thead>
           <tr>
-            <th>ID</th>
-            <th class="center aligned one wide">图片</th>
-            <th>名称</th>
-            <th>品牌</th>
-            <th>类别</th>
-            <th>创建时间</th>
-            <th>操作</th>
+            <th class="one wide">ID</th>
+            <th class="five wide">名称</th>
+            <th class="two wide">品牌</th>
+            <th class="two wide">目录</th>
+            <th class="one wide">图片</th>
+            <th class="one wide">状态</th>
+            <th class="two wide">创建时间</th>
+            <th class="two wide">操作</th>
           </tr>
         </thead>
         <tbody>
           @each(row in data.goods)
             <tr>
               <td class="td">{{ row.id }}</td>
-              <td class="center aligned td">
-                <!-- <img class="ui tiny bordered rounded image" style="margin: 0 auto;" src="{{ row.good_theme_url || '' }}" alt="" /> -->
-                {{ row.good_theme_url.length || 0 }}
-              </td>
               <td class="td">{{ row.good_name || '' }}</td>
               <td class="td">{{ row.good_brand || '' }}</td>
               <td class="td">{{ row.catalog && row.catalog.name ? row.catalog.name : '' }}</td>
+              <td class="td">
+                <!-- <img class="ui tiny bordered rounded image" style="margin: 0 auto;" src="{{ row.good_theme_url || '' }}" alt="" /> -->
+                {{ row.good_theme_url.length || 0 }}
+              </td>
+              <td class="td">
+                {{ row.status == 0 ? '审核中' : '' }}
+                {{ row.status == 1 ? '已发布' : '' }}
+              </td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">
                 <a href="{{ route('land/admin/SupplierController.edit', { id: row.id }) }}">编辑</a>
