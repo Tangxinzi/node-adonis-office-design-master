@@ -59,6 +59,7 @@ Route.group(() => {
   Route.post('/work/save', 'land/admin/WorkController.save')
   Route.post('/work/delete', 'land/admin/WorkController.delete')
 
+  Route.get('/datas', 'land/admin/DataController.index')
   Route.get('/calculator', 'land/admin/CalculatorController.index')
 
   Route.get('/feedback', 'land/admin/FeedbackController.index')
