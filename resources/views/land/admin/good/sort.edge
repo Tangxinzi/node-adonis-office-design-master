@@ -32,10 +32,7 @@
           @each(row in data.goods)
             <div class="ui segment flex-between">
               <div class="good">
-                <img class="ui avatar bordered image" src="{{ row.good_theme_url }}" alt="" >
-                <span>
-                  <a target="_blank" href="{{ route('land/admin/GoodController.edit', { id: row.id }) }}">{{ row.good_name }}</a>
-                </span>
+                <a target="_blank" href="{{ route('land/admin/GoodController.edit', { id: row.id }) }}">{{ row.good_name }}</a>
                 {{ row.status == 0 ? '[草稿]' : '' }}
               </div>
               <span class="ui mini label">{{ row.good_supplier.supplier_name || '平台发布' }}</span>

@@ -31,7 +31,6 @@
             <th>ID</th>
             <th>类型</th>
             <th>标题</th>
-            <th>作者</th>
             <th>打开</th>
             <th>状态</th>
             <th>时间</th>
@@ -43,9 +42,17 @@
             <tr>
               <td class="td">{{ row.id }}</td>
               <td class="td">{{ row.catalog }}</td>
-              <td class="td">{{ row.article_title }}</td>
-              <td class="td">{{ row.article_author || '' }}</td>
-              <td class="td">[{{ row.target == 0 ? 'URL 跳转' : '小程序页面' }}]</td>
+              <td class="td">
+                <span>{{ row.article_title }}</span>
+                @if(row.article_author)
+                <span class="ui mini label">{{ row.article_author || '' }}</span>
+                @endif
+              </td>
+              <td class="td">
+                {{ row.target == 0 ? '[URL 跳转]' : '' }}
+                {{ row.target == 1 ? '[小程序页面]' : '' }}
+                {{ row.target == 1000 ? '[无操作]' : '' }}
+              </td>
               <td class="td">{{ row.status == 0 ? '草稿' : '' }}{{ row.status == 1 ? '发布' : '' }}</td>
               <td class="td">{{ row.created_at }}</td>
               <td class="td">

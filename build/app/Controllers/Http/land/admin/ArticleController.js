@@ -10,7 +10,7 @@ const randomstring_1 = __importDefault(require("randomstring"));
 class ArticleController {
     async index({ request, view, response }) {
         try {
-            const all = request.all(), catalog = ['其它', '活动资讯'];
+            const all = request.all(), catalog = ['其它', '活动资讯', '首页 Banner'];
             const articles = await Database_1.default.from('land_articles').select('id', 'article_catalog', 'article_title', 'article_author', 'article_detail', 'article_theme_url', 'article_original_url', 'status', 'target', 'created_at').where('status', all.status == 0 ? 0 : 1).andWhereNull('deleted_at').orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             for (let index = 0; index < articles.length; index++) {
                 articles[index].catalog = catalog[articles[index].article_catalog];

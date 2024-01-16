@@ -55,6 +55,7 @@
               <div class="menu">
                 <div class="item" data-value="0">URL 跳转</div>
                 <div class="item" data-value="1">小程序页面</div>
+                <div class="item" data-value="1000">无操作</div>
               </div>
             </div>
           </div>
@@ -68,6 +69,7 @@
               <div class="default text">点击选择</div>
               <div class="menu">
                 <div class="item" data-value="1">活动资讯</div>
+                <div class="item" data-value="2">首页 Banner</div>
                 <div class="item" data-value="0">其它</div>
               </div>
             </div>
@@ -90,7 +92,7 @@
           <input type="text" name="original_url" value="{{ data.article.article_original_url || '' }}" placeholder="" />
         </div>
         <div class="field">
-          <label>封面
+          <label>封面 / 主图
             @if(data.article.article_theme_url)
               <a href="{{ data.article.article_theme_url }}" target="_blank">查看图片</a>
             @endif
