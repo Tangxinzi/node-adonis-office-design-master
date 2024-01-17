@@ -37,6 +37,7 @@ Route_1.default.group(() => {
     Route_1.default.get('/work/edit/:id', 'land/admin/WorkController.edit');
     Route_1.default.post('/work/save', 'land/admin/WorkController.save');
     Route_1.default.post('/work/delete', 'land/admin/WorkController.delete');
+    Route_1.default.get('/datas', 'land/admin/DataController.index');
     Route_1.default.get('/calculator', 'land/admin/CalculatorController.index');
     Route_1.default.get('/feedback', 'land/admin/FeedbackController.index');
     Route_1.default.post('/feedback/submit', 'land/admin/FeedbackController.save');

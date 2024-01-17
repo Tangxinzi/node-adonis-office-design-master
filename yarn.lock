@@ -201,7 +201,7 @@
 
 "@adonisjs/lucid@^18.4.2":
   version "18.4.2"
-  resolved "https://registry.npmmirror.com/@adonisjs/lucid/-/lucid-18.4.2.tgz#2cfc44b90ce4719153412d0d2a2d271402998dc4"
+  resolved "https://registry.npmmirror.com/@adonisjs/lucid/-/lucid-18.4.2.tgz"
   integrity sha512-4k8GOat/YQtobNqwBIU8VAuY19p+V3ucBRoZ+iwxd/qy/KE1XupPzuMZVWYt1vyBboCrBmEYYmvC851tNqoP0A==
   dependencies:
     "@faker-js/faker" "^8.0.1"
@@ -260,7 +260,7 @@
 
 "@adonisjs/shield@^7.1.1":
   version "7.1.1"
-  resolved "https://registry.npmmirror.com/@adonisjs/shield/-/shield-7.1.1.tgz#4c88a34f3a836c7decd9abfc9c9f8a86cf628252"
+  resolved "https://registry.npmmirror.com/@adonisjs/shield/-/shield-7.1.1.tgz"
   integrity sha512-y1YzXwravcS/A1yxcyfSD/UrRi2+H9v0ntX9NgVhLYvBF5eHuPzQKgv9sICVjmj2z7n94HzcTAio0Rc32EX51Q==
   dependencies:
     "@poppinss/utils" "^4.0.4"

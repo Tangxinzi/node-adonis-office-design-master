@@ -16,13 +16,13 @@ export default class DataController {
         FROM (
             SELECT DISTINCT DATE_FORMAT(created_at, '%Y-%m-%d') AS date
             FROM land_desginers
-            WHERE created_at >= CURDATE() - INTERVAL 30 DAY
+            WHERE created_at >= CURDATE() - INTERVAL 30 DAY AND status = 1
 
             UNION
 
             SELECT DISTINCT DATE_FORMAT(created_at, '%Y-%m-%d') AS date
             FROM land_goods
-            WHERE created_at >= CURDATE() - INTERVAL 30 DAY
+            WHERE created_at >= CURDATE() - INTERVAL 30 DAY AND status = 1
 
             UNION
 
@@ -34,7 +34,7 @@ export default class DataController {
 
             SELECT DISTINCT DATE_FORMAT(created_at, '%Y-%m-%d') AS date
             FROM land_works
-            WHERE created_at >= CURDATE() - INTERVAL 30 DAY
+            WHERE created_at >= CURDATE() - INTERVAL 30 DAY AND status = 1
         ) date_range
 
         LEFT JOIN (
@@ -85,8 +85,6 @@ export default class DataController {
         count_land_works[index] = datas[index].count_land_works
       }
 
-      // console.log(date);
-
       var currentDate = Moment(), dates = [], dataset = {
         date: [],
         desginer: [],
@@ -97,8 +95,7 @@ export default class DataController {
 
       for (var i = 0; i < 30; i++) {
         dates.push(currentDate.format("YYYY-MM-DD"));
-        let indexOf = dates.indexOf(dates[i])
-        // console.log(dates[i], date.indexOf(dates[i]));
+        let indexOf = date.indexOf(dates[i])
         if (indexOf == -1) {
           dataset.date[i] = dates[i]
           dataset.desginer[i] = 0
@@ -115,24 +112,19 @@ export default class DataController {
         currentDate = currentDate.subtract(1, 'days');
       }
 
-      return dataset
-
-
-      // var options = []
-      //
-      // for (let index = 0; index < 30; index++) {
-      //   options[index] = {
-      //
-      //   }
-      //
-      // }
+      dataset = {
+        date: dataset.date.reverse(),
+        desginer: dataset.desginer.reverse(),
+        goods: dataset.goods.reverse(),
+        users: dataset.users.reverse(),
+        works: dataset.works.reverse()
+      };
 
       return view.render('land/admin/data/index', {
         data: {
           title: '数据',
           active: 'data',
-          datas,
-          // dates
+          dataset
         }
       })
     } catch (error) {
