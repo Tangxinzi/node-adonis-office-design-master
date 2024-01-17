@@ -14,6 +14,9 @@
     background-size: cover;
     background-position: center center;
   }
+
+  .datas { margin: 0 -1em; }
+  .datas .data { background: #FFF; padding: 1em; margin: 1em; display: inline-block; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
 @endsection
@@ -21,10 +24,30 @@
 @section('content')
   <div class="ui stackable four column grid">
     <div class="sixteen wide column">
-      <div class="ui segment">
-        <div id="echarts" class="echarts" style="height: 700px">
-
+      <div class="datas">
+        <div class="data">
+          <span class="num">{{ data.dataset.count.user }}</span>
+          <span class="title">用户</span>
         </div>
+        <div class="data">
+          <span class="num">{{ data.dataset.count.desginer }}</span>
+          <span class="title">设计师</span>
+        </div>
+        <div class="data">
+          <span class="num">{{ data.dataset.count.work }}</span>
+          <span class="title">作品</span>
+        </div>
+        <div class="data">
+          <span class="num">{{ data.dataset.count.good }}</span>
+          <span class="title">商品</span>
+        </div>
+        <div class="data">
+          <span class="num">{{ data.dataset.count.supplier }}</span>
+          <span class="title">供应商</span>
+        </div>
+      </div>
+      <div class="ui segment">
+        <div id="echarts" class="echarts" style="height: 700px"></div>
       </div>
     </div>
   </div>

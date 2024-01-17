@@ -116,7 +116,14 @@ class DataController {
                 desginer: dataset.desginer.reverse(),
                 goods: dataset.goods.reverse(),
                 users: dataset.users.reverse(),
-                works: dataset.works.reverse()
+                works: dataset.works.reverse(),
+                count: {
+                    user: (await Database_1.default.from('land_users').count('* as total'))[0].total || 0,
+                    desginer: (await Database_1.default.from('land_goods').where({ status: 1 }).count('* as total'))[0].total || 0,
+                    good: (await Database_1.default.from('land_goods').where({ status: 1 }).count('* as total'))[0].total || 0,
+                    work: (await Database_1.default.from('land_works').where({ status: 1 }).count('* as total'))[0].total || 0,
+                    supplier: (await Database_1.default.from('land_supplier').count('* as total'))[0].total || 0,
+                }
             };
             return view.render('land/admin/data/index', {
                 data: {
