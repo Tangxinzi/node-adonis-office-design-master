@@ -144,6 +144,8 @@ export default class DesginerController {
 
   public async sort({ view, request, response, session }: HttpContextContract) {
     try {
+      let all = request.all()
+
       if (request.method() == 'GET') {
         const catalog = ['其它', '设计团队', '工程管理团队']
         const desginers = await Database.from('land_desginers').whereIn('status', [1]).andWhereNull('deleted_at').orderBy('sort', 'asc')
@@ -161,10 +163,13 @@ export default class DesginerController {
       }
 
       if (request.method() == 'POST') {
-        let all = request.all()
-        for (let index = 0; index < all.id.length; index++) {
-          await Database.from('land_desginers').where('id', all.id[index]).update({ sort: parseInt(all.sort[index]) + index })
-        }
+        await Database.transaction(async (trx) => {
+          all.id.forEach(async (row, index) => {
+            const querySql = `UPDATE land_desginers SET sort = ${ 1000 + index } WHERE id = ${ row }`
+            const query = await Database.rawQuery(querySql)
+          })
+        })
+
         session.flash('message', { type: 'success', header: '排序更新成功', message: `` })
         return response.redirect('back')
       }

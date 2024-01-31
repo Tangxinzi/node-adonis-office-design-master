@@ -237,9 +237,12 @@ class GoodController {
             }
             if (request.method() == 'POST') {
                 let all = request.all();
-                for (let index = 0; index < all.id.length; index++) {
-                    await Database_1.default.from('land_goods').where('id', all.id[index]).update({ sort: parseInt(all.sort[index]) + index });
-                }
+                await Database_1.default.transaction(async (trx) => {
+                    all.id.forEach(async (row, index) => {
+                        const querySql = `UPDATE land_goods SET sort = ${1000 + index} WHERE id = ${row}`;
+                        const query = await Database_1.default.rawQuery(querySql);
+                    });
+                });
                 session.flash('message', { type: 'success', header: '排序更新成功', message: `` });
                 return response.redirect('back');
             }
