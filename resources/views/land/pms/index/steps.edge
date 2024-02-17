@@ -1,0 +1,241 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<link href="/lib/wangeditor/index.css" rel="stylesheet">
+<style media="screen">
+  .meta {color: rgba(0,0,0,.4);}
+  .jobs .ui.divider:last-child {display: none !important;}
+  .job p {margin-bottom: 0.75rem;}
+  .ui.message>.close.icon {position: absolute; margin: 0; top: 14px; right: 1.3em;}
+  #editor—wrapper { border: 1px solid #ccc; z-index: 100; }
+  #toolbar-container { border-bottom: 1px solid #ccc; }
+  #editor-container { height: 500px; }
+
+  .ui.labels>.label { margin: 0 0 0 .5em; }
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <!-- <div class="three wide column">
+      @!component('land/components/pms-menus', data=data, csrf=csrfField())
+    </div> -->
+    <div class="sixteen wide column">
+      @!component('land/pms/steps-components/steps', data=data, csrf=csrfField())
+      @if(data.step == 'step-01')
+        @!component('land/pms/steps-components/steps-01', data=data, csrf=csrfField())
+      @elseif(data.step == 'step-02')
+        @!component('land/pms/steps-components/steps-02', data=data, csrf=csrfField())
+      @elseif(data.step == 'step-03')
+        @!component('land/pms/steps-components/steps-03', data=data, csrf=csrfField())
+      @elseif(data.step == 'step-04')
+        @!component('land/pms/steps-components/steps-04', data=data, csrf=csrfField())
+      @elseif(data.step == 'step-05')
+        @!component('land/pms/steps-components/steps-05', data=data, csrf=csrfField())
+      @else
+        
+      @endif
+    </div>
+  </div>
+  
+  <form class="ui full modal form file" action="{{ route('land/pms/IndexController.file') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">上传文件</h3>
+    <div class="content">
+      <div class="field required">
+        <label>文件</label>
+        <input type="file" name="file" placeholder="" />
+      </div>
+      <div class="two fields">
+        <div class="field required">
+          <label>文件名</label>
+          <input type="text" name="file" placeholder="" />
+        </div>
+      </div>
+      <div class="field">
+        <label>备注</label>
+        <textarea name="" id="" cols="30" rows="4"></textarea>
+      </div>
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui deny button">
+        取消
+      </div>
+      <button class="ui grey right labeled icon button">
+        确认上传
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+
+  <form class="ui full modal form notifications" action="{{ route('land/pms/IndexController.notifications') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">节点推送</h3>
+    <div class="content">
+      <div class="field">
+        <label>节点</label>
+        <select multiple="" class="ui dropdown" placeholder="">
+          <option value="">下拉选择</option>
+          <option value="00">设计任务配合表</option>
+          <option value="01">文件</option>
+          <option value="02">办公空间需求统计</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>接收推送人员</label>
+        <select multiple="" class="ui dropdown" placeholder="">
+          <option value="">下拉选择</option>
+          <option value="00">张三</option>
+          <option value="01">李四</option>
+          <option value="02">王五</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>确认签字人员</label>
+        <select multiple="" class="ui dropdown" placeholder="">
+          <option value="">下拉选择</option>
+          <option value="00">张三</option>
+          <option value="01">李四</option>
+          <option value="02">王五</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>备注</label>
+        <textarea name="" id="" cols="30" rows="4"></textarea>
+      </div>
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui deny button">
+        取消
+      </div>
+      <button class="ui green right labeled icon button">
+        确认推送
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+
+  <form class="ui full modal form member" action="{{ route('land/pms/IndexController.member') }}" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">添加人员</h3>
+    <div class="content">
+      <div class="field">
+        <label>人员</label>
+        <div class="ui fluid search selection dropdown">
+          <input type="hidden" name="country">
+          <i class="dropdown icon"></i>
+          <div class="default text">下拉选择</div>
+          <div class="menu">
+            <div class="item" data-value="zhangsan">
+              <img class="ui avatar mini image" src="https://semantic-ui.com/images/avatar/small/jenny.jpg" /> 张三
+            </div>
+            <div class="item" data-value="lisi">李四</div>
+            <div class="item" data-value="wangwu">王五</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>备注</label>
+        <textarea name="" id="" cols="30" rows="4"></textarea>
+      </div>
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui deny button">
+        取消
+      </div>
+      <button class="ui grey right labeled icon button">
+        确认添加
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+@endsection
+
+@section('footer')
+  <div class="ui container footer" style="min-height: auto">
+    <div class="ui relaxed horizontal list">
+      <a class="item" href="{{ route('land/pms/IndexController.index') }}">项目列表</a>
+      <a class="item" href="#">二维码</a>
+      <a class="item" href="#">日志</a>
+      <a class="item" href="#">当前进度</a>
+    </div>
+    <div class="ui right floated horizontal list">
+      <div class="disabled item" href="#">PMS 项目名称</div>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+<script src="/scripts/jquery.min.js"></script>
+<script src="https://semantic-ui.com/dist/semantic.min.js" charset="utf-8"></script>
+<script src="/scripts/global.js" charset="utf-8"></script>
+<script src="/lib/wangeditor/index.js"></script>
+<script type="text/javascript">
+
+  function uploadFile() {
+    $('.ui.modal.form.file').modal('show')
+  }
+
+  function nodeNotifications() {
+    $('.ui.modal.form.notifications').modal('show')
+  }
+
+  function addMember() {
+    $('.ui.modal.form.member').modal('show')
+  }
+
+  const { createEditor, createToolbar } = window.wangEditor
+
+  const editor = createEditor({
+    selector: '#editor-container',
+    html: $('#detail').val() || '',
+    config: {
+      placeholder: '请输入内容...',
+      MENU_CONF: {
+        uploadImage: {
+          server: '/land/file/upload',
+          fieldName: 'files',
+          maxFileSize: 10 * 1024 * 1024
+        },
+        uploadVideo: {
+          server: '/land/file/upload',
+          fieldName: 'files',
+          maxFileSize: 100 * 1024 * 1024
+        },
+      },
+      onChange(editor) {
+        $('#detail').val(editor.getHtml())
+      }
+    },
+    mode: 'simple', // or 'simple'
+  })
+
+  const toolbarConfig = {}
+
+  const toolbar = createToolbar({
+    editor,
+    selector: '#toolbar-container',
+    config: toolbarConfig,
+    mode: 'simple', // or 'simple'
+  })
+
+  $('.ui.dropdown').dropdown()
+
+  var reads = new FileReader()
+  function change(input, src) {
+    reads.readAsDataURL($(input)[0].files[0])
+    reads.onload = function(e) {
+      $(src).attr("src", this.result)
+    }
+  }
+</script>
+@endsection

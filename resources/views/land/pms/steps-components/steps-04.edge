@@ -1,0 +1,52 @@
+<form class="ui form" method="post" action="{{ route('land/pms/IndexController.save') }}" enctype="multipart/form-data">
+  <div class="ui segments">
+    <div class="ui segment flex-between">
+      <b>报审</b>
+    </div>
+  </div>
+  <div class="ui segments">
+    <div class="ui segment flex-between">
+      <b>保险</b>
+    </div>
+  </div>
+  <div class="ui segments">
+    <div class="ui segment flex-between">
+      <b>工期</b>
+    </div>
+  </div>
+  <div class="ui segments">
+    <div class="ui segment flex-between">
+      <b>资料</b>
+      <div class="ui labels">
+        <a class="ui small grey label" onclick="uploadFile()">上传文件</a>
+        <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
+      </div>
+    </div>
+    <div class="ui segment">
+      <div class="ui link cards">
+        @each(item in data.information_documents)
+          <div class="card">
+            <div class="content">
+              <div class="header">{{ item.file }}</div>
+              <div class="description">{{ item.description || '' }}</div>
+            </div>
+            <div class="extra content">
+              <span>
+                <i class="time icon"></i>
+                {{ item.date }}
+              </span>
+              <span class="right floated">
+                <i class="download icon"></i>
+              </span>
+            </div>
+          </div>
+        @endeach
+      </div>      
+    </div>
+  </div>
+  <div class="ui segments">
+    <div class="ui segment flex-between">
+      <b>验收</b>
+    </div>
+  </div>
+</form>

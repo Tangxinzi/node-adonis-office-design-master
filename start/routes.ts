@@ -85,6 +85,14 @@ Route.group(() => {
   Route.get('/good/edit/:id', 'land/admin/GoodController.edit')
   Route.post('/good/save', 'land/admin/GoodController.save')
   Route.post('/good/delete', 'land/admin/GoodController.delete')
+
+  Route.get('/pms', 'land/pms/IndexController.index')
+  Route.post('/pms/create', 'land/pms/IndexController.create')
+  Route.post('/pms/save', 'land/pms/IndexController.save')
+  Route.post('/pms/file', 'land/pms/IndexController.file')
+  Route.post('/pms/member', 'land/pms/IndexController.member')
+  Route.post('/pms/notifications', 'land/pms/IndexController.notifications')
+  Route.get('/pms/:id/steps/:step', 'land/pms/IndexController.steps')
 }).prefix('/land')
 
 Route.group(() => {
