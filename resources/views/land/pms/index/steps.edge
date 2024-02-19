@@ -158,6 +158,124 @@
       </button>
     </div>
   </form>
+
+  <form class="ui full modal form payment" action="" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">添加款项</h3>
+    <div class="content">
+      <div class="field">
+        <label>项目名称</label>
+        <input type="text" name="product" placeholder="" />
+      </div>
+      <div class="field">
+        <label>合同总金额</label>
+        <input type="number" name="number" placeholder="不含增&设" />
+      </div>
+      <div class="field">
+        <label>备注</label>
+        <textarea name="" cols="30" rows="4"></textarea>
+      </div>
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui deny button">
+        取消
+      </div>
+      <button class="ui grey right labeled icon button">
+        确认添加
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+
+  <form class="ui full modal form payment-node" action="" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">添加付款节点</h3>
+    <div class="content">
+      <div class="field">
+        <label>款项</label>
+        <div class="ui fluid selection dropdown">
+          <input type="hidden" name="country">
+          <i class="dropdown icon"></i>
+          <div class="default text">下拉选择</div>
+          <div class="menu">
+            <div class="item" data-value="lisi">一层</div>
+            <div class="item" data-value="wangwu">二层</div>
+            <div class="item" data-value="wangwu">三层</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>节点名称</label>
+        <input type="text" name="product" placeholder="" />
+      </div>
+      <div class="field">
+        <label>节点金额</label>
+        <input type="number" name="number" placeholder="" />
+      </div>
+      <div class="field">
+        <label>应付日期</label>
+        <input type="number" name="number" placeholder="" />
+      </div>
+      <div class="field">
+        <label>备注</label>
+        <textarea name="" cols="30" rows="4"></textarea>
+      </div>
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui deny button">
+        取消
+      </div>
+      <button class="ui grey right labeled icon button">
+        确认添加
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
+
+  <form class="ui full modal form payment-item" action="" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">添加支付项</h3>
+    <div class="content">
+      <div class="field">
+        <label>付款节点</label>
+        <div class="ui fluid selection dropdown">
+          <input type="hidden" name="country">
+          <i class="dropdown icon"></i>
+          <div class="default text">下拉选择</div>
+          <div class="menu">
+            <div class="item" data-value="">一层 · 首付款20%</div>
+            <div class="item" data-value="">一层 · 隐蔽验收30%</div>
+            <div class="item" data-value="">一层 · 竣工20%</div>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label>付款金额</label>
+        <input type="number" name="number" placeholder="" />
+      </div>
+      <div class="field">
+        <label>支付日期</label>
+        <input type="date" name="number" placeholder="" />
+      </div>
+      <div class="field">
+        <label>备注</label>
+        <textarea name="" cols="30" rows="4"></textarea>
+      </div>
+      <div class="ui info message">未支付款项、支付金额、滞纳金等将自动计算展示。</div>
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui deny button">
+        取消
+      </div>
+      <button class="ui grey right labeled icon button">
+        确认添加
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
 @endsection
 
 @section('footer')
@@ -180,6 +298,17 @@
 <script src="/scripts/global.js" charset="utf-8"></script>
 <script src="/lib/wangeditor/index.js"></script>
 <script type="text/javascript">
+  function addPaymentItem() {
+    $('.ui.modal.form.payment-item').modal('show')
+  }
+
+  function addPaymentNode() {
+    $('.ui.modal.form.payment-node').modal('show')
+  }
+
+  function addPayment() {
+    $('.ui.modal.form.payment').modal('show')
+  }
 
   function uploadFile() {
     $('.ui.modal.form.file').modal('show')
