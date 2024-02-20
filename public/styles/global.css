@@ -39,7 +39,7 @@ body, body.pushable>.pusher { background-color: rgba(255, 255, 255, .95); }
   .ui.container {width: 1400px; margin-left: auto!important; margin-right: auto!important;}
 } */
 @media only screen and (min-width: 1400px) {
-  .ui.container {width: 1400px; margin-left: auto!important; margin-right: auto!important;}
+  .ui.container {width: 1500px; margin-left: auto!important; margin-right: auto!important;}
 }
 @media only screen and (min-width: 767px) {
   .ui.container.mobile {margin: 0 auto !important; padding: 0; max-width: 767px !important;}
