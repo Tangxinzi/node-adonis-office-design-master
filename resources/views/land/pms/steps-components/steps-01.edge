@@ -41,11 +41,11 @@
       <div class="five fields">
         <div class="field required">
           <label>编号</label>
-          <input type="text" name="project_id" placeholder="" />
+          <input type="text" name="serial" value="{{ data.product.serial || '' }}" placeholder="" />
         </div>
         <div class="field required">
           <label>名称</label>
-          <input type="text" name="title" placeholder="" />
+          <input type="text" name="name" value="{{ data.product.name }}" placeholder="" />
         </div>
         <div class="field">
           <label>地址</label>
