@@ -87,7 +87,6 @@ Route.group(() => {
   Route.post('/good/delete', 'land/admin/GoodController.delete')
 
   Route.get('/pms', 'land/pms/IndexController.index')
-  Route.post('/pms/create', 'land/pms/IndexController.create')
   Route.post('/pms/save', 'land/pms/IndexController.save')
   Route.post('/pms/file', 'land/pms/IndexController.file')
   Route.post('/pms/member', 'land/pms/IndexController.member')

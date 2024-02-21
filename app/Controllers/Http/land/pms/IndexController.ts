@@ -20,13 +20,13 @@ export default class IndexController {
     }
   }
 
-  public async create({ params, request, response, view, session }: HttpContextContract) {
+  public async save({ params, request, response, view, session }: HttpContextContract) {
     try {
       const all = request.all()
 
       if (all.button == 'create') {
         const product_id = uuidv4()
-        await Database.table('land_products').insert({ 
+        await Database.table('land_products').insert({
           product_id, // 项目 ID
           serial: all.serial, // 编号
           name: all.name, // 名称
@@ -42,12 +42,12 @@ export default class IndexController {
           date_end: all.date_end, // 项目进度 / 设计提交时间
           description: all.description,
         })
-        
+
         session.flash('message', { type: 'success', header: '创建成功', message: `${ all.name }项目已创建。` })
       }
 
       if (all.button == 'update') {
-        await Database.from('land_products').where('product_id', all.product_id).update({ 
+        await Database.from('land_products').where('product_id', all.product_id).update({
           serial: all.serial, // 编号
           name: all.name, // 名称
           address: all.address, // 地址
@@ -66,7 +66,6 @@ export default class IndexController {
         session.flash('message', { type: 'success', header: '更新成功', message: `${ all.name }项目信息已更新。` })
       }
 
-      // return response.redirect().toRoute('land/pms/IndexController.steps', { id: params.id, step: params.step })
       return response.redirect('back')
     } catch (error) {
       console.log(error)
@@ -119,7 +118,7 @@ export default class IndexController {
             }
           ]
           break;
-      
+
         default:
           break;
       }
