@@ -7,7 +7,7 @@
 #
 # 主机: 127.0.0.1 (MySQL 5.7.26)
 # 数据库: Landtower
-# 生成时间: 2024-02-21 10:52:17 +0000
+# 生成时间: 2024-02-24 05:03:27 +0000
 # ************************************************************
 
 
@@ -492,7 +492,7 @@ LOCK TABLES `land_products` WRITE;
 
 INSERT INTO `land_products` (`id`, `product_id`, `serial`, `name`, `address`, `area`, `budget`, `description`, `date_start`, `date_end`, `value01`, `value02`, `value03`, `value04`, `value05`, `status`, `created_at`, `modified_at`, `deleted_at`)
 VALUES
-	(1,'2e629684-f14a-43bf-bc7d-93e41de11ad8','1','2','3','4','5','11','2024-02-21','2024-02-22','6','7','8','9','10',1,'2024-02-21 18:36:05',NULL,NULL);
+	(1,'2e629684-f14a-43bf-bc7d-93e41de11ad8','XX-1234','测试项目名称','北京','400','10000','11','2024-02-21','2024-02-22','6','7','8','9','10',1,'2024-02-21 18:36:05',NULL,NULL);
 
 /*!40000 ALTER TABLE `land_products` ENABLE KEYS */;
 UNLOCK TABLES;

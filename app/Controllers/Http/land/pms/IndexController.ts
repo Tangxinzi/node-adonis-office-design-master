@@ -123,12 +123,23 @@ export default class IndexController {
           break;
       }
 
+      if (all.type == 'json') {
+        return response.json({
+          status: 200,
+          message: "ok",
+          data: {
+            step: params.step,
+            product,
+            ...dataset
+          }
+        })
+      }
+
       return view.render('land/pms/index/steps', {
         data: {
           title: '编辑项目',
-          step: params.step,
           all,
-          id: '0000',
+          step: params.step,
           product,
           ...dataset
         }
