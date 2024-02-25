@@ -111,12 +111,16 @@
     </div>
   </div>
 </form>
-<div class="ui segments">
+<form class="ui segments form" action="{{ route('land/pms/IndexController.save') }}" method="post">
   <div class="ui segment flex-between">
     <b>办公空间需求统计 - 设计启动阶段</b>
     <div class="ui labels">
       <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
-      <button class="ui small blue label" type="submit" name="button" value="save">提交保存</button>
+      <div class="field disabled required" hidden>
+        <label>ID</label>
+        <input type="text" name="product_id" value="{{ data.product.product_id || '' }}" placeholder="" />
+      </div>
+      <button class="ui small blue label" type="submit" name="button" value="OfficeSpaceDemandStatistics">提交保存</button>
     </div>
   </div>
   <div class="ui segment">
@@ -125,7 +129,7 @@
         <tr>
           <th class="two wide">类型</th>
           <th class="two wide">子项</th>
-          <th>操作</th>
+          <th class="five wide">操作</th>
           <th>描述</th>
         </tr>
       </thead>
@@ -133,199 +137,460 @@
         <tr>
           <td>办公室入口</td>
           <td>前台</td>
-          <td></td>
-          <td></td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_1" value="{{ data.land_products_osds.number_1 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">需要</div>
+                <div class="item" data-value="1">不需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="2">等候区</td>
           <td>等候座位</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_2">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 组</option>
+              @endeach
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>显示屏</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_3">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="3">会议室类型数量</td>
           <td>大（30人）</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_4">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 组投影</option>
+              @endeach
+            </select>
+            <select class="ui dropdown" name="number_5">
+              <option value="">下拉选择</option>
+              <option value="0">不需要电视</option>
+              <option value="1">需要电视</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>中（10-20人）</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_6">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 组投影</option>
+              @endeach
+            </select>
+            <select class="ui dropdown" name="number_7">
+              <option value="">下拉选择</option>
+              <option value="0">不需要电视</option>
+              <option value="1">需要电视</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>小（7-8人）</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_8">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 组投影</option>
+              @endeach
+            </select>
+            <select class="ui dropdown" name="number_9">
+              <option value="">下拉选择</option>
+              <option value="0">不需要电视</option>
+              <option value="1">需要电视</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="2">展示区</td>
           <td>展示墙</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_10">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>展厅</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_11">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">10~20平方米</option>
+              <option value="2">20~30平方米</option>
+              <option value="3">30~50平方米</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="2">休闲区</td>
           <td>水吧</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_12">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>多功能区</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_13">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">10~20平方米</option>
+              <option value="2">20~30平方米</option>
+              <option value="3">30~50平方米</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
-          <td rowspan="3">独立办公室</td>
+          <td rowspan="4">独立办公室</td>
           <td>CEO办公室</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_14">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 间</option>
+              @endeach
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>财务室</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_15">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 间</option>
+              @endeach
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>经理室</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_16">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 间</option>
+              @endeach
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>行政办公室</td>
-          <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_17">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="5">辅助区</td>
           <td>卫生间</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_18">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>储物间</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_19">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>打印机</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_20">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+              <option value="{{ row }}">{{ row }} 台</option>
+              @endeach
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>快递柜</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_21">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>其它需求</td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="5">办公区</td>
           <td>工位数量</td>
-          <td></td>
-          <td></td>
+          <td>
+            <input type="number" name="" value="" />
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>工位尺寸</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_22">
+              <option value="">下拉选择</option>
+              <option value="0">1200mmX600mm</option>
+              <option value="1">1500mmX600mm</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>天花装饰形式</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_23">
+              <option value="">下拉选择</option>
+              <option value="0">裸顶</option>
+              <option value="1">石膏板吊顶</option>
+              <option value="2">矿棉板吊顶</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>地面装饰材质</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_24">
+              <option value="">下拉选择</option>
+              <option value="0">地胶</option>
+              <option value="1">地砖</option>
+              <option value="2">地毯</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>其他需求</td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="2">网络布线要求</td>
           <td>无线网络</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_25">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>工位网络接口</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_26">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">需要</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="2">机房配置要求</td>
           <td>面积需求</td>
-          <td></td>
-          <td></td>
+          <td>
+            <input type="number" name="" value="" />
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>UPS电源</td>
-          <td></td>
-          <td></td>
+          <td>
+            <select class="ui dropdown" name="number_27">
+              <option value="">下拉选择</option>
+              <option value="0">不需要</option>
+              <option value="1">30 分钟</option>
+              <option value="2">60 分钟</option>
+              <option value="3">120 分钟</option>
+              <option value="4">180 分钟</option>
+            </select>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>家具采购要求</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>IT设备采购要求</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td rowspan="2">门禁及相关安全管理需求</td>
           <td>人脸识别</td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>消防通道指纹识别</td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>办公设施设备采购项目</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>加班餐电源需求</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
         <tr>
           <td>其他特殊需求</td>
           <td></td>
           <td></td>
-          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
-</div>
+</form>
 {{--  <div class="ui segments">
   <div class="ui segment">
     <b>实勘工具</b>
