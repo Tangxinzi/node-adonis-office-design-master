@@ -68,8 +68,6 @@ export default class IndexController {
       }
 
       if (all.button == 'OfficeSpaceDemandStatistics') {
-        console.log(all);
-
         await Database.from('land_products_osds').where('product_id', all.product_id).update({
           number_1: all.number_1,
           number_2: all.number_2,
@@ -99,6 +97,8 @@ export default class IndexController {
           number_26: all.number_26,
           number_27: all.number_27,
         })
+
+        session.flash('message', { type: 'success', header: '更新成功', message: `办公空间需求统计信息已更新。` })
       }
 
       return response.redirect('back')
@@ -167,6 +167,7 @@ export default class IndexController {
           data: {
             step: params.step,
             product,
+            land_products_osds,
             ...dataset
           }
         })

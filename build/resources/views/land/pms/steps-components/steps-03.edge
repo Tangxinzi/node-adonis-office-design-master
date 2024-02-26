@@ -1,5 +1,5 @@
 <form class="ui form" method="post" action="{{ route('land/pms/IndexController.save') }}" enctype="multipart/form-data">
-  <div class="ui segments">
+  {{--  <div class="ui segments">
     <div class="ui segment flex-between">
       <b>合约范围</b>
       <div class="ui labels">
@@ -7,8 +7,8 @@
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
-  </div>
-  <div class="ui segments">
+  </div>  --}}
+  {{--  <div class="ui segments">
     <div class="ui segment flex-between">
       <b>合同管理</b>
       <div class="ui labels">
@@ -16,17 +16,93 @@
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
-  </div>
+  </div>  --}}
   <div class="ui segments">
     <div class="ui segment flex-between">
       <b>款项管理</b>
       <div class="ui labels">
-        <a class="ui small grey label" onclick="uploadFile()">上传文件</a>
+        <a class="ui small grey label" onclick="addPayment()">添加项目</a>
+        <a class="ui small grey label" onclick="addPaymentNode()">添加付款节点</a>
+        <a class="ui small grey label" onclick="addPaymentItem()">添加支付项</a>
+        {{--  <a class="ui small grey label" onclick="uploadFile()">上传文件</a>  --}}
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
+    <div class="ui segment">
+      <div class="scroll-container" style="width: 100%; overflow-x: scroll;">
+        <table class="ui celled center aligned table" style="width: 110%;">
+          <thead>
+            <tr>
+              <th class="left aligned">项目</th>
+              <th>合同总金额</th>
+              <th>付款节点</th>
+              <th>付款节点金额</th>
+              <th>应付日期</th>
+              <th>已支付款项</th>
+              <th>已支付金额</th>
+              <th>支付时间</th>
+              <th>未支付款项</th>
+              <th>未支付金额</th>
+              <th>支付时间</th>
+              <th>逾期金额</th>
+              <th>逾期时间（天）</th>
+              <th>滞纳金</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="left aligned" rowspan="3">
+                <b>一层</b>
+                <p>开工日7.31<br/>竣工日9.30（12.14）</p>
+              </td>
+              <td rowspan="3">¥1,008,819.00</td>
+              <td>首付款20%</td>
+              <td>¥201,763.80</td>
+              <td>2023.07.30</td>
+              <td class="positive">首付款20%</td>
+              <td class="positive">¥201,763.80</td>
+              <td class="positive">2023.08.03</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>竣工20%</td>
+              <td>¥201,763.80</td>
+              <td>2023.07.30</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="warning">隐蔽验收30%</td>
+              <td class="warning">¥201,763.80</td>
+              <td class="warning">2023.08.03</td>
+              <td class="negative">¥201,763.80</td>
+              <td class="negative">2</td>
+              <td class="negative">XX</td>
+            </tr>
+            <tr>
+              <td>首付款20%</td>
+              <td>¥201,763.80</td>
+              <td>2023.07.30</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="negative">¥201,763.80</td>
+              <td class="negative">2</td>
+              <td class="negative">XX</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
   </div>
-  <div class="ui segments">
+  </div>
+  {{--  <div class="ui segments">
     <div class="ui segment flex-between">
       <b>物料管理</b>
       <div class="ui labels">
@@ -34,13 +110,59 @@
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
-  </div>
+  </div>  --}}
   <div class="ui segments">
     <div class="ui segment flex-between">
       <b>增项管理</b>
       <div class="ui labels">
-        <a class="ui small grey label" onclick="uploadFile()">上传文件</a>
+        <a class="ui small grey label" onclick="addPayment()">添加项目</a>
+        <a class="ui small grey label" onclick="addPaymentNode()">添加付款节点</a>
+        <a class="ui small grey label" onclick="addPaymentItem()">添加支付项</a>
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
+      </div>
+    </div>
+    <div class="ui segment">
+      <div class="scroll-container" style="width: 100%; overflow-x: scroll;">
+        <table class="ui celled center aligned table" style="width: 110%;">
+          <thead>
+            <tr>
+              <th class="left aligned">项目</th>
+              <th>合同总金额</th>
+              <th>付款节点</th>
+              <th>付款节点金额</th>
+              <th>应付日期</th>
+              <th>已支付款项</th>
+              <th>已支付金额</th>
+              <th>支付时间</th>
+              <th>未支付款项</th>
+              <th>未支付金额</th>
+              <th>支付时间</th>
+              <th>逾期金额</th>
+              <th>逾期时间（天）</th>
+              <th>滞纳金</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="left aligned">
+                <b>设计 2 层</b>
+              </td>
+              <td>¥1,008,819.00</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td class="positive">首付款20%</td>
+              <td class="positive">¥201,763.80</td>
+              <td class="positive">2023.08.03</td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>

@@ -1,335 +1,710 @@
-<form class="ui form" method="post" action="{{ route('land/pms/IndexController.save') }}" enctype="multipart/form-data">
-  <div class="ui segments">
-    <div class="ui segment flex-between">
-      <b>项目参与人员</b>
-      <div class="ui labels">
-        <a class="ui small grey label" onclick="addMember()">添加人员</a>
-        <button class="ui small blue label" type="submit" name="button" value="save">提交保存</button>
-      </div>
+<div class="ui segments">
+  <div class="ui segment flex-between">
+    <b>项目参与人员</b>
+    <div class="ui labels">
+      <a class="ui small grey label" onclick="addMember()">添加人员</a>
+      <button class="ui small blue label" type="submit" name="button" value="save">提交保存</button>
     </div>
-    <div class="ui segment">
-      <div class="ui cards">
-        <div class="card link">
-          <div class="content">
-            <img class="right floated mini ui image" src="https://semantic-ui.com/images/avatar2/large/matthew.png" />
-            <div class="header">张三 · 17712341234</div>
-            <div class="meta">项目对接负责人</div>
-          </div>
-          <div class="extra content">
-            <span class="">
-              <i class="time icon"></i>
-              2024-01-01
-            </span>
-            <span class="right floated">
-              <i title="删除人员" class="trash alternate icon"></i>
-            </span>
-          </div>
+  </div>
+  <div class="ui segment">
+    <div class="ui cards">
+      <div class="card link">
+        <div class="content">
+          <img class="right floated mini ui image" src="https://semantic-ui.com/images/avatar2/large/matthew.png" />
+          <div class="header">张三 · 17712341234</div>
+          <div class="meta">项目对接负责人</div>
+        </div>
+        <div class="extra content">
+          <span class="">
+            <i class="time icon"></i>
+            2024-01-01
+          </span>
+          <span class="right floated">
+            <i title="删除人员" class="trash alternate icon"></i>
+          </span>
         </div>
       </div>
     </div>
   </div>
-  <div class="ui segments">
-    <div class="ui segment flex-between">
-      <b>设计任务配合总表</b>
-      <div class="ui labels">
-        <a class="ui small grey label" onclick="uploadFile()">上传文件</a>
-        <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
-        <button class="ui small blue label" type="submit" name="button" value="save">提交保存</button>
-      </div>
+</div>
+<form class="ui segments form" action="{{ route('land/pms/IndexController.save') }}" method="post">
+  <div class="ui segment flex-between">
+    <b>设计任务配合总表</b>
+    <div class="ui labels">
+      <a class="ui small grey label" onclick="uploadFile()">上传文件</a>
+      <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
+      {{ csrfField() }}
+      <button class="ui small blue label" type="submit" name="button" value="update">提交保存</button>
     </div>
-    <div class="ui segment">
-      <div class="five fields">
-        <div class="field required">
-          <label>编号</label>
-          <input type="text" name="project_id" placeholder="" />
-        </div>
-        <div class="field required">
-          <label>名称</label>
-          <input type="text" name="title" placeholder="" />
-        </div>
-        <div class="field">
-          <label>地址</label>
-          <input type="text" name="address" placeholder="" />
-        </div>
-        <div class="field">
-          <label>面积</label>
-          <input type="number" name="area" placeholder="" />
-        </div>
-        <div class="field">
-          <label>项目预算造价</label>
-          <input type="number" name="price" placeholder="元/平方米" />
-        </div>
+  </div>
+  <div class="ui segment">
+    <div class="field disabled required" hidden>
+      <label>ID</label>
+      <input type="text" name="product_id" value="{{ data.product.product_id || '' }}" placeholder="" />
+    </div>
+    <div class="five fields">
+      <div class="field required">
+        <label>编号</label>
+        <input type="text" name="serial" value="{{ data.product.serial || '' }}" placeholder="" />
       </div>
-      <div class="five fields">
-        <div class="field">
-          <label>毛坯 / 遗留装修</label>
-          <input type="text" name="" placeholder="" />
-        </div>
-        <div class="field">
-          <label>建筑层高</label>
-          <input type="text" name="" placeholder="" />
-        </div>
-        <div class="field">
-          <label>梁底高度</label>
-          <input type="text" name="" placeholder="" />
-        </div>
-        <div class="field">
-          <label>地面距离地面高度</label>
-          <input type="text" name="" placeholder="" />
-        </div>
-        <div class="field">
-          <label>完成面高度</label>
-          <input type="text" name="" placeholder="" />
-        </div>
-      </div>
-      <div class="five fields">
-        <div class="field">
-          <label>项目启动日期</label>
-          <input type="date" name="" placeholder="" />
-        </div>
-        <div class="field">
-          <label>项目进度 / 设计提交时间</label>
-          <input type="date" name="" placeholder="" />
-        </div>
+      <div class="field required">
+        <label>名称</label>
+        <input type="text" name="name" value="{{ data.product.name || '' }}" placeholder="" />
       </div>
       <div class="field">
-        <label>设计配合内容</label>
-        <select multiple="" class="ui dropdown" placeholder="">
-          <option value="">下拉选择</option>
-          <option value="00">工期时长</option>
-          <option value="01">产品详细规划（详细到工位数量，细部布局）</option>
-          <option value="02">工程造价</option>
-        </select>
+        <label>地址</label>
+        <input type="text" name="address" value="{{ data.product.address || '' }}" placeholder="" />
       </div>
       <div class="field">
-        <label>项目描述</label>
-        <textarea name="description" rows="8" cols="80"></textarea>
+        <label>面积</label>
+        <input type="number" name="area" value="{{ data.product.area || '' }}" placeholder="" />
+      </div>
+      <div class="field">
+        <label>项目预算造价</label>
+        <input type="number" name="budget" value="{{ data.product.budget || '' }}" placeholder="元/平方米" />
       </div>
     </div>
-  </div>
-  <div class="ui segments">
-    <div class="ui segment flex-between">
-      <b>办公空间需求统计 - 设计启动阶段</b>
-      <div class="ui labels">
-        <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
-        <button class="ui small blue label" type="submit" name="button" value="save">提交保存</button>
+    <div class="five fields">
+      <div class="field">
+        <label>毛坯 / 遗留装修</label>
+        <input type="text" name="value01" value="{{ data.product.value01 || '' }}" placeholder="" />
+      </div>
+      <div class="field">
+        <label>建筑层高</label>
+        <input type="text" name="value02" value="{{ data.product.value02 || '' }}" placeholder="" />
+      </div>
+      <div class="field">
+        <label>梁底高度</label>
+        <input type="text" name="value03" value="{{ data.product.value03 || '' }}" placeholder="" />
+      </div>
+      <div class="field">
+        <label>地面距离地面高度</label>
+        <input type="text" name="value04" value="{{ data.product.value04 || '' }}" placeholder="" />
+      </div>
+      <div class="field">
+        <label>完成面高度</label>
+        <input type="text" name="value05" value="{{ data.product.value05 || '' }}" placeholder="" />
       </div>
     </div>
-    <div class="ui segment">
-      <table class="ui celled structured table">
-        <thead>
-          <tr>
-            <th class="two wide">类型</th>
-            <th class="two wide">子项</th>
-            <th>操作</th>
-            <th>描述</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>办公室入口</td>
-            <td>前台</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="2">等候区</td>
-            <td>等候座位</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>显示屏</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="3">会议室类型数量</td>
-            <td>大（30人）</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>中（10-20人）</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>小（7-8人）</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="2">展示区</td>
-            <td>展示墙</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>展厅</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="2">休闲区</td>
-            <td>水吧</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>多功能区</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="3">独立办公室</td>
-            <td>CEO办公室</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>财务室</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>经理室</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>行政办公室</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="5">辅助区</td>
-            <td>卫生间</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>储物间</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>打印机</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>快递柜</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>其它需求</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="5">办公区</td>
-            <td>工位数量</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>工位尺寸</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>天花装饰形式</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>地面装饰材质</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>其他需求</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="2">网络布线要求</td>
-            <td>无线网络</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>工位网络接口</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="2">机房配置要求</td>
-            <td>面积需求</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>UPS电源</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>家具采购要求</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>IT设备采购要求</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td rowspan="2">门禁及相关安全管理需求</td>
-            <td>人脸识别</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>消防通道指纹识别</td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>办公设施设备采购项目</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>加班餐电源需求</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td>其他特殊需求</td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-        </tbody>
-      </table>
+    <div class="five fields">
+      <div class="field">
+        <label>项目启动日期</label>
+        <input type="date" name="date_start" value="{{ data.product.date_start || '' }}" placeholder="" />
+      </div>
+      <div class="field">
+        <label>项目进度 / 设计提交时间</label>
+        <input type="date" name="date_end" value="{{ data.product.date_end || '' }}" placeholder="" />
+      </div>
     </div>
-  </div>
-  <div class="ui segments">
-    <div class="ui segment">
-      <b>实勘工具</b>
-    </div>
-  </div>
-  <div class="ui segments">
-    <div class="ui segment">
-      <b>预算评估工具</b>
+    {{-- <div class="field">
+      <label>设计配合内容</label>
+      <select multiple="" class="ui dropdown" placeholder="">
+        <option value="">下拉选择</option>
+        <option value="00">工期时长</option>
+        <option value="01">产品详细规划（详细到工位数量，细部布局）</option>
+        <option value="02">工程造价</option>
+      </select>
+    </div> --}}
+    <div class="field">
+      <label>项目描述</label>
+      <textarea name="description" rows="8" cols="80">{{ data.product.description || '' }}</textarea>
     </div>
   </div>
 </form>
+<form class="ui segments form" action="{{ route('land/pms/IndexController.save') }}" method="post">
+  <div class="ui segment flex-between">
+    <b>办公空间需求统计 - 设计启动阶段</b>
+    <div class="ui labels">
+      <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
+      <div class="field disabled required" hidden>
+        <label>ID</label>
+        <input type="text" name="product_id" value="{{ data.product.product_id || '' }}" placeholder="" />
+      </div>
+      <button class="ui small blue label" type="submit" name="button" value="OfficeSpaceDemandStatistics">提交保存</button>
+    </div>
+  </div>
+  <div class="ui segment">
+    <table class="ui celled structured table">
+      <thead>
+        <tr>
+          <th class="two wide">类型</th>
+          <th class="two wide">子项</th>
+          <th class="five wide">操作</th>
+          <th>描述</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>办公室入口</td>
+          <td>前台</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_1" value="{{ data.land_products_osds.number_1 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="2">等候区</td>
+          <td>等候座位</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_2" value="{{ data.land_products_osds.number_2 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 组</div>
+                @endeach
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>显示屏</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_3" value="{{ data.land_products_osds.number_3 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="3">会议室类型数量</td>
+          <td>大（30人）</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_4" value="{{ data.land_products_osds.number_4 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 组投影</div>
+                @endeach
+              </div>
+            </div>
+
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_5" value="{{ data.land_products_osds.number_5 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要电视</div>
+                <div class="item" data-value="1">需要电视</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>中（10-20人）</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_6" value="{{ data.land_products_osds.number_6 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 组投影</div>
+                @endeach
+              </div>
+            </div>
+
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_7" value="{{ data.land_products_osds.number_7 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要电视</div>
+                <div class="item" data-value="1">需要电视</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>小（7-8人）</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_8" value="{{ data.land_products_osds.number_8 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 组投影</div>
+                @endeach
+              </div>
+            </div>
+
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_9" value="{{ data.land_products_osds.number_9 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要电视</div>
+                <div class="item" data-value="1">需要电视</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="2">展示区</td>
+          <td>展示墙</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_10" value="{{ data.land_products_osds.number_10 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>展厅</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_11" value="{{ data.land_products_osds.number_11 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">10~20平方米</div>
+                <div class="item" data-value="2">20~30平方米</div>
+                <div class="item" data-value="3">30~50平方米</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="2">休闲区</td>
+          <td>水吧</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_12" value="{{ data.land_products_osds.number_12 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>多功能区</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_13" value="{{ data.land_products_osds.number_13 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">10~20平方米</div>
+                <div class="item" data-value="2">20~30平方米</div>
+                <div class="item" data-value="3">30~50平方米</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="4">独立办公室</td>
+          <td>CEO办公室</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_14" value="{{ data.land_products_osds.number_14 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 间</div>
+                @endeach
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>财务室</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_15" value="{{ data.land_products_osds.number_15 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 间</div>
+                @endeach
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>经理室</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_16" value="{{ data.land_products_osds.number_16 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 间</div>
+                @endeach
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>行政办公室</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_17" value="{{ data.land_products_osds.number_17 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="5">辅助区</td>
+          <td>卫生间</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_18" value="{{ data.land_products_osds.number_18 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>储物间</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_19" value="{{ data.land_products_osds.number_19 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>打印机</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_20" value="{{ data.land_products_osds.number_20 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                @each(row in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
+                <div class="item" data-value="{{ row }}">{{ row }} 台</div>
+                @endeach
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>快递柜</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_21" value="{{ data.land_products_osds.number_21 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>其它需求</td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="5">办公区</td>
+          <td>工位数量</td>
+          <td>
+            <input type="number" name="" value="" />
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>工位尺寸</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_22" value="{{ data.land_products_osds.number_22 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">1200mmX600mm</div>
+                <div class="item" data-value="1">1500mmX600mm</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>天花装饰形式</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_23" value="{{ data.land_products_osds.number_23 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">裸顶</div>
+                <div class="item" data-value="1">石膏板吊顶</div>
+                <div class="item" data-value="2">矿棉板吊顶</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>地面装饰材质</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_24" value="{{ data.land_products_osds.number_24 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">地胶</div>
+                <div class="item" data-value="1">地砖</div>
+                <div class="item" data-value="2">地毯</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>其他需求</td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="2">网络布线要求</td>
+          <td>无线网络</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_25" value="{{ data.land_products_osds.number_25 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>工位网络接口</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_26" value="{{ data.land_products_osds.number_26 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">需要</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="2">机房配置要求</td>
+          <td>面积需求</td>
+          <td>
+            <input type="number" name="" value="" />
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>UPS电源</td>
+          <td>
+            <div class="ui selection dropdown">
+              <input type="hidden" name="number_27" value="{{ data.land_products_osds.number_27 || '' }}" />
+              <i class="dropdown icon"></i>
+              <div class="default text">下拉选择</div>
+              <div class="menu">
+                <div class="item" data-value="0">不需要</div>
+                <div class="item" data-value="1">30 分钟</div>
+                <div class="item" data-value="2">60 分钟</div>
+                <div class="item" data-value="3">120 分钟</div>
+                <div class="item" data-value="4">180 分钟</div>
+              </div>
+            </div>
+          </td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>家具采购要求</td>
+          <td></td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>IT设备采购要求</td>
+          <td></td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td rowspan="2">门禁及相关安全管理需求</td>
+          <td>人脸识别</td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>消防通道指纹识别</td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>办公设施设备采购项目</td>
+          <td></td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>加班餐电源需求</td>
+          <td></td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+        <tr>
+          <td>其他特殊需求</td>
+          <td></td>
+          <td></td>
+          <td>
+            <input type="text" name="" value="" />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</form>
+{{--  <div class="ui segments">
+  <div class="ui segment">
+    <b>实勘工具</b>
+  </div>
+</div>
+<div class="ui segments">
+  <div class="ui segment">
+    <b>预算评估工具</b>
+  </div>
+</div>  --}}

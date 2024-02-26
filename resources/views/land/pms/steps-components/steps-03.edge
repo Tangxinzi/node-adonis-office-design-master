@@ -21,7 +21,7 @@
     <div class="ui segment flex-between">
       <b>款项管理</b>
       <div class="ui labels">
-        <a class="ui small grey label" onclick="addPayment()">添加款项</a>
+        <a class="ui small grey label" onclick="addPayment()">添加项目</a>
         <a class="ui small grey label" onclick="addPaymentNode()">添加付款节点</a>
         <a class="ui small grey label" onclick="addPaymentItem()">添加支付项</a>
         {{--  <a class="ui small grey label" onclick="uploadFile()">上传文件</a>  --}}
@@ -55,7 +55,7 @@
                 <b>一层</b>
                 <p>开工日7.31<br/>竣工日9.30（12.14）</p>
               </td>
-              <td>¥1,008,819.00</td>
+              <td rowspan="3">¥1,008,819.00</td>
               <td>首付款20%</td>
               <td>¥201,763.80</td>
               <td>2023.07.30</td>
@@ -70,7 +70,6 @@
               <td></td>
             </tr>
             <tr>
-              <td>¥1,008,819.00</td>
               <td>竣工20%</td>
               <td>¥201,763.80</td>
               <td>2023.07.30</td>
@@ -85,7 +84,6 @@
               <td class="negative">XX</td>
             </tr>
             <tr>
-              <td>¥1,008,819.00</td>
               <td>首付款20%</td>
               <td>¥201,763.80</td>
               <td>2023.07.30</td>
@@ -117,7 +115,7 @@
     <div class="ui segment flex-between">
       <b>增项管理</b>
       <div class="ui labels">
-        <a class="ui small grey label" onclick="addPayment()">添加款项</a>
+        <a class="ui small grey label" onclick="addPayment()">添加项目</a>
         <a class="ui small grey label" onclick="addPaymentNode()">添加付款节点</a>
         <a class="ui small grey label" onclick="addPaymentItem()">添加支付项</a>
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>

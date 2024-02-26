@@ -61,7 +61,6 @@ Route_1.default.group(() => {
     Route_1.default.post('/good/save', 'land/admin/GoodController.save');
     Route_1.default.post('/good/delete', 'land/admin/GoodController.delete');
     Route_1.default.get('/pms', 'land/pms/IndexController.index');
-    Route_1.default.post('/pms/create', 'land/pms/IndexController.create');
     Route_1.default.post('/pms/save', 'land/pms/IndexController.save');
     Route_1.default.post('/pms/file', 'land/pms/IndexController.file');
     Route_1.default.post('/pms/member', 'land/pms/IndexController.member');

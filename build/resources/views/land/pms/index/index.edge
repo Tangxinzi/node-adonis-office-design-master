@@ -39,42 +39,44 @@
             <th>项目名称</th>
             <th>项目进度</th>
             <th>预算造价</th>
-            <th>启动日期</th>
+            <th>项目日期</th>
             <th class="two wide">操作</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>
-              <a href="{{ route('land/pms/IndexController.steps', { id: '0000', step: 'step-01' }) }}">[编号] 名称</a>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <i title="扫码查看" class="qrcode icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <i title="操作日志" class="print icon"></i>
-              &nbsp;&nbsp;&nbsp;&nbsp;
-              <i title="删除项目" class="trash alternate icon"></i>
-            </td>
-          </tr>
+          @each(product in data.products)
+            <tr>
+              <td>
+                <a href="{{ route('land/pms/IndexController.steps', { id: product.product_id, step: 'step-01' }) }}">[{{ product.serial }}] {{ product.name }}</a>
+              </td>
+              <td>-</td>
+              <td>¥{{ product.budget || 0 }}</td>
+              <td>{{ product.date_start }} - {{ product.date_end }}</td>
+              <td>
+                <i title="扫码查看" class="qrcode icon"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <i title="操作日志" class="print icon"></i>
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <i title="删除项目" class="trash alternate icon"></i>
+              </td>
+            </tr>
+          @endeach
         </tbody>
       </table>
     </div>
   </div>
-  <form class="ui full modal form" action="{{ route('land/pms/IndexController.create') }}" method="post">
+  <form class="ui full modal form" action="{{ route('land/pms/IndexController.save') }}" method="post">
     <i class="close icon"></i>
     <h3 class="header">创建项目</h3>
     <div class="content">
       <div class="five fields">
         <div class="field required">
           <label>编号</label>
-          <input type="text" name="project_id" placeholder="" />
+          <input type="text" name="serial" placeholder="" />
         </div>
         <div class="field required">
           <label>名称</label>
-          <input type="text" name="title" placeholder="" />
+          <input type="text" name="name" placeholder="" />
         </div>
         <div class="field">
           <label>地址</label>
@@ -86,37 +88,50 @@
         </div>
         <div class="field">
           <label>项目预算造价</label>
-          <input type="number" name="price" placeholder="元/平方米" />
+          <input type="number" name="budget" placeholder="元/平方米" />
         </div>
       </div>
       <div class="five fields">
         <div class="field">
-          <label>毛坯/遗留装修</label>
-          <input type="text" name="" placeholder="" />
+          <label>毛坯 / 遗留装修</label>
+          <input type="text" name="value01" placeholder="" />
         </div>
         <div class="field">
           <label>建筑层高</label>
-          <input type="text" name="" placeholder="" />
+          <input type="text" name="value02" placeholder="" />
         </div>
         <div class="field">
           <label>梁底高度</label>
-          <input type="text" name="" placeholder="" />
+          <input type="text" name="value03" placeholder="" />
         </div>
         <div class="field">
           <label>地面距离地面高度</label>
-          <input type="text" name="" placeholder="" />
+          <input type="text" name="value04" placeholder="" />
         </div>
         <div class="field">
           <label>完成面高度</label>
-          <input type="text" name="" placeholder="" />
+          <input type="text" name="value05" placeholder="" />
         </div>
       </div>
       <div class="five fields">
         <div class="field">
           <label>项目启动日期</label>
-          <input type="date" name="" placeholder="" />
+          <input type="date" name="date_start" placeholder="" />
+        </div>
+        <div class="field">
+          <label>项目进度 / 设计提交时间</label>
+          <input type="date" name="date_end" placeholder="" />
         </div>
       </div>
+      {{--  <div class="field">
+        <label>设计配合内容</label>
+        <select multiple="" class="ui dropdown" placeholder="">
+          <option value="">下拉选择</option>
+          <option value="00">工期时长</option>
+          <option value="01">产品详细规划（详细到工位数量，细部布局）</option>
+          <option value="02">工程造价</option>
+        </select>
+      </div>  --}}
       <div class="field">
         <label>项目描述</label>
         <textarea name="description" rows="8" cols="80"></textarea>
