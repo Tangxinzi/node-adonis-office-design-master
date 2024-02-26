@@ -50,58 +50,53 @@
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td class="left aligned" rowspan="3">
-                <b>一层</b>
-                <p>开工日7.31<br/>竣工日9.30（12.14）</p>
-              </td>
-              <td rowspan="3">¥1,008,819.00</td>
-              <td>首付款20%</td>
-              <td>¥201,763.80</td>
-              <td>2023.07.30</td>
-              <td class="positive">首付款20%</td>
-              <td class="positive">¥201,763.80</td>
-              <td class="positive">2023.08.03</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-            <tr>
-              <td>竣工20%</td>
-              <td>¥201,763.80</td>
-              <td>2023.07.30</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="warning">隐蔽验收30%</td>
-              <td class="warning">¥201,763.80</td>
-              <td class="warning">2023.08.03</td>
-              <td class="negative">¥201,763.80</td>
-              <td class="negative">2</td>
-              <td class="negative">XX</td>
-            </tr>
-            <tr>
-              <td>首付款20%</td>
-              <td>¥201,763.80</td>
-              <td>2023.07.30</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="negative">¥201,763.80</td>
-              <td class="negative">2</td>
-              <td class="negative">XX</td>
-            </tr>
+            @each(fund in data.product.fund)
+              @each(tr in fund.node)
+                <tr>
+                  <td class="left aligned">
+                    <b>{{ fund.products_fund_name }}</b>
+                    <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
+                  </td>
+                  <td>¥{{ fund.total }}</td>
+                  <td>{{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+                  <td>¥{{ tr.node_fund }}</td>
+                  <td>{{ tr.node_date }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              @endeach
+            @endeach
           </tbody>
         </table>
       </div>
+    </div>
   </div>
-  </div>
+  {{--  <tr>
+    <td class="left aligned" rowspan="3">
+      <b>一层</b>
+      <p>开工日7.31<br/>竣工日9.30（12.14）</p>
+    </td>
+    <td rowspan="3">¥1,008,819.00</td>
+    <td>首付款20%</td>
+    <td>¥201,763.80</td>
+    <td>2023.07.30</td>
+    <td class="positive">首付款20%</td>
+    <td class="positive">¥201,763.80</td>
+    <td class="positive">2023.08.03</td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+    <td></td>
+  </tr>  --}}
   {{--  <div class="ui segments">
     <div class="ui segment flex-between">
       <b>物料管理</b>

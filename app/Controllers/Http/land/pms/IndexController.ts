@@ -116,6 +116,22 @@ export default class IndexController {
       const land_products_osds = await Database.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
 
       switch (params.step) {
+        case 'step-03':
+          product.fund = await Database.from('land_products_fund').where('product_id', params.id).andWhereNull('deleted_at')
+          for (let index = 0; index < product.fund.length; index++) {
+            if (product.fund[index].id) {
+              product.fund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at')
+
+              // 数据完整
+              for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
+                product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name
+                product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start
+                product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end
+                product.fund[index].node[nodeIndex].total = product.fund[index].total
+              }
+            }
+          }
+          break;
         case 'step-04':
           dataset.information_documents = [
             {
@@ -155,10 +171,12 @@ export default class IndexController {
             }
           ]
           break;
-
         default:
           break;
       }
+
+      console.log(product.fund[0]);
+      
 
       if (all.type == 'json') {
         return response.json({
