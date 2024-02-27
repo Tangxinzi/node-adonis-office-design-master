@@ -122,12 +122,32 @@ export default class IndexController {
             if (product.fund[index].id) {
               product.fund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at')
 
-              // 数据完整
+              // 付款节点
               for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
                 product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name
                 product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start
                 product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end
                 product.fund[index].node[nodeIndex].total = product.fund[index].total
+
+                var nodePay = await Database.from('land_products_fund_node_pay').where({
+                  products_fund_id: product.fund[index].node[nodeIndex].products_fund_id,
+                  products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
+                }).andWhereNull('deleted_at').first() || {}
+
+                // 判断
+                if(nodePay.id) {
+                  // 支付项
+                  product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id
+                  product.fund[index].node[nodeIndex].pay = nodePay.pay
+                  product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
+                  product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date
+                } else if (Moment(Moment().format("YYYY-MM-DD")).isBefore(product.fund[index].node[nodeIndex].node_date), product.fund[index].node[nodeIndex].node_date) {
+                  
+                } else {
+                  
+                }
+
+                // console.log(product.fund[index].node[nodeIndex]);                
               }
             }
           }
@@ -173,10 +193,7 @@ export default class IndexController {
           break;
         default:
           break;
-      }
-
-      console.log(product.fund[0]);
-      
+      }      
 
       if (all.type == 'json') {
         return response.json({

@@ -33,17 +33,20 @@
         <table class="ui celled center aligned table" style="width: 110%;">
           <thead>
             <tr>
-              <th class="left aligned">项目</th>
+              <th class="two wide left aligned">项目</th>
               <th>合同总金额</th>
               <th>付款节点</th>
               <th>付款节点金额</th>
               <th>应付日期</th>
+
               <th>已支付款项</th>
               <th>已支付金额</th>
               <th>支付时间</th>
+
               <th>未支付款项</th>
               <th>未支付金额</th>
               <th>支付时间</th>
+
               <th>逾期金额</th>
               <th>逾期时间（天）</th>
               <th>滞纳金</th>
@@ -51,19 +54,27 @@
           </thead>
           <tbody>
             @each(fund in data.product.fund)
-              @each(tr in fund.node)
+              @each((tr, fundIndex) in fund.node)
                 <tr>
-                  <td class="left aligned">
-                    <b>{{ fund.products_fund_name }}</b>
-                    <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
-                  </td>
-                  <td>¥{{ fund.total }}</td>
-                  <td>{{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+                  @if(fundIndex == 0)
+                    <td class="left aligned" rowspan="{{ fund.node.length }}">
+                      <b>{{ fund.products_fund_name }}</b>
+                      <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
+                    </td>
+                    <td rowspan="{{ fund.node.length }}">¥{{ fund.total }}</td>
+                  @endif
+                  <td>{{ fundIndex }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
                   <td>¥{{ tr.node_fund }}</td>
                   <td>{{ tr.node_date }}</td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  @if(tr.pay && tr.pay_date)
+                    <td class="positive"></td>
+                    <td class="positive">{{ tr.pay ? '¥' + tr.pay : ''  }}</td>
+                    <td class="positive">{{ tr.pay_date || '' }}</td>                    
+                  @else
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  @endif
                   <td></td>
                   <td></td>
                   <td></td>
@@ -121,7 +132,7 @@
         <table class="ui celled center aligned table" style="width: 110%;">
           <thead>
             <tr>
-              <th class="left aligned">项目</th>
+              <th class="two wide left aligned">项目</th>
               <th>合同总金额</th>
               <th>付款节点</th>
               <th>付款节点金额</th>
