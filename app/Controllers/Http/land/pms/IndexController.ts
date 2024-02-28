@@ -117,7 +117,7 @@ export default class IndexController {
 
       switch (params.step) {
         case 'step-03':
-          product.fund = await Database.from('land_products_fund').where('product_id', params.id).andWhereNull('deleted_at')
+          product.fund = await Database.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at')
           for (let index = 0; index < product.fund.length; index++) {
             if (product.fund[index].id) {
               product.fund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at')
@@ -134,17 +134,19 @@ export default class IndexController {
                   products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
                 }).andWhereNull('deleted_at').first() || {}
 
-                // 判断
+                // 支付项
                 if(nodePay.id) {
-                  // 支付项
                   product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id
                   product.fund[index].node[nodeIndex].pay = nodePay.pay
                   product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
                   product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date
-                } else if (Moment(Moment().format("YYYY-MM-DD")).isBefore(product.fund[index].node[nodeIndex].node_date), product.fund[index].node[nodeIndex].node_date) {
-                  
-                } else {
-                  
+                } 
+
+                // 判断是否预期
+                // console.log(Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date), Moment().format("YYYY-MM-DD"), product.fund[index].node[nodeIndex].node_date);
+                if (Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
+                  product.fund[index].node[nodeIndex].expire = true
+                  product.fund[index].node[nodeIndex].expireDay = Moment().diff(product.fund[index].node[nodeIndex].node_date, 'days')
                 }
 
                 // console.log(product.fund[index].node[nodeIndex]);                
@@ -193,7 +195,7 @@ export default class IndexController {
           break;
         default:
           break;
-      }      
+      }
 
       if (all.type == 'json') {
         return response.json({

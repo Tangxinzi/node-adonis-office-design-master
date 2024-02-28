@@ -34,7 +34,7 @@
           <thead>
             <tr>
               <th class="two wide left aligned">项目</th>
-              <th>合同总金额</th>
+              <th class="one wide">合同总金额</th>
               <th>付款节点</th>
               <th>付款节点金额</th>
               <th>应付日期</th>
@@ -45,10 +45,10 @@
 
               <th>未支付款项</th>
               <th>未支付金额</th>
-              <th>支付时间</th>
+              <th>应付日期</th>
 
               <th>逾期金额</th>
-              <th>逾期时间（天）</th>
+              <th>逾期时间</th>
               <th>滞纳金</th>
             </tr>
           </thead>
@@ -57,30 +57,46 @@
               @each((tr, fundIndex) in fund.node)
                 <tr>
                   @if(fundIndex == 0)
-                    <td class="left aligned" rowspan="{{ fund.node.length }}">
-                      <b>{{ fund.products_fund_name }}</b>
-                      <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
-                    </td>
-                    <td rowspan="{{ fund.node.length }}">¥{{ fund.total }}</td>
+                  <td class="left aligned" rowspan="{{ fund.node.length }}">
+                    <b>{{ fund.products_fund_name }}</b>
+                    <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
+                  </td>
+                  <td rowspan="{{ fund.node.length }}">¥{{ fund.total }}</td>
                   @endif
-                  <td>{{ fundIndex }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+
+                  <td>{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
                   <td>¥{{ tr.node_fund }}</td>
                   <td>{{ tr.node_date }}</td>
                   @if(tr.pay && tr.pay_date)
-                    <td class="positive"></td>
-                    <td class="positive">{{ tr.pay ? '¥' + tr.pay : ''  }}</td>
-                    <td class="positive">{{ tr.pay_date || '' }}</td>                    
+                  <td class="positive">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ (tr.pay / tr.node_fund * 100).toFixed(2) }}%</td>
+                  <td class="positive">{{ tr.pay ? '¥' + tr.pay : ''  }}</td>
+                  <td class="positive">{{ tr.pay_date || '' }}</td>     
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
                   @else
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                    @if(tr.expire)
+                    <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+                    <td class="warning">¥{{ tr.node_fund }}</td>
+                    <td class="warning">{{ tr.node_date }}</td>
+                    <td class="error">¥{{ tr.node_fund }}</td>
+                    <td class="error">{{ tr.expireDay }}</td>
+                    <td class="error">¥{{ (tr.node_fund * 0.2).toFixed(2) }}</td>
+                    @else
+                    <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+                    <td class="warning">¥{{ tr.node_fund }}</td>
+                    <td class="warning">{{ tr.node_date }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
+                    @endif
                   @endif
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
                 </tr>
               @endeach
             @endeach
@@ -133,18 +149,21 @@
           <thead>
             <tr>
               <th class="two wide left aligned">项目</th>
-              <th>合同总金额</th>
+              <th class="one wide">合同总金额</th>
               <th>付款节点</th>
               <th>付款节点金额</th>
               <th>应付日期</th>
+
               <th>已支付款项</th>
               <th>已支付金额</th>
               <th>支付时间</th>
+
               <th>未支付款项</th>
               <th>未支付金额</th>
-              <th>支付时间</th>
+              <th>应付日期</th>
+
               <th>逾期金额</th>
-              <th>逾期时间（天）</th>
+              <th>逾期时间</th>
               <th>滞纳金</th>
             </tr>
           </thead>
@@ -153,7 +172,7 @@
               <td class="left aligned">
                 <b>设计 2 层</b>
               </td>
-              <td>¥1,008,819.00</td>
+              <td>¥10088.00</td>
               <td></td>
               <td></td>
               <td></td>
@@ -170,6 +189,19 @@
           </tbody>
         </table>
       </div>
+    </div>
+  </div>
+
+  <div class="ui info message">
+    <div class="content">
+      <p class="header">项目付款逻辑</p>
+      <ul class="list">
+        <li>首付款 20%，支付日期：项目启动；</li>
+        <li>隐蔽验收 30%，支付日期：隐蔽验收后 3 个工作日；</li>
+        <li>竣工款 20%，支付日期：竣工后 3 个工作日（竣工款的支付日期认定：甲方签署竣工验收单后，追溯到乙方最后一次提交竣工验收申请的日期。）；</li>
+        <li>竣工后款：25%，支付日期：竣工日后，每个月 25% / 3，分别记录为：竣工后款 A、B、C；</li>
+        <li>质保款：5%，竣工日后 365 天支付，质保期两年。</li>
+      </ul>
     </div>
   </div>
 </form>

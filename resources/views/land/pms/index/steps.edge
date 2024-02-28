@@ -279,6 +279,13 @@
         <input type="date" name="number" placeholder="" />
       </div>
       <div class="field">
+        <label>欠款费用</label>
+        <div class="ui toggle checkbox">
+          <input type="checkbox" tabindex="0" class="hidden">
+          <label>该笔支付项是否为欠款费用</label>
+        </div>
+      </div>
+      <div class="field">
         <label>备注</label>
         <textarea name="" cols="30" rows="4"></textarea>
       </div>
@@ -339,6 +346,8 @@
   function addMember() {
     $('.ui.modal.form.member').modal('show')
   }
+
+  $('.ui.checkbox').checkbox()
 
   const { createEditor, createToolbar } = window.wangEditor
 
