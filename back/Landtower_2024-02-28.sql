@@ -5,9 +5,9 @@
 # https://sequel-ace.com/
 # https://github.com/Sequel-Ace/Sequel-Ace
 #
-# 主机: 127.0.0.1 (MySQL 5.7.26)
-# 数据库: Landtower
-# 生成时间: 2024-02-28 10:40:01 +0000
+# 主机: localhost (MySQL 5.7.34)
+# 数据库: landtower
+# 生成时间: 2024-02-28 15:32:01 +0000
 # ************************************************************
 
 
@@ -525,7 +525,9 @@ LOCK TABLES `land_products_fund` WRITE;
 
 INSERT INTO `land_products_fund` (`id`, `product_id`, `products_fund_id`, `products_fund_name`, `total`, `description`, `date_start`, `date_end`, `status`, `type`, `created_at`, `modified_at`, `deleted_at`)
 VALUES
-	(1,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_90ASD3','一层',1008820,NULL,'2024-01-01','2024-12-31',1,0,'2024-02-26 10:56:58',NULL,NULL);
+	(1,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_90ASD3','一层',1008820,NULL,'2024-01-01','2024-12-31',1,0,'2024-02-26 10:56:58',NULL,NULL),
+	(2,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_9EXYw3','二层',100000,NULL,'2024-03-01','2024-03-31',1,0,'2024-02-28 22:57:23',NULL,NULL),
+	(3,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_SeEm2M','三层',200000,NULL,'2024-04-01','2024-04-30',1,0,'2024-02-28 23:23:22',NULL,NULL);
 
 /*!40000 ALTER TABLE `land_products_fund` ENABLE KEYS */;
 UNLOCK TABLES;
@@ -594,7 +596,8 @@ LOCK TABLES `land_products_fund_node_pay` WRITE;
 
 INSERT INTO `land_products_fund_node_pay` (`id`, `product_id`, `products_fund_id`, `products_fund_node_id`, `products_fund_node_pay_id`, `products_fund_node_pay_name`, `pay`, `node_fund_percent`, `description`, `pay_date`, `status`, `created_at`, `modified_at`, `deleted_at`)
 VALUES
-	(1,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_90ASD3','NODE_SC89AC','PAY_128912',NULL,201764,5,NULL,'2024-02-28',1,'2024-02-27 09:39:13',NULL,NULL);
+	(1,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_90ASD3','NODE_SC89AC','PAY_128912',NULL,201764,5,NULL,'2024-02-28',1,'2024-02-27 09:39:13',NULL,NULL),
+	(2,'2e629684-f14a-43bf-bc7d-93e41de11ad8','FUND_90ASD3','NODE_SC89AB','PAY_128913',NULL,201764,5,NULL,'2024-02-28',1,'2024-02-27 09:39:13',NULL,NULL);
 
 /*!40000 ALTER TABLE `land_products_fund_node_pay` ENABLE KEYS */;
 UNLOCK TABLES;

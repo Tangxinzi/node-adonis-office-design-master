@@ -38,21 +38,18 @@
               <th>付款节点</th>
               <th>付款节点金额</th>
               <th>应付日期</th>
-
               <th>已支付款项</th>
               <th>已支付金额</th>
               <th>支付时间</th>
-
               <th>未支付款项</th>
               <th>未支付金额</th>
               <th>应付日期</th>
-
               <th>逾期金额</th>
               <th>逾期时间</th>
               <th>滞纳金</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody {{ data.product.fund.length }}>
             @each(fund in data.product.fund)
               @each((tr, fundIndex) in fund.node)
                 <tr>
@@ -60,23 +57,30 @@
                   <td class="left aligned" rowspan="{{ fund.node.length }}">
                     <b>{{ fund.products_fund_name }}</b>
                     <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
+                    <p>{{ fund.description || '' }}</p>
                   </td>
-                  <td rowspan="{{ fund.node.length }}">¥{{ fund.total }}</td>
+                  <td rowspan="{{ fund.node.length }}">{{ fund.total ? '¥' + fund.total : '' }}</td>
                   @endif
 
-                  <td>{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
-                  <td>¥{{ tr.node_fund }}</td>
-                  <td>{{ tr.node_date }}</td>
+                  <td>{{ tr.products_fund_node_name && tr.node_fund_percent ? (fundIndex + 1) + '. ' + tr.products_fund_node_name + ' - ' + tr.node_fund_percent + '%' : '' }}</td>
+                  <td>{{ fund.node_fund ? '¥' + fund.node_fund : '' }}</td>
+                  <td>{{ tr.node_date || '' }}</td>
                   @if(tr.pay && tr.pay_date)
                   <td class="positive">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ (tr.pay / tr.node_fund * 100).toFixed(2) }}%</td>
                   <td class="positive">{{ tr.pay ? '¥' + tr.pay : ''  }}</td>
-                  <td class="positive">{{ tr.pay_date || '' }}</td>     
+                  <td class="positive">{{ tr.pay_date || '' }}</td>
                   <td></td>
                   <td></td>
                   <td></td>
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                    @if(tr.expire)
+                    <td class="error">¥{{ tr.node_fund }}</td>
+                    <td class="error">{{ tr.expireDay }}</td>
+                    <td class="error">¥{{ (tr.node_fund * 0.2).toFixed(2) }}</td>
+                    @else
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    @endif
                   @else
                   <td></td>
                   <td></td>
@@ -88,10 +92,17 @@
                     <td class="error">¥{{ tr.node_fund }}</td>
                     <td class="error">{{ tr.expireDay }}</td>
                     <td class="error">¥{{ (tr.node_fund * 0.2).toFixed(2) }}</td>
-                    @else
+                    @elif(tr.node_fund && tr.node_date)
                     <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
-                    <td class="warning">¥{{ tr.node_fund }}</td>
-                    <td class="warning">{{ tr.node_date }}</td>
+                    <td class="warning">¥{{ tr.node_fund || '' }}</td>
+                    <td class="warning">{{ tr.node_date || '' }}</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    @else
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>

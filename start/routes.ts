@@ -90,6 +90,7 @@ Route.group(() => {
   Route.post('/pms/save', 'land/pms/IndexController.save')
   Route.post('/pms/file', 'land/pms/IndexController.file')
   Route.post('/pms/member', 'land/pms/IndexController.member')
+  Route.post('/pms/products', 'land/pms/IndexController.products')
   Route.post('/pms/notifications', 'land/pms/IndexController.notifications')
   Route.get('/pms/:id/steps/:step', 'land/pms/IndexController.steps')
 }).prefix('/land')

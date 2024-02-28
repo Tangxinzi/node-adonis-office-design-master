@@ -114,6 +114,7 @@ export default class IndexController {
       }
       const product = await Database.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
       const land_products_osds = await Database.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
+      session.put('product', product)
 
       switch (params.step) {
         case 'step-03':
@@ -140,19 +141,28 @@ export default class IndexController {
                   product.fund[index].node[nodeIndex].pay = nodePay.pay
                   product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
                   product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date
-                } 
+                }
 
                 // 判断是否预期
-                // console.log(Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date), Moment().format("YYYY-MM-DD"), product.fund[index].node[nodeIndex].node_date);
                 if (Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
                   product.fund[index].node[nodeIndex].expire = true
                   product.fund[index].node[nodeIndex].expireDay = Moment().diff(product.fund[index].node[nodeIndex].node_date, 'days')
                 }
+              }
 
-                // console.log(product.fund[index].node[nodeIndex]);                
+              // 无付款节点情况
+              if (product.fund[index].node.length == 0) {
+                product.fund[index].node.push({
+                  products_fund_name: product.fund[index].products_fund_name,
+                  date_start: product.fund[index].date_start,
+                  date_end: product.fund[index].date_end,
+                  total: product.fund[index].total,
+                })
               }
             }
           }
+          console.log(product.fund);
+
           break;
         case 'step-04':
           dataset.information_documents = [
@@ -222,6 +232,32 @@ export default class IndexController {
       })
     } catch (error) {
       console.log(error)
+    }
+  }
+
+  public async products({ params, request, response, view, session }: HttpContextContract) {
+    try {
+      let all = request.all(), product = session.get('product')
+      switch (all.button) {
+        case 'fund':
+          await Database.table('land_products_fund').returning('id').insert({
+            product_id: product.product_id,
+            products_fund_id: `FUND_${ randomstring.generate(6) }`,
+            products_fund_name: all.products_fund_name,
+            total: all.total,
+            description: all.description,
+            date_start: all.date_start,
+            date_end: all.date_end
+          })
+
+          session.flash('message', { type: 'success', header: '创建成功', message: `${ all.products_fund_name }已创建。` })
+          return response.redirect('back')
+          break;
+      }
+    } catch (error) {
+      console.log(error)
+      session.flash('message', { type: 'error', header: '创建失败', message: `${ JSON.stringify(error) }` })
+      return response.redirect('back')
     }
   }
 }
