@@ -301,6 +301,48 @@
       </button>
     </div>
   </form>
+
+  <form class="ui full modal form con-scheduling" action="" method="post">
+    <i class="close icon"></i>
+    <h3 class="header">施工进度</h3>
+    <div class="content">
+      @each(item in [0, 1, 2, 3, 4])
+      <div class="ui segment">
+        <div class="four fields">
+          <div class="field">
+            <label>工作</label>
+            <input type="text" name="work" placeholder="" />
+          </div>
+          <div class="field">
+            <label>开始日期</label>
+            <input type="date" name="start_date" placeholder="" />
+          </div>
+          <div class="field">
+            <label>结束日期</label>
+            <input type="date" name="end_date" placeholder="" />
+          </div>
+          <div class="field">
+            <label>进度</label>
+            <div class="ui right labeled input">
+              <input type="number" name="progress" placeholder="">
+              <div class="ui basic label">%</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      @endeach
+    </div>
+    {{ csrfField() }}
+    <div class="actions">
+      <div class="ui left floated button">添加工期</div>
+      
+      <div class="ui deny button">取消</div>
+      <button class="ui grey right labeled icon button">
+        确认添加
+        <i class="checkmark icon"></i>
+      </button>
+    </div>
+  </form>
 @endsection
 
 @section('footer')
@@ -325,6 +367,10 @@
 <script type="text/javascript">
   function addPaymentItem() {
     $('.ui.modal.form.payment-item').modal('show')
+  }
+
+  function conScheduling() {
+    $('.ui.modal.form.con-scheduling').modal('show')
   }
 
   function addPaymentNode() {
