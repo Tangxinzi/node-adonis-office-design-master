@@ -18,6 +18,7 @@
   #editor-container { height: 500px; }
 
   .ui.labels>.label { margin: 0 0 0 .5em; }
+  .ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child { border-left: 1px solid rgba(34,36,38,.1); }
 </style>
 @endsection
 
@@ -166,31 +167,31 @@
     </div>
   </form>
 
-  <form class="ui full modal form payment" action="" method="post">
+  <form class="ui full modal form payment" action="{{ route('land/pms/IndexController.products') }}" method="post">
     <i class="close icon"></i>
     <h3 class="header">添加项目</h3>
     <div class="content">
       <div class="field">
         <label>项目名称</label>
-        <input type="text" name="product" placeholder="" />
+        <input type="text" name="products_fund_name" placeholder="" />
       </div>
       <div class="two fields">
         <div class="field">
           <label>开工日期</label>
-          <input type="date" name="" placeholder="" />
+          <input type="date" name="date_start" placeholder="" />
         </div>
         <div class="field">
           <label>竣工日期</label>
-          <input type="date" name="" placeholder="" />
+          <input type="date" name="date_end" placeholder="" />
         </div>
       </div>
       <div class="field">
         <label>合同总金额</label>
-        <input type="number" name="number" placeholder="不含增&设" />
+        <input type="number" name="total" placeholder="不含增&设" />
       </div>
       <div class="field">
         <label>备注</label>
-        <textarea name="" cols="30" rows="4"></textarea>
+        <textarea name="description" cols="30" rows="4"></textarea>
       </div>
     </div>
     {{ csrfField() }}
@@ -198,7 +199,7 @@
       <div class="ui deny button">
         取消
       </div>
-      <button class="ui grey right labeled icon button">
+      <button class="ui grey right labeled icon button" name="button" value="fund">
         确认添加
         <i class="checkmark icon"></i>
       </button>
@@ -278,6 +279,13 @@
         <input type="date" name="number" placeholder="" />
       </div>
       <div class="field">
+        <label>欠款费用</label>
+        <div class="ui toggle checkbox">
+          <input type="checkbox" tabindex="0" class="hidden">
+          <label>该笔支付项是否为欠款费用</label>
+        </div>
+      </div>
+      <div class="field">
         <label>备注</label>
         <textarea name="" cols="30" rows="4"></textarea>
       </div>
@@ -338,6 +346,8 @@
   function addMember() {
     $('.ui.modal.form.member').modal('show')
   }
+
+  $('.ui.checkbox').checkbox()
 
   const { createEditor, createToolbar } = window.wangEditor
 

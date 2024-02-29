@@ -4,6 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const Database_1 = __importDefault(global[Symbol.for('ioc.use')]("Adonis/Lucid/Database"));
+const moment_1 = __importDefault(require("moment"));
+const randomstring_1 = __importDefault(require("randomstring"));
 const uuid_1 = require("uuid");
 class IndexController {
     async index({ request, response, view, session }) {
@@ -108,7 +110,45 @@ class IndexController {
             };
             const product = await Database_1.default.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {};
             const land_products_osds = await Database_1.default.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {};
+            session.put('product', product);
             switch (params.step) {
+                case 'step-03':
+                    product.fund = await Database_1.default.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at');
+                    for (let index = 0; index < product.fund.length; index++) {
+                        if (product.fund[index].id) {
+                            product.fund[index].node = await Database_1.default.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at');
+                            for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
+                                product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name;
+                                product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start;
+                                product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end;
+                                product.fund[index].node[nodeIndex].total = product.fund[index].total;
+                                var nodePay = await Database_1.default.from('land_products_fund_node_pay').where({
+                                    products_fund_id: product.fund[index].node[nodeIndex].products_fund_id,
+                                    products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
+                                }).andWhereNull('deleted_at').first() || {};
+                                if (nodePay.id) {
+                                    product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id;
+                                    product.fund[index].node[nodeIndex].pay = nodePay.pay;
+                                    product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent;
+                                    product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date;
+                                }
+                                if ((0, moment_1.default)((0, moment_1.default)().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
+                                    product.fund[index].node[nodeIndex].expire = true;
+                                    product.fund[index].node[nodeIndex].expireDay = (0, moment_1.default)().diff(product.fund[index].node[nodeIndex].node_date, 'days');
+                                }
+                            }
+                            if (product.fund[index].node.length == 0) {
+                                product.fund[index].node.push({
+                                    products_fund_name: product.fund[index].products_fund_name,
+                                    date_start: product.fund[index].date_start,
+                                    date_end: product.fund[index].date_end,
+                                    total: product.fund[index].total,
+                                });
+                            }
+                        }
+                    }
+                    console.log(product.fund);
+                    break;
                 case 'step-04':
                     dataset.information_documents = [
                         {
@@ -176,6 +216,31 @@ class IndexController {
         }
         catch (error) {
             console.log(error);
+        }
+    }
+    async products({ params, request, response, view, session }) {
+        try {
+            let all = request.all(), product = session.get('product');
+            switch (all.button) {
+                case 'fund':
+                    await Database_1.default.table('land_products_fund').returning('id').insert({
+                        product_id: product.product_id,
+                        products_fund_id: `FUND_${randomstring_1.default.generate(6)}`,
+                        products_fund_name: all.products_fund_name,
+                        total: all.total,
+                        description: all.description,
+                        date_start: all.date_start,
+                        date_end: all.date_end
+                    });
+                    session.flash('message', { type: 'success', header: '创建成功', message: `${all.products_fund_name}已创建。` });
+                    return response.redirect('back');
+                    break;
+            }
+        }
+        catch (error) {
+            console.log(error);
+            session.flash('message', { type: 'error', header: '创建失败', message: `${JSON.stringify(error)}` });
+            return response.redirect('back');
         }
     }
 }

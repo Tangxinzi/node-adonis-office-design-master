@@ -64,6 +64,7 @@ Route_1.default.group(() => {
     Route_1.default.post('/pms/save', 'land/pms/IndexController.save');
     Route_1.default.post('/pms/file', 'land/pms/IndexController.file');
     Route_1.default.post('/pms/member', 'land/pms/IndexController.member');
+    Route_1.default.post('/pms/products', 'land/pms/IndexController.products');
     Route_1.default.post('/pms/notifications', 'land/pms/IndexController.notifications');
     Route_1.default.get('/pms/:id/steps/:step', 'land/pms/IndexController.steps');
 }).prefix('/land');
