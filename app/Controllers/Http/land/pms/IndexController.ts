@@ -114,11 +114,11 @@ export default class IndexController {
       }
       const product = await Database.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
       const land_products_osds = await Database.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
+      product.fund = await Database.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at') || {}
       session.put('product', product)
 
       switch (params.step) {
         case 'step-03':
-          product.fund = await Database.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at')
           for (let index = 0; index < product.fund.length; index++) {
             if (product.fund[index].id) {
               product.fund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at')
@@ -161,8 +161,6 @@ export default class IndexController {
               }
             }
           }
-          console.log(product.fund);
-
           break;
         case 'step-04':
           dataset.information_documents = [
@@ -220,6 +218,8 @@ export default class IndexController {
         })
       }
 
+      console.log(product.fund[0]);
+
       return view.render('land/pms/index/steps', {
         data: {
           title: '编辑项目',
@@ -251,6 +251,19 @@ export default class IndexController {
           })
 
           session.flash('message', { type: 'success', header: '创建成功', message: `${ all.products_fund_name }已创建。` })
+          return response.redirect('back')
+          break;
+        case 'node':
+          await Database.table('land_products_fund_node').returning('id').insert({
+            product_id: product.product_id,
+            products_fund_id: all.products_fund_id,
+            products_fund_node_id: `NODE_${ randomstring.generate(6) }`,
+            products_fund_node_name: all.products_fund_node_name,
+            node_fund_percent: all.node_fund_percent,
+            node_date: all.node_date
+          })
+
+          session.flash('message', { type: 'success', header: '创建成功', message: `${ all.products_fund_node_name }已创建。` })
           return response.redirect('back')
           break;
       }

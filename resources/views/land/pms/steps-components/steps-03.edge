@@ -79,9 +79,7 @@
                     <td></td>
                     @endif
                   @else
-                  <td></td>
-                  <td></td>
-                  <td></td>
+                  {{--  未支付  --}}
                     @if(tr.expire)
                     <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
                     <td class="warning">¥{{ tr.node_fund }}</td>
