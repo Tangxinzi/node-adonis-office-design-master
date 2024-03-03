@@ -137,14 +137,17 @@ export default class IndexController {
 
                 // 支付项
                 if(nodePay.id) {
+                  product.fund[index].node[nodeIndex].isPay = true
                   product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id
                   product.fund[index].node[nodeIndex].pay = nodePay.pay
                   product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
                   product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date
+                } else {
+                  product.fund[index].node[nodeIndex].isPay = false
                 }
 
-                // 判断是否预期
                 if (Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
+                  // 判断是否预期
                   product.fund[index].node[nodeIndex].expire = true
                   product.fund[index].node[nodeIndex].expireDay = Moment().diff(product.fund[index].node[nodeIndex].node_date, 'days')
                 }
@@ -218,8 +221,6 @@ export default class IndexController {
         })
       }
 
-      console.log(product.fund[0]);
-
       return view.render('land/pms/index/steps', {
         data: {
           title: '编辑项目',
@@ -238,6 +239,7 @@ export default class IndexController {
   public async products({ params, request, response, view, session }: HttpContextContract) {
     try {
       let all = request.all(), product = session.get('product')
+
       switch (all.button) {
         case 'fund':
           await Database.table('land_products_fund').returning('id').insert({
@@ -264,6 +266,22 @@ export default class IndexController {
           })
 
           session.flash('message', { type: 'success', header: '创建成功', message: `${ all.products_fund_node_name }已创建。` })
+          return response.redirect('back')
+          break;
+        case 'pay':
+          const node = await Database.from('land_products_fund_node').where('products_fund_node_id', all.products_fund_node_id).andWhereNull('deleted_at').first() || {}
+          await Database.table('land_products_fund_node_pay').returning('id').insert({
+            product_id: product.product_id,
+            products_fund_id: node.products_fund_id,
+            products_fund_node_id: all.products_fund_node_id,
+            products_fund_node_pay_id: `PAY_${ randomstring.generate(6) }`,
+            products_fund_node_pay_name: all.products_fund_node_pay_name,
+            pay: all.pay,
+            pay_date: all.pay_date,
+            description: all.description
+          })
+
+          session.flash('message', { type: 'success', header: '创建成功', message: `${ all.products_fund_node_pay_name }已创建。` })
           return response.redirect('back')
           break;
       }

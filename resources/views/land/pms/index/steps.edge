@@ -167,137 +167,6 @@
     </div>
   </form>
 
-  <form class="ui full modal form payment" action="{{ route('land/pms/IndexController.products') }}" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">添加项目</h3>
-    <div class="content">
-      <div class="field">
-        <label>项目名称</label>
-        <input type="text" name="products_fund_name" placeholder="" />
-      </div>
-      <div class="two fields">
-        <div class="field">
-          <label>开工日期</label>
-          <input type="date" name="date_start" placeholder="" />
-        </div>
-        <div class="field">
-          <label>竣工日期</label>
-          <input type="date" name="date_end" placeholder="" />
-        </div>
-      </div>
-      <div class="field">
-        <label>合同总金额</label>
-        <input type="number" name="total" placeholder="不含增&设" />
-      </div>
-      <div class="field">
-        <label>备注</label>
-        <textarea name="description" cols="30" rows="4"></textarea>
-      </div>
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui deny button">
-        取消
-      </div>
-      <button class="ui grey right labeled icon button" name="button" value="fund">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
-
-  <form class="ui full modal form payment-node" action="{{ route('land/pms/IndexController.products') }}" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">添加付款节点</h3>
-    <div class="content">
-      <div class="field">
-        <label>款项</label>
-        <div class="ui fluid selection dropdown">
-          <input type="hidden" name="products_fund_id">
-          <i class="dropdown icon"></i>
-          <div class="default text">下拉选择</div>
-          <div class="menu">
-            @each(fund in data.product.fund)
-            <div class="item" data-value="{{ fund.products_fund_id }}">{{ data.product.name }}　·　{{ fund.products_fund_name }}　·　¥{{ fund.total }}</div>              
-            @endeach
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>节点名称</label>
-        <input type="text" name="products_fund_node_name" placeholder="" />
-      </div>
-      <div class="field">
-        <label>节点金额支付比例</label>
-        <input type="number" name="node_fund_percent" placeholder="" />
-      </div>
-      <div class="field">
-        <label>应付日期</label>
-        <input type="date" name="node_date" placeholder="" />
-      </div>
-      <div class="ui info message">未支付款项、支付金额、滞纳金等将自动计算展示。</div>
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui deny button">
-        取消
-      </div>
-      <button class="ui grey right labeled icon button" name="button" value="node">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
-
-  <form class="ui full modal form payment-item" action="" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">添加支付项</h3>
-    <div class="content">
-      <div class="field">
-        <label>付款节点</label>
-        <div class="ui fluid selection dropdown">
-          <input type="hidden" name="country">
-          <i class="dropdown icon"></i>
-          <div class="default text">下拉选择</div>
-          <div class="menu">
-            <div class="item" data-value="">一层 · 首付款20%</div>
-            <div class="item" data-value="">一层 · 隐蔽验收30%</div>
-            <div class="item" data-value="">一层 · 竣工20%</div>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>付款金额</label>
-        <input type="number" name="number" placeholder="" />
-      </div>
-      <div class="field">
-        <label>支付日期</label>
-        <input type="date" name="number" placeholder="" />
-      </div>
-      <div class="field">
-        <label>欠款费用</label>
-        <div class="ui toggle checkbox">
-          <input type="checkbox" tabindex="0" class="hidden">
-          <label>该笔支付项是否为欠款费用</label>
-        </div>
-      </div>
-      <div class="field">
-        <label>备注</label>
-        <textarea name="" cols="30" rows="4"></textarea>
-      </div>
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui deny button">
-        取消
-      </div>
-      <button class="ui grey right labeled icon button">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
-
   <form class="ui full modal form con-scheduling" action="" method="post">
     <i class="close icon"></i>
     <h3 class="header">施工进度</h3>
@@ -338,7 +207,7 @@
     {{ csrfField() }}
     <div class="actions">
       <div class="ui left floated button">添加工期</div>
-      
+
       <div class="ui deny button">取消</div>
       <button class="ui grey right labeled icon button">
         确认添加
