@@ -19,6 +19,8 @@
 
   .ui.labels>.label { margin: 0 0 0 .5em; }
   .ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child { border-left: 1px solid rgba(34,36,38,.1); }
+
+  .land_products_fund .ui.celled.table tr td { min-height: 50px !important; }
 </style>
 @endsection
 
@@ -249,7 +251,8 @@
     $('.ui.modal.form.payment-node').modal('show')
   }
 
-  function addPayment() {
+  function addPayment(type) {
+    $('#type').val(type || 0)
     $('.ui.modal.form.payment').modal('show')
   }
 

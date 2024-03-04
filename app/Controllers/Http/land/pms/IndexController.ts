@@ -107,63 +107,122 @@ export default class IndexController {
     }
   }
 
+  async formatData (product) {
+    try {
+      // 款项管理
+      for (let index = 0; index < product.fund.length; index++) {
+        if (product.fund[index].id) {
+          product.fund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at')
+
+          // 付款节点
+          for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
+            product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name
+            product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start
+            product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end
+            product.fund[index].node[nodeIndex].total = product.fund[index].total
+
+            var nodePay = await Database.from('land_products_fund_node_pay').where({
+              products_fund_id: product.fund[index].node[nodeIndex].products_fund_id,
+              products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
+            }).andWhereNull('deleted_at').first() || {}
+
+            // 支付项
+            if(nodePay.id) {
+              product.fund[index].node[nodeIndex].isPay = true
+              product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id
+              product.fund[index].node[nodeIndex].pay = nodePay.pay
+              product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
+              product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date
+            } else {
+              product.fund[index].node[nodeIndex].isPay = false
+            }
+
+            if (Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
+              // 判断是否预期
+              product.fund[index].node[nodeIndex].expire = true
+              product.fund[index].node[nodeIndex].expireDay = Moment().diff(product.fund[index].node[nodeIndex].node_date, 'days')
+            }
+          }
+
+          // 无付款节点情况
+          if (product.fund[index].node.length == 0) {
+            product.fund[index].node.push({
+              products_fund_name: product.fund[index].products_fund_name,
+              date_start: product.fund[index].date_start,
+              date_end: product.fund[index].date_end,
+              total: product.fund[index].total,
+            })
+          }
+        }
+      }
+
+      // 增项管理
+      for (let index = 0; index < product.addFund.length; index++) {
+        if (product.addFund[index].id) {
+          product.addFund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.addFund[index].products_fund_id).andWhereNull('deleted_at')
+
+          // 付款节点
+          for (let nodeIndex = 0; nodeIndex < product.addFund[index].node.length; nodeIndex++) {
+            product.addFund[index].node[nodeIndex].products_fund_name = product.addFund[index].products_fund_name
+            product.addFund[index].node[nodeIndex].date_start = product.addFund[index].date_start
+            product.addFund[index].node[nodeIndex].date_end = product.addFund[index].date_end
+            product.addFund[index].node[nodeIndex].total = product.addFund[index].total
+
+            var nodePay = await Database.from('land_products_fund_node_pay').where({
+              products_fund_id: product.addFund[index].node[nodeIndex].products_fund_id,
+              products_fund_node_id: product.addFund[index].node[nodeIndex].products_fund_node_id
+            }).andWhereNull('deleted_at').first() || {}
+
+            // 支付项
+            if(nodePay.id) {
+              product.addFund[index].node[nodeIndex].isPay = true
+              product.addFund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id
+              product.addFund[index].node[nodeIndex].pay = nodePay.pay
+              product.addFund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
+              product.addFund[index].node[nodeIndex].pay_date = nodePay.pay_date
+            } else {
+              product.addFund[index].node[nodeIndex].isPay = false
+            }
+
+            if (Moment(Moment().format("YYYY-MM-DD")).isAfter(product.addFund[index].node[nodeIndex].node_date)) {
+              // 判断是否预期
+              product.addFund[index].node[nodeIndex].expire = true
+              product.addFund[index].node[nodeIndex].expireDay = Moment().diff(product.addFund[index].node[nodeIndex].node_date, 'days')
+            }
+          }
+
+          // 无付款节点情况
+          if (product.addFund[index].node.length == 0) {
+            product.addFund[index].node.push({
+              products_fund_name: product.addFund[index].products_fund_name,
+              date_start: product.addFund[index].date_start,
+              date_end: product.addFund[index].date_end,
+              total: product.addFund[index].total,
+            })
+          }
+        }
+      }
+
+      return product
+    } catch (error) {
+      console.log(error);      
+    }
+  }
+
   public async steps({ params, request, response, view, session }: HttpContextContract) {
     try {
       let all = request.all(), dataset = {
         information_documents: []
       }
-      const product = await Database.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
+      let product = await Database.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
       const land_products_osds = await Database.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
       product.fund = await Database.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at') || {}
+      product.addFund = await Database.from('land_products_fund').where({ product_id: params.id, type: 1 }).andWhereNull('deleted_at') || {}
       session.put('product', product)
 
       switch (params.step) {
         case 'step-03':
-          for (let index = 0; index < product.fund.length; index++) {
-            if (product.fund[index].id) {
-              product.fund[index].node = await Database.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at')
-
-              // 付款节点
-              for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
-                product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name
-                product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start
-                product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end
-                product.fund[index].node[nodeIndex].total = product.fund[index].total
-
-                var nodePay = await Database.from('land_products_fund_node_pay').where({
-                  products_fund_id: product.fund[index].node[nodeIndex].products_fund_id,
-                  products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
-                }).andWhereNull('deleted_at').first() || {}
-
-                // 支付项
-                if(nodePay.id) {
-                  product.fund[index].node[nodeIndex].isPay = true
-                  product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id
-                  product.fund[index].node[nodeIndex].pay = nodePay.pay
-                  product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent
-                  product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date
-                } else {
-                  product.fund[index].node[nodeIndex].isPay = false
-                }
-
-                if (Moment(Moment().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
-                  // 判断是否预期
-                  product.fund[index].node[nodeIndex].expire = true
-                  product.fund[index].node[nodeIndex].expireDay = Moment().diff(product.fund[index].node[nodeIndex].node_date, 'days')
-                }
-              }
-
-              // 无付款节点情况
-              if (product.fund[index].node.length == 0) {
-                product.fund[index].node.push({
-                  products_fund_name: product.fund[index].products_fund_name,
-                  date_start: product.fund[index].date_start,
-                  date_end: product.fund[index].date_end,
-                  total: product.fund[index].total,
-                })
-              }
-            }
-          }
+          product = await this.formatData(product)
           break;
         case 'step-04':
           dataset.information_documents = [
@@ -221,6 +280,9 @@ export default class IndexController {
         })
       }
 
+      console.log(product.addFund[0]);
+      
+
       return view.render('land/pms/index/steps', {
         data: {
           title: '编辑项目',
@@ -243,6 +305,7 @@ export default class IndexController {
       switch (all.button) {
         case 'fund':
           await Database.table('land_products_fund').returning('id').insert({
+            type: all.type || 0,
             product_id: product.product_id,
             products_fund_id: `FUND_${ randomstring.generate(6) }`,
             products_fund_name: all.products_fund_name,
