@@ -225,6 +225,36 @@ export default class IndexController {
           product = await this.formatData(product)
           break;
         case 'step-04':
+          product.progress = product.progress ? JSON.parse(product.progress) : {}
+          product.progress.num = product.progress.work.length
+          product.progress.day = []
+          product.progress.startDate = product.progress.start_date[0]
+          product.progress.endDate = Moment(product.progress.end_date[0])
+          for (let index = 0; index < product.progress.num; index++) {
+            // 日期最小值
+            if (Moment(product.progress.start_date[index]).isBefore(product.progress.startDate)) {
+              product.progress.startDate = product.progress.start_date[index]
+            }
+
+            // 日期最大值
+            if (Moment(product.progress.end_date[index]).isAfter(product.progress.endDate)) {
+              product.progress.endDate = product.progress.end_date[index]
+            }
+
+            product.progress.day.push(Moment(product.progress.end_date[index]).diff(product.progress.start_date[index], 'days'))
+          }
+
+          const startDate = Moment(product.progress.startDate), endDate = Moment(product.progress.endDate);
+          let currentDate = startDate.clone(), days = [];
+
+          while (currentDate.isSameOrBefore(endDate)) {
+            days.push(currentDate.format('YYYY-MM-DD'));
+            currentDate.add(1, 'days');
+          }
+
+          product.progress.days = days
+
+          console.log(product.progress);
           dataset.information_documents = [
             {
               file: '项目周报',
@@ -280,12 +310,9 @@ export default class IndexController {
         })
       }
 
-      console.log(product.addFund[0]);
-      
-
       return view.render('land/pms/index/steps', {
         data: {
-          title: '编辑项目',
+          title: product.name + ' - 项目',
           all,
           step: params.step,
           product,
@@ -347,6 +374,19 @@ export default class IndexController {
           session.flash('message', { type: 'success', header: '创建成功', message: `${ all.products_fund_node_pay_name }已创建。` })
           return response.redirect('back')
           break;
+        case 'progress':
+          console.log(all);
+          await Database.from('land_products').where('product_id', product.product_id).update({
+            progress: JSON.stringify({
+              work: all.work,
+              start_date: all.start_date,
+              end_date: all.end_date,
+              delayed_date: all.delayed_date,
+              progress: all.progress,
+            })
+          })
+          session.flash('message', { type: 'success', header: '设置成功', message: `施工进度已设置。` })
+          return response.redirect('back')
       }
     } catch (error) {
       console.log(error)
