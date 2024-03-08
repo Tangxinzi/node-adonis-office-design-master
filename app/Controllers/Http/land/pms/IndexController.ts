@@ -205,7 +205,7 @@ export default class IndexController {
 
       return product
     } catch (error) {
-      console.log(error);      
+      console.log(error);
     }
   }
 
@@ -228,6 +228,8 @@ export default class IndexController {
           product.progress = product.progress ? JSON.parse(product.progress) : {}
           product.progress.num = product.progress.work.length
           product.progress.day = []
+          product.progress.dayCount = 0
+          product.progress.delay_date = []
           product.progress.startDate = product.progress.start_date[0]
           product.progress.endDate = Moment(product.progress.end_date[0])
           for (let index = 0; index < product.progress.num; index++) {
@@ -241,7 +243,9 @@ export default class IndexController {
               product.progress.endDate = product.progress.end_date[index]
             }
 
-            product.progress.day.push(Moment(product.progress.end_date[index]).diff(product.progress.start_date[index], 'days'))
+            let day = Moment(product.progress.end_date[index]).diff(product.progress.start_date[index], 'days')
+            product.progress.dayCount += day + 1
+            product.progress.day.push(day)
           }
 
           const startDate = Moment(product.progress.startDate), endDate = Moment(product.progress.endDate);
@@ -253,6 +257,12 @@ export default class IndexController {
           }
 
           product.progress.days = days
+
+          // 整理数据
+          product.progress.items = []
+          for (let index = 0; index < product.progress.num; index++) {
+            const element = array[index];
+          }
 
           console.log(product.progress);
           dataset.information_documents = [

@@ -25,7 +25,7 @@
             <th>#</th>
             <th>项目</th>
             @each(day in data.product.progress.days)
-            <th>{{ day[8] }}{{ day[9] }}</th>              
+            <th>{{ day[8] }}{{ day[9] }}</th>
             @endeach
           </tr>
         </thead>
@@ -34,7 +34,7 @@
           <tr>
             <td>{{ index }}</td>
             <td>{{ work }}</td>
-          </tr>          
+          </tr>
           @endeach
         </tbody>
       </table>
@@ -67,7 +67,7 @@
             </div>
           </div>
         @endeach
-      </div>      
+      </div>
     </div>
   </div>  --}}
   {{--  <div class="ui segments">
@@ -79,34 +79,31 @@
 
 <form class="ui full modal form con-scheduling" action="{{ route('land/pms/IndexController.products') }}" method="post" style="width: 1100px;">
   <i class="close icon"></i>
-  <h3 class="header">施工进度</h3>
+  <h3 class="header">施工进度 {{ data.product.progress.dayCount }} 天</h3>
   <div class="content">
-    <div class="ui message">1.工作项内容填写后，系统自动计算工作周期；2.工作项内容填写后，请维护实际完成天数；3.工作项进度，需更具实际项目周期进行预估。</div>
+    <div class="ui message">1.工作项内容填写后，系统自动计算工作周期；2.工作项内容填写后，请维护实际完成天数；3.工作项进度，1 / 天数 * 100% = 以日计量单位。</div>
     <div class="ui segments">
       @each((progress, index) in data.product.progress.work)
         <div class="ui segment">
           <div class="five fields">
-            <div class="field">
-              <label>{{ index + 1 }}.工作项</label>
+            <div class="field required">
+              <label>{{ index + 1 }}.工作项 - {{ data.product.progress.day[index] + 1 }} 天</label>
               <input type="text" name="work[]" value="{{ data.product.progress.work[index] || '' }}" placeholder="" />
             </div>
-            <div class="field">
+            <div class="field required">
               <label>开始日期</label>
               <input type="date" name="start_date[]" value="{{ data.product.progress.start_date[index] || '' }}" placeholder="" />
             </div>
-            <div class="field">
+            <div class="field required">
               <label>结束日期</label>
               <input type="date" name="end_date[]" value="{{ data.product.progress.end_date[index] || '' }}" placeholder="" />
             </div>
             <div class="field">
-              <label>进度 {{ (data.product.progress.progress[index] / (data.product.progress.day[index] + 1)).toFixed(2) }}%</label>
-              <div class="ui right labeled input">
-                <input type="number" name="progress[]" value="{{ data.product.progress.progress[index] || '' }}" placeholder="">
-                <div class="ui basic label">%</div>
-              </div>
+              <label>延期日期</label>
+              <input type="date" name="delay_date[]" value="{{ data.product.progress.delay_date[index] || '' }}" placeholder="" />
             </div>
             <div class="field">
-              <label>完成天数 - {{ data.product.progress.day[index] + 1 }}</label>
+              <label>完成天数</label>
               <input type="number" name="day" value="" placeholder="" disabled />
             </div>
           </div>
@@ -140,7 +137,7 @@
             <input type="number" name="day" placeholder="" disabled />
           </div>
         </div>
-      </div>      
+      </div>
     @endif
   </div>
   {{ csrfField() }}
