@@ -28,7 +28,7 @@
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
-    <div class="ui segment">
+    <div class="ui segment land_products_fund">
       <div class="scroll-container" style="width: 100%; overflow-x: scroll;">
         <table class="ui celled center aligned table" style="width: 110%;">
           <thead>
@@ -51,58 +51,54 @@
           <tbody {{ data.product.fund.length }}>
             @each(fund in data.product.fund)
               @each((tr, fundIndex) in fund.node)
-                <tr>
-                  @if(fundIndex == 0)
-                  <td class="left aligned" rowspan="{{ fund.node.length }}">
+              <tr>
+                @if(fundIndex == 0)
+                  <td class="left aligned" rowspan="{{ fund.node.length }}" title="项目">
                     <b>{{ fund.products_fund_name }}</b>
                     <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
                     <p>{{ fund.description || '' }}</p>
                   </td>
-                  <td rowspan="{{ fund.node.length }}">{{ fund.total ? '¥' + fund.total : '' }}</td>
-                  @endif
+                  <td rowspan="{{ fund.node.length }}" title="合同总金额">{{ fund.total ? '¥' + fund.total : '' }}</td>
+                @endif
 
-                  <td>{{ tr.products_fund_node_name && tr.node_fund_percent ? (fundIndex + 1) + '. ' + tr.products_fund_node_name + ' - ' + tr.node_fund_percent + '%' : '' }}</td>
-                  <td>{{ tr.node_fund ? '¥' + tr.node_fund : '' }}</td>
-                  <td>{{ tr.node_date || '' }}</td>
-                  @if(tr.pay && tr.pay_date)
+                <td title="付款节点">{{ tr.products_fund_node_name && tr.node_fund_percent ? (fundIndex + 1) + '. ' + tr.products_fund_node_name + ' - ' + tr.node_fund_percent + '%' : '' }}</td>
+                <td title="付款节点金额">{{ tr.node_fund ? '¥' + tr.node_fund : '' }}</td>
+                <td title="应付日期">{{ tr.node_date || '' }}</td>
+
+                @if(tr.isPay)
+                  {{-- 已支付 --}}
                   <td class="positive">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ (tr.pay / tr.node_fund * 100).toFixed(2) }}%</td>
                   <td class="positive">{{ tr.pay ? '¥' + tr.pay : ''  }}</td>
                   <td class="positive">{{ tr.pay_date || '' }}</td>
                   <td></td>
                   <td></td>
                   <td></td>
-                    @if(tr.expire)
-                    <td class="error">¥{{ tr.node_fund }}</td>
-                    <td class="error">{{ tr.expireDay }}</td>
-                    @else
-                    <td></td>
-                    <td></td>
-                    @endif
-                  @else
+                @elseif(tr.products_fund_node_name && tr.node_fund_percent)
+                  {{-- 未支付 --}}
                   <td></td>
                   <td></td>
                   <td></td>
-                    @if(tr.expire)
-                    <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
-                    <td class="warning">¥{{ tr.node_fund }}</td>
-                    <td class="warning">{{ tr.node_date }}</td>
-                    <td class="error">¥{{ tr.node_fund }}</td>
-                    <td class="error">{{ tr.expireDay }}</td>
-                    @elif(tr.node_fund && tr.node_date)
-                    <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
-                    <td class="warning">¥{{ tr.node_fund || '' }}</td>
-                    <td class="warning">{{ tr.node_date || '' }}</td>
-                    <td></td>
-                    <td></td>
-                    @else
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    @endif
-                  @endif
-                </tr>
+                  <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+                  <td class="warning">¥{{ tr.node_fund || '' }}</td>
+                  <td class="warning">{{ tr.node_date || '' }}</td>
+                @else
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                @endif
+
+                {{-- 是否逾期 --}}
+                @if(tr.expire)
+                  <td class="error">¥{{ tr.node_fund }}</td>
+                  <td class="error">{{ tr.expireDay }}</td>
+                @else
+                  <td></td>
+                  <td></td>
+                @endif
+              </tr>
               @endeach
             @endeach
           </tbody>
@@ -110,25 +106,6 @@
       </div>
     </div>
   </div>
-  {{--  <tr>
-    <td class="left aligned" rowspan="3">
-      <b>一层</b>
-      <p>开工日7.31<br/>竣工日9.30（12.14）</p>
-    </td>
-    <td rowspan="3">¥1,008,819.00</td>
-    <td>首付款20%</td>
-    <td>¥201,763.80</td>
-    <td>2023.07.30</td>
-    <td class="positive">首付款20%</td>
-    <td class="positive">¥201,763.80</td>
-    <td class="positive">2023.08.03</td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-    <td></td>
-  </tr>  --}}
   {{--  <div class="ui segments">
     <div class="ui segment flex-between">
       <b>物料管理</b>
@@ -142,13 +119,13 @@
     <div class="ui segment flex-between">
       <b>增项管理</b>
       <div class="ui labels">
-        <a class="ui small grey label" onclick="addPayment()">添加项目</a>
+        <a class="ui small grey label" onclick="addPayment(1)">添加项目</a>
         <a class="ui small grey label" onclick="addPaymentNode()">添加付款节点</a>
         <a class="ui small grey label" onclick="addPaymentItem()">添加支付项</a>
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
-    <div class="ui segment">
+    <div class="ui segment land_products_fund">
       <div class="scroll-container" style="width: 100%; overflow-x: scroll;">
         <table class="ui celled center aligned table" style="width: 110%;">
           <thead>
@@ -158,39 +135,70 @@
               <th>付款节点</th>
               <th>付款节点金额</th>
               <th>应付日期</th>
-
               <th>已支付款项</th>
               <th>已支付金额</th>
               <th>支付时间</th>
-
               <th>未支付款项</th>
               <th>未支付金额</th>
               <th>应付日期</th>
-
               <th>逾期金额</th>
               <th>逾期时间</th>
-              <th>滞纳金</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td class="left aligned">
-                <b>设计 2 层</b>
-              </td>
-              <td>¥10088.00</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td class="positive">首付款20%</td>
-              <td class="positive">¥201,763.80</td>
-              <td class="positive">2023.08.03</td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
+
+          <tbody {{ data.product.addFund.length }}>
+            @each(fund in data.product.addFund)
+              @each((tr, fundIndex) in fund.node)
+              <tr>
+                @if(fundIndex == 0)
+                  <td class="left aligned" rowspan="{{ fund.node.length }}" title="项目">
+                    <b>{{ fund.products_fund_name }}</b>
+                    <p>{{ fund.date_start }} ~ {{ fund.date_end }}</p>
+                    <p>{{ fund.description || '' }}</p>
+                  </td>
+                  <td rowspan="{{ fund.node.length }}" title="合同总金额">{{ fund.total ? '¥' + fund.total : '' }}</td>
+                @endif
+
+                <td title="付款节点">{{ tr.products_fund_node_name && tr.node_fund_percent ? (fundIndex + 1) + '. ' + tr.products_fund_node_name + ' - ' + tr.node_fund_percent + '%' : '' }}</td>
+                <td title="付款节点金额">{{ tr.node_fund ? '¥' + tr.node_fund : '' }}</td>
+                <td title="应付日期">{{ tr.node_date || '' }}</td>
+
+                @if(tr.isPay)
+                  {{-- 已支付 --}}
+                  <td class="positive">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ (tr.pay / tr.node_fund * 100).toFixed(2) }}%</td>
+                  <td class="positive">{{ tr.pay ? '¥' + tr.pay : ''  }}</td>
+                  <td class="positive">{{ tr.pay_date || '' }}</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                @elseif(tr.products_fund_node_name && tr.node_fund_percent)
+                  {{-- 未支付 --}}
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td class="warning">{{ fundIndex + 1 }}. {{ tr.products_fund_node_name }} - {{ tr.node_fund_percent }}%</td>
+                  <td class="warning">¥{{ tr.node_fund || '' }}</td>
+                  <td class="warning">{{ tr.node_date || '' }}</td>
+                @else
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                @endif
+
+                {{-- 是否逾期 --}}
+                @if(tr.expire)
+                  <td class="error">¥{{ tr.node_fund }}</td>
+                  <td class="error">{{ tr.expireDay }}</td>
+                @else
+                  <td></td>
+                  <td></td>
+                @endif
+              </tr>
+              @endeach
+            @endeach
           </tbody>
         </table>
       </div>
@@ -208,5 +216,152 @@
         <li>质保款：5%，竣工日后 365 天支付，质保期两年。</li>
       </ul>
     </div>
+  </div>
+</form>
+
+<form class="ui full modal form payment" action="{{ route('land/pms/IndexController.products') }}" method="post">
+  <i class="close icon"></i>
+  <h3 class="header">添加项目</h3>
+  <div class="content">
+    <div class="field" hidden>
+      <label>类型</label>
+      <input type="number" id="type" name="type" placeholder="" />
+    </div>
+    <div class="field">
+      <label>项目名称</label>
+      <input type="text" name="products_fund_name" placeholder="" />
+    </div>
+    <div class="two fields">
+      <div class="field">
+        <label>开工日期</label>
+        <input type="date" name="date_start" placeholder="" />
+      </div>
+      <div class="field">
+        <label>竣工日期</label>
+        <input type="date" name="date_end" placeholder="" />
+      </div>
+    </div>
+    <div class="field">
+      <label>合同总金额</label>
+      <input type="number" name="total" placeholder="不含增&设" />
+    </div>
+    <div class="field">
+      <label>备注</label>
+      <textarea name="description" cols="30" rows="4"></textarea>
+    </div>
+  </div>
+  {{ csrfField() }}
+  <div class="actions">
+    <div class="ui deny button">
+      取消
+    </div>
+    <button class="ui grey right labeled icon button" name="button" value="fund">
+      确认添加
+      <i class="checkmark icon"></i>
+    </button>
+  </div>
+</form>
+
+<form class="ui full modal form payment-node" action="{{ route('land/pms/IndexController.products') }}" method="post">
+  <i class="close icon"></i>
+  <h3 class="header">添加付款节点</h3>
+  <div class="content">
+    <div class="field">
+      <label>款项</label>
+      <div class="ui fluid selection dropdown">
+        <input type="hidden" name="products_fund_id">
+        <i class="dropdown icon"></i>
+        <div class="default text">下拉选择</div>
+        <div class="menu">
+          @each(fund in data.product.fund)
+          <div class="item" data-value="{{ fund.products_fund_id }}">{{ data.product.name }}　·　{{ fund.products_fund_name }}（¥{{ fund.total }}）</div>
+          @endeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>节点名称</label>
+      <input type="text" name="products_fund_node_name" placeholder="" />
+    </div>
+    <div class="field">
+      <label>节点金额</label>
+      <input type="number" name="node_fund" placeholder="" />
+    </div>
+    <div class="field">
+      <label>节点金额支付比例</label>
+      <input type="number" name="node_fund_percent" placeholder="" />
+    </div>
+    <div class="field">
+      <label>应付日期</label>
+      <input type="date" name="node_date" placeholder="" />
+    </div>
+    <div class="ui info message">未支付款项、支付金额、滞纳金等将自动计算展示。</div>
+  </div>
+  {{ csrfField() }}
+  <div class="actions">
+    <div class="ui deny button">
+      取消
+    </div>
+    <button class="ui grey right labeled icon button" name="button" value="node">
+      确认添加
+      <i class="checkmark icon"></i>
+    </button>
+  </div>
+</form>
+
+<form class="ui full modal form payment-item" action="{{ route('land/pms/IndexController.products') }}" method="post">
+  <i class="close icon"></i>
+  <h3 class="header">添加支付项</h3>
+  <div class="content">
+    <div class="field">
+      <label>付款节点</label>
+      <div class="ui fluid selection dropdown">
+        <input type="hidden" name="products_fund_node_id">
+        <i class="dropdown icon"></i>
+        <div class="default text">下拉选择</div>
+        <div class="menu">
+          @each(fund in data.product.fund)
+            @each((tr, fundIndex) in fund.node)
+              @if(tr.products_fund_node_name)
+              <div class="item" data-value="{{ tr.products_fund_node_id }}">{{ data.product.name }}　·　{{ fund.products_fund_name }}　·　{{ tr.products_fund_node_name }}（¥{{ tr.node_fund }}）</div>
+              @endif
+            @endeach
+          @endeach
+        </div>
+      </div>
+    </div>
+    <div class="field">
+      <label>支付项名称</label>
+      <input type="text" name="products_fund_node_pay_name" placeholder="" />
+    </div>
+    <div class="field">
+      <label>付款金额</label>
+      <input type="number" name="pay" placeholder="" />
+    </div>
+    <div class="field">
+      <label>支付日期</label>
+      <input type="date" name="pay_date" placeholder="" />
+    </div>
+    <div class="field">
+      <label>欠款费用</label>
+      <div class="ui toggle checkbox">
+        <input type="checkbox" value="arrears" class="hidden">
+        <label>该笔支付项是否为欠款费用</label>
+      </div>
+    </div>
+    <div class="field">
+      <label>备注</label>
+      <textarea name="description" cols="30" rows="4"></textarea>
+    </div>
+  </div>
+  {{ csrfField() }}
+  <div class="actions">
+    <div class="ui deny button">
+      取消
+    </div>
+    <button class="ui grey right labeled icon button" name="button" value="pay">
+      确认添加
+      <i class="checkmark icon"></i>
+    </button>
   </div>
 </form>

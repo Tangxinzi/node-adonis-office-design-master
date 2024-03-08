@@ -103,90 +103,141 @@ class IndexController {
             console.log(error);
         }
     }
+    async formatData(product) {
+        try {
+            for (let index = 0; index < product.fund.length; index++) {
+                if (product.fund[index].id) {
+                    product.fund[index].node = await Database_1.default.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at');
+                    for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
+                        product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name;
+                        product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start;
+                        product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end;
+                        product.fund[index].node[nodeIndex].total = product.fund[index].total;
+                        var nodePay = await Database_1.default.from('land_products_fund_node_pay').where({
+                            products_fund_id: product.fund[index].node[nodeIndex].products_fund_id,
+                            products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
+                        }).andWhereNull('deleted_at').first() || {};
+                        if (nodePay.id) {
+                            product.fund[index].node[nodeIndex].isPay = true;
+                            product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id;
+                            product.fund[index].node[nodeIndex].pay = nodePay.pay;
+                            product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent;
+                            product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date;
+                        }
+                        else {
+                            product.fund[index].node[nodeIndex].isPay = false;
+                        }
+                        if ((0, moment_1.default)((0, moment_1.default)().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
+                            product.fund[index].node[nodeIndex].expire = true;
+                            product.fund[index].node[nodeIndex].expireDay = (0, moment_1.default)().diff(product.fund[index].node[nodeIndex].node_date, 'days');
+                        }
+                    }
+                    if (product.fund[index].node.length == 0) {
+                        product.fund[index].node.push({
+                            products_fund_name: product.fund[index].products_fund_name,
+                            date_start: product.fund[index].date_start,
+                            date_end: product.fund[index].date_end,
+                            total: product.fund[index].total,
+                        });
+                    }
+                }
+            }
+            for (let index = 0; index < product.addFund.length; index++) {
+                if (product.addFund[index].id) {
+                    product.addFund[index].node = await Database_1.default.from('land_products_fund_node').where('products_fund_id', product.addFund[index].products_fund_id).andWhereNull('deleted_at');
+                    for (let nodeIndex = 0; nodeIndex < product.addFund[index].node.length; nodeIndex++) {
+                        product.addFund[index].node[nodeIndex].products_fund_name = product.addFund[index].products_fund_name;
+                        product.addFund[index].node[nodeIndex].date_start = product.addFund[index].date_start;
+                        product.addFund[index].node[nodeIndex].date_end = product.addFund[index].date_end;
+                        product.addFund[index].node[nodeIndex].total = product.addFund[index].total;
+                        var nodePay = await Database_1.default.from('land_products_fund_node_pay').where({
+                            products_fund_id: product.addFund[index].node[nodeIndex].products_fund_id,
+                            products_fund_node_id: product.addFund[index].node[nodeIndex].products_fund_node_id
+                        }).andWhereNull('deleted_at').first() || {};
+                        if (nodePay.id) {
+                            product.addFund[index].node[nodeIndex].isPay = true;
+                            product.addFund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id;
+                            product.addFund[index].node[nodeIndex].pay = nodePay.pay;
+                            product.addFund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent;
+                            product.addFund[index].node[nodeIndex].pay_date = nodePay.pay_date;
+                        }
+                        else {
+                            product.addFund[index].node[nodeIndex].isPay = false;
+                        }
+                        if ((0, moment_1.default)((0, moment_1.default)().format("YYYY-MM-DD")).isAfter(product.addFund[index].node[nodeIndex].node_date)) {
+                            product.addFund[index].node[nodeIndex].expire = true;
+                            product.addFund[index].node[nodeIndex].expireDay = (0, moment_1.default)().diff(product.addFund[index].node[nodeIndex].node_date, 'days');
+                        }
+                    }
+                    if (product.addFund[index].node.length == 0) {
+                        product.addFund[index].node.push({
+                            products_fund_name: product.addFund[index].products_fund_name,
+                            date_start: product.addFund[index].date_start,
+                            date_end: product.addFund[index].date_end,
+                            total: product.addFund[index].total,
+                        });
+                    }
+                }
+            }
+            return product;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
     async steps({ params, request, response, view, session }) {
         try {
-            let all = request.all(), dataset = {
-                information_documents: []
-            };
-            const product = await Database_1.default.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {};
+            let all = request.all(), dataset = {};
+            let product = await Database_1.default.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {};
             const land_products_osds = await Database_1.default.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {};
+            product.fund = await Database_1.default.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at') || {};
+            product.addFund = await Database_1.default.from('land_products_fund').where({ product_id: params.id, type: 1 }).andWhereNull('deleted_at') || {};
             session.put('product', product);
             switch (params.step) {
                 case 'step-03':
-                    product.fund = await Database_1.default.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at');
-                    for (let index = 0; index < product.fund.length; index++) {
-                        if (product.fund[index].id) {
-                            product.fund[index].node = await Database_1.default.from('land_products_fund_node').where('products_fund_id', product.fund[index].products_fund_id).andWhereNull('deleted_at');
-                            for (let nodeIndex = 0; nodeIndex < product.fund[index].node.length; nodeIndex++) {
-                                product.fund[index].node[nodeIndex].products_fund_name = product.fund[index].products_fund_name;
-                                product.fund[index].node[nodeIndex].date_start = product.fund[index].date_start;
-                                product.fund[index].node[nodeIndex].date_end = product.fund[index].date_end;
-                                product.fund[index].node[nodeIndex].total = product.fund[index].total;
-                                var nodePay = await Database_1.default.from('land_products_fund_node_pay').where({
-                                    products_fund_id: product.fund[index].node[nodeIndex].products_fund_id,
-                                    products_fund_node_id: product.fund[index].node[nodeIndex].products_fund_node_id
-                                }).andWhereNull('deleted_at').first() || {};
-                                if (nodePay.id) {
-                                    product.fund[index].node[nodeIndex].products_fund_node_pay_id = nodePay.products_fund_node_pay_id;
-                                    product.fund[index].node[nodeIndex].pay = nodePay.pay;
-                                    product.fund[index].node[nodeIndex].pay_fund_percent = nodePay.pay_fund_percent;
-                                    product.fund[index].node[nodeIndex].pay_date = nodePay.pay_date;
-                                }
-                                if ((0, moment_1.default)((0, moment_1.default)().format("YYYY-MM-DD")).isAfter(product.fund[index].node[nodeIndex].node_date)) {
-                                    product.fund[index].node[nodeIndex].expire = true;
-                                    product.fund[index].node[nodeIndex].expireDay = (0, moment_1.default)().diff(product.fund[index].node[nodeIndex].node_date, 'days');
-                                }
-                            }
-                            if (product.fund[index].node.length == 0) {
-                                product.fund[index].node.push({
-                                    products_fund_name: product.fund[index].products_fund_name,
-                                    date_start: product.fund[index].date_start,
-                                    date_end: product.fund[index].date_end,
-                                    total: product.fund[index].total,
-                                });
-                            }
-                        }
-                    }
-                    console.log(product.fund);
+                    product = await this.formatData(product);
                     break;
                 case 'step-04':
-                    dataset.information_documents = [
-                        {
-                            file: '项目周报',
-                            description: '文件描述',
-                            date: '2024-01-01'
-                        },
-                        {
-                            file: '项目例会纪要',
-                            description: '文件描述',
-                            date: '2024-01-01'
-                        },
-                        {
-                            file: '隐蔽验收单',
-                            description: '文件描述',
-                            date: '2024-01-01'
-                        },
-                        {
-                            file: '设计变更通知',
-                            description: '文件描述',
-                            date: '2024-01-01'
-                        },
-                        {
-                            file: '工程洽商记录',
-                            description: '文件描述',
-                            date: '2024-01-01'
-                        },
-                        {
-                            file: '竣工验收单及整改单',
-                            description: '文件描述',
-                            date: '2024-01-01'
-                        },
-                        {
-                            file: '签证单、签证执行单',
-                            description: '文件描述',
-                            date: '2024-01-01'
+                    const items = product.progress ? JSON.parse(product.progress) : {};
+                    delete product.progress;
+                    product = {
+                        ...product,
+                        items,
+                        day: 0,
+                        days: [],
+                        startDate: (0, moment_1.default)(items[0].start_date).format('YYYY-MM-DD'),
+                        endDate: (0, moment_1.default)(items[0].end_date).format('YYYY-MM-DD'),
+                    };
+                    for (let index = 0; index < product.items.length; index++) {
+                        if ((0, moment_1.default)(product.items[index].start_date).isBefore(product.startDate)) {
+                            product.startDate = (0, moment_1.default)(product.items[index].start_date).format('YYYY-MM-DD');
                         }
-                    ];
+                        if ((0, moment_1.default)(product.items[index].end_date).isAfter(product.endDate)) {
+                            product.endDate = (0, moment_1.default)(product.items[index].end_date).format('YYYY-MM-DD');
+                        }
+                    }
+                    for (let index = 0; index < product.items.length; index++) {
+                        let range = [];
+                        for (let date = (0, moment_1.default)(product.startDate); date.isSameOrBefore(product.endDate); date.add(1, 'day')) {
+                            if (date.isBetween(product.items[index].start_date, product.items[index].end_date, null, '[]')) {
+                                range.push({ date: date.format('YYYY-MM-DD'), flag: 1 });
+                            }
+                            else {
+                                range.push({ date: date.format('YYYY-MM-DD'), flag: 0 });
+                            }
+                        }
+                        product.items[index].index = index;
+                        product.items[index].range = range;
+                        product.day += product.items[index].day + 1;
+                    }
+                    let startDate = (0, moment_1.default)(product.startDate), endDate = (0, moment_1.default)(product.endDate);
+                    let currentDate = startDate.clone(), days = [];
+                    while (currentDate.isSameOrBefore(endDate)) {
+                        days.push(currentDate.format('YYYY-MM-DD'));
+                        currentDate.add(1, 'days');
+                    }
+                    product.days = days;
+                    console.log(product);
                     break;
                 default:
                     break;
@@ -205,7 +256,7 @@ class IndexController {
             }
             return view.render('land/pms/index/steps', {
                 data: {
-                    title: '编辑项目',
+                    title: product.name + ' - 项目',
                     all,
                     step: params.step,
                     product,
@@ -224,6 +275,7 @@ class IndexController {
             switch (all.button) {
                 case 'fund':
                     await Database_1.default.table('land_products_fund').returning('id').insert({
+                        type: all.type || 0,
                         product_id: product.product_id,
                         products_fund_id: `FUND_${randomstring_1.default.generate(6)}`,
                         products_fund_name: all.products_fund_name,
@@ -235,6 +287,48 @@ class IndexController {
                     session.flash('message', { type: 'success', header: '创建成功', message: `${all.products_fund_name}已创建。` });
                     return response.redirect('back');
                     break;
+                case 'node':
+                    await Database_1.default.table('land_products_fund_node').returning('id').insert({
+                        product_id: product.product_id,
+                        products_fund_id: all.products_fund_id,
+                        products_fund_node_id: `NODE_${randomstring_1.default.generate(6)}`,
+                        products_fund_node_name: all.products_fund_node_name,
+                        node_fund_percent: all.node_fund_percent,
+                        node_date: all.node_date
+                    });
+                    session.flash('message', { type: 'success', header: '创建成功', message: `${all.products_fund_node_name}已创建。` });
+                    return response.redirect('back');
+                    break;
+                case 'pay':
+                    const node = await Database_1.default.from('land_products_fund_node').where('products_fund_node_id', all.products_fund_node_id).andWhereNull('deleted_at').first() || {};
+                    await Database_1.default.table('land_products_fund_node_pay').returning('id').insert({
+                        product_id: product.product_id,
+                        products_fund_id: node.products_fund_id,
+                        products_fund_node_id: all.products_fund_node_id,
+                        products_fund_node_pay_id: `PAY_${randomstring_1.default.generate(6)}`,
+                        products_fund_node_pay_name: all.products_fund_node_pay_name,
+                        pay: all.pay,
+                        pay_date: all.pay_date,
+                        description: all.description
+                    });
+                    session.flash('message', { type: 'success', header: '创建成功', message: `${all.products_fund_node_pay_name}已创建。` });
+                    return response.redirect('back');
+                    break;
+                case 'progress':
+                    console.log(all);
+                    const items = [];
+                    for (let index = 0; index < all.work.length; index++) {
+                        items.push({
+                            work: all.work[index],
+                            start_date: all.start_date[index],
+                            end_date: all.end_date[index],
+                            delay_date: all.delay_date[index],
+                            day: (0, moment_1.default)(all.end_date[index]).diff(all.start_date[index], 'days') + 1
+                        });
+                    }
+                    await Database_1.default.from('land_products').where('product_id', product.product_id).update({ progress: JSON.stringify(items) });
+                    session.flash('message', { type: 'success', header: '设置成功', message: `施工进度已设置。` });
+                    return response.redirect('back');
             }
         }
         catch (error) {

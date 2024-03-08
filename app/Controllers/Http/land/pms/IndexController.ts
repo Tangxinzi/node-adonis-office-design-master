@@ -211,9 +211,7 @@ export default class IndexController {
 
   public async steps({ params, request, response, view, session }: HttpContextContract) {
     try {
-      let all = request.all(), dataset = {
-        information_documents: []
-      }
+      let all = request.all(), dataset = {}
       let product = await Database.from('land_products').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
       const land_products_osds = await Database.from('land_products_osds').where('product_id', params.id).andWhereNull('deleted_at').first() || {}
       product.fund = await Database.from('land_products_fund').where({ product_id: params.id, type: 0 }).andWhereNull('deleted_at') || {}
@@ -225,30 +223,47 @@ export default class IndexController {
           product = await this.formatData(product)
           break;
         case 'step-04':
-          product.progress = product.progress ? JSON.parse(product.progress) : {}
-          product.progress.num = product.progress.work.length
-          product.progress.day = []
-          product.progress.dayCount = 0
-          product.progress.delay_date = []
-          product.progress.startDate = product.progress.start_date[0]
-          product.progress.endDate = Moment(product.progress.end_date[0])
-          for (let index = 0; index < product.progress.num; index++) {
+          const items = product.progress ? JSON.parse(product.progress) : {}
+          delete product.progress
+          product = {
+            ...product,
+            items,
+            day: 0,
+            days: [],
+            startDate: Moment(items[0].start_date).format('YYYY-MM-DD'),
+            endDate: Moment(items[0].end_date).format('YYYY-MM-DD'),
+          }
+          
+          for (let index = 0; index < product.items.length; index++) {
             // 日期最小值
-            if (Moment(product.progress.start_date[index]).isBefore(product.progress.startDate)) {
-              product.progress.startDate = product.progress.start_date[index]
+            if (Moment(product.items[index].start_date).isBefore(product.startDate)) {
+              product.startDate = Moment(product.items[index].start_date).format('YYYY-MM-DD')
             }
 
             // 日期最大值
-            if (Moment(product.progress.end_date[index]).isAfter(product.progress.endDate)) {
-              product.progress.endDate = product.progress.end_date[index]
+            if (Moment(product.items[index].end_date).isAfter(product.endDate)) {
+              product.endDate = Moment(product.items[index].end_date).format('YYYY-MM-DD')
             }
-
-            let day = Moment(product.progress.end_date[index]).diff(product.progress.start_date[index], 'days')
-            product.progress.dayCount += day + 1
-            product.progress.day.push(day)
           }
 
-          const startDate = Moment(product.progress.startDate), endDate = Moment(product.progress.endDate);
+          // 整理数据
+          for (let index = 0; index < product.items.length; index++) {
+            // 项目日期范围
+            let range = []
+            for (let date = Moment(product.startDate); date.isSameOrBefore(product.endDate); date.add(1, 'day')) {        
+              if (date.isBetween(product.items[index].start_date, product.items[index].end_date, null, '[]')) {
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 1 })
+              } else {
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 0 })
+              }
+            }
+
+            product.items[index].index = index
+            product.items[index].range = range
+            product.day += product.items[index].day + 1
+          }
+
+          let startDate = Moment(product.startDate), endDate = Moment(product.endDate);
           let currentDate = startDate.clone(), days = [];
 
           while (currentDate.isSameOrBefore(endDate)) {
@@ -256,52 +271,9 @@ export default class IndexController {
             currentDate.add(1, 'days');
           }
 
-          product.progress.days = days
+          product.days = days
 
-          // 整理数据
-          product.progress.items = []
-          for (let index = 0; index < product.progress.num; index++) {
-            const element = array[index];
-          }
-
-          console.log(product.progress);
-          dataset.information_documents = [
-            {
-              file: '项目周报',
-              description: '文件描述',
-              date: '2024-01-01'
-            },
-            {
-              file: '项目例会纪要',
-              description: '文件描述',
-              date: '2024-01-01'
-            },
-            {
-              file: '隐蔽验收单',
-              description: '文件描述',
-              date: '2024-01-01'
-            },
-            {
-              file: '设计变更通知',
-              description: '文件描述',
-              date: '2024-01-01'
-            },
-            {
-              file: '工程洽商记录',
-              description: '文件描述',
-              date: '2024-01-01'
-            },
-            {
-              file: '竣工验收单及整改单',
-              description: '文件描述',
-              date: '2024-01-01'
-            },
-            {
-              file: '签证单、签证执行单',
-              description: '文件描述',
-              date: '2024-01-01'
-            }
-          ]
+          console.log(product);
           break;
         default:
           break;
@@ -386,15 +358,18 @@ export default class IndexController {
           break;
         case 'progress':
           console.log(all);
-          await Database.from('land_products').where('product_id', product.product_id).update({
-            progress: JSON.stringify({
-              work: all.work,
-              start_date: all.start_date,
-              end_date: all.end_date,
-              delayed_date: all.delayed_date,
-              progress: all.progress,
+          const items = []
+          for (let index = 0; index < all.work.length; index++) {
+            items.push({
+              work: all.work[index],
+              start_date: all.start_date[index],
+              end_date: all.end_date[index],
+              delay_date: all.delay_date[index],
+              day: Moment(all.end_date[index]).diff(all.start_date[index], 'days') + 1
             })
-          })
+          }
+          
+          await Database.from('land_products').where('product_id', product.product_id).update({ progress: JSON.stringify(items) })
           session.flash('message', { type: 'success', header: '设置成功', message: `施工进度已设置。` })
           return response.redirect('back')
       }

@@ -192,29 +192,22 @@
 <script type="text/javascript">
   function addProgress() {
     $('.con-scheduling .content .segments').append(`<div class="ui segment">
-      <div class="five fields">
-        <div class="field">
-          <label>工作项</label>
+      <div class="four fields">
+        <div class="field required">
+          <label>添加工作项</label>
           <input type="text" name="work[]" placeholder="" />
         </div>
-        <div class="field">
+        <div class="field required">
           <label>开始日期</label>
           <input type="date" name="start_date[]" placeholder="" />
         </div>
-        <div class="field">
+        <div class="field required">
           <label>结束日期</label>
           <input type="date" name="end_date[]" placeholder="" />
         </div>
         <div class="field">
-          <label>进度</label>
-          <div class="ui right labeled input">
-            <input type="number" name="progress[]" placeholder="">
-            <div class="ui basic label">%</div>
-          </div>
-        </div>
-        <div class="field disabled">
-          <label>实际完成天数</label>
-          <input type="number" name="day" placeholder="" disabled />
+          <label>结束日期</label>
+          <input type="date" name="delay_date[]" placeholder="" />
         </div>
       </div>
     </div>`)

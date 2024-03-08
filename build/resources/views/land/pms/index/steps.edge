@@ -19,6 +19,8 @@
 
   .ui.labels>.label { margin: 0 0 0 .5em; }
   .ui.celled.table tr td:first-child, .ui.celled.table tr th:first-child { border-left: 1px solid rgba(34,36,38,.1); }
+
+  .land_products_fund .ui.celled.table tr td { min-height: 50px !important; }
 </style>
 @endsection
 
@@ -166,183 +168,6 @@
       </button>
     </div>
   </form>
-
-  <form class="ui full modal form payment" action="{{ route('land/pms/IndexController.products') }}" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">添加项目</h3>
-    <div class="content">
-      <div class="field">
-        <label>项目名称</label>
-        <input type="text" name="products_fund_name" placeholder="" />
-      </div>
-      <div class="two fields">
-        <div class="field">
-          <label>开工日期</label>
-          <input type="date" name="date_start" placeholder="" />
-        </div>
-        <div class="field">
-          <label>竣工日期</label>
-          <input type="date" name="date_end" placeholder="" />
-        </div>
-      </div>
-      <div class="field">
-        <label>合同总金额</label>
-        <input type="number" name="total" placeholder="不含增&设" />
-      </div>
-      <div class="field">
-        <label>备注</label>
-        <textarea name="description" cols="30" rows="4"></textarea>
-      </div>
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui deny button">
-        取消
-      </div>
-      <button class="ui grey right labeled icon button" name="button" value="fund">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
-
-  <form class="ui full modal form payment-node" action="" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">添加付款节点</h3>
-    <div class="content">
-      <div class="field">
-        <label>款项</label>
-        <div class="ui fluid selection dropdown">
-          <input type="hidden" name="country">
-          <i class="dropdown icon"></i>
-          <div class="default text">下拉选择</div>
-          <div class="menu">
-            <div class="item" data-value="lisi">一层</div>
-            <div class="item" data-value="wangwu">二层</div>
-            <div class="item" data-value="wangwu">三层</div>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>节点名称</label>
-        <input type="text" name="product" placeholder="" />
-      </div>
-      <div class="field">
-        <label>节点金额</label>
-        <input type="number" name="number" placeholder="" />
-      </div>
-      <div class="field">
-        <label>应付日期</label>
-        <input type="date" name="number" placeholder="" />
-      </div>
-      <div class="field">
-        <label>备注</label>
-        <textarea name="" cols="30" rows="4"></textarea>
-      </div>
-      <div class="ui info message">未支付款项、支付金额、滞纳金等将自动计算展示。</div>
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui deny button">
-        取消
-      </div>
-      <button class="ui grey right labeled icon button">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
-
-  <form class="ui full modal form payment-item" action="" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">添加支付项</h3>
-    <div class="content">
-      <div class="field">
-        <label>付款节点</label>
-        <div class="ui fluid selection dropdown">
-          <input type="hidden" name="country">
-          <i class="dropdown icon"></i>
-          <div class="default text">下拉选择</div>
-          <div class="menu">
-            <div class="item" data-value="">一层 · 首付款20%</div>
-            <div class="item" data-value="">一层 · 隐蔽验收30%</div>
-            <div class="item" data-value="">一层 · 竣工20%</div>
-          </div>
-        </div>
-      </div>
-      <div class="field">
-        <label>付款金额</label>
-        <input type="number" name="number" placeholder="" />
-      </div>
-      <div class="field">
-        <label>支付日期</label>
-        <input type="date" name="number" placeholder="" />
-      </div>
-      <div class="field">
-        <label>欠款费用</label>
-        <div class="ui toggle checkbox">
-          <input type="checkbox" tabindex="0" class="hidden">
-          <label>该笔支付项是否为欠款费用</label>
-        </div>
-      </div>
-      <div class="field">
-        <label>备注</label>
-        <textarea name="" cols="30" rows="4"></textarea>
-      </div>
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui deny button">
-        取消
-      </div>
-      <button class="ui grey right labeled icon button">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
-
-  <form class="ui full modal form con-scheduling" action="" method="post">
-    <i class="close icon"></i>
-    <h3 class="header">施工进度</h3>
-    <div class="content">
-      @each(item in [0, 1, 2, 3, 4])
-      <div class="ui segment">
-        <div class="four fields">
-          <div class="field">
-            <label>工作</label>
-            <input type="text" name="work" placeholder="" />
-          </div>
-          <div class="field">
-            <label>开始日期</label>
-            <input type="date" name="start_date" placeholder="" />
-          </div>
-          <div class="field">
-            <label>结束日期</label>
-            <input type="date" name="end_date" placeholder="" />
-          </div>
-          <div class="field">
-            <label>进度</label>
-            <div class="ui right labeled input">
-              <input type="number" name="progress" placeholder="">
-              <div class="ui basic label">%</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      @endeach
-    </div>
-    {{ csrfField() }}
-    <div class="actions">
-      <div class="ui left floated button">添加工期</div>
-      
-      <div class="ui deny button">取消</div>
-      <button class="ui grey right labeled icon button">
-        确认添加
-        <i class="checkmark icon"></i>
-      </button>
-    </div>
-  </form>
 @endsection
 
 @section('footer')
@@ -354,7 +179,7 @@
       <a class="item" href="#">当前进度</a>
     </div>
     <div class="ui right floated horizontal list">
-      <div class="disabled item" href="#">PMS 项目名称</div>
+      <div class="disabled item" href="#">{{ data.product.name }}</div>
     </div>
   </div>
 @endsection
@@ -365,6 +190,29 @@
 <script src="/scripts/global.js" charset="utf-8"></script>
 <script src="/lib/wangeditor/index.js"></script>
 <script type="text/javascript">
+  function addProgress() {
+    $('.con-scheduling .content .segments').append(`<div class="ui segment">
+      <div class="four fields">
+        <div class="field required">
+          <label>添加工作项</label>
+          <input type="text" name="work[]" placeholder="" />
+        </div>
+        <div class="field required">
+          <label>开始日期</label>
+          <input type="date" name="start_date[]" placeholder="" />
+        </div>
+        <div class="field required">
+          <label>结束日期</label>
+          <input type="date" name="end_date[]" placeholder="" />
+        </div>
+        <div class="field">
+          <label>结束日期</label>
+          <input type="date" name="delay_date[]" placeholder="" />
+        </div>
+      </div>
+    </div>`)
+  }
+
   function addPaymentItem() {
     $('.ui.modal.form.payment-item').modal('show')
   }
@@ -377,7 +225,8 @@
     $('.ui.modal.form.payment-node').modal('show')
   }
 
-  function addPayment() {
+  function addPayment(type) {
+    $('#type').val(type || 0)
     $('.ui.modal.form.payment').modal('show')
   }
 
