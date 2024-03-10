@@ -228,12 +228,14 @@ export default class IndexController {
           product = {
             ...product,
             items,
+            today: Moment().format('YYYY-MM-DD'),
             day: 0,
+            currentDay: 0,
             days: [],
             startDate: Moment(items[0].start_date).format('YYYY-MM-DD'),
             endDate: Moment(items[0].end_date).format('YYYY-MM-DD'),
           }
-          
+
           for (let index = 0; index < product.items.length; index++) {
             // 日期最小值
             if (Moment(product.items[index].start_date).isBefore(product.startDate)) {
@@ -250,11 +252,15 @@ export default class IndexController {
           for (let index = 0; index < product.items.length; index++) {
             // 项目日期范围
             let range = []
-            for (let date = Moment(product.startDate); date.isSameOrBefore(product.endDate); date.add(1, 'day')) {        
-              if (date.isBetween(product.items[index].start_date, product.items[index].end_date, null, '[]')) {
-                range.push({ date: date.format('YYYY-MM-DD'), flag: 1 })
+            for (let date = Moment(product.startDate); date.isSameOrBefore(product.endDate); date.add(1, 'day')) {
+              let today = date.isSame(product.today, 'day')
+
+              if (product.items[index].delay_date && date.isBetween(Moment(product.items[index].end_date).add(1, 'day'), product.items[index].delay_date, null, '[]')) {
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 2, today, day: product.currentDay += 1 })
+              } else if (date.isBetween(product.items[index].start_date, product.items[index].end_date, null, '[]')) {
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 1, today, day: product.currentDay += 1 })
               } else {
-                range.push({ date: date.format('YYYY-MM-DD'), flag: 0 })
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 0, today })
               }
             }
 
@@ -273,7 +279,7 @@ export default class IndexController {
 
           product.days = days
 
-          console.log(product);
+          console.log(product.items[0]);
           break;
         default:
           break;
@@ -365,10 +371,10 @@ export default class IndexController {
               start_date: all.start_date[index],
               end_date: all.end_date[index],
               delay_date: all.delay_date[index],
-              day: Moment(all.end_date[index]).diff(all.start_date[index], 'days') + 1
+              day: Moment(all.delay_date[index] || all.end_date[index]).diff(all.start_date[index], 'days') + 1
             })
           }
-          
+
           await Database.from('land_products').where('product_id', product.product_id).update({ progress: JSON.stringify(items) })
           session.flash('message', { type: 'success', header: '设置成功', message: `施工进度已设置。` })
           return response.redirect('back')
