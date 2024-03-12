@@ -205,6 +205,7 @@ class IndexController {
                         items,
                         today: (0, moment_1.default)().format('YYYY-MM-DD'),
                         day: 0,
+                        totalDay: 0,
                         currentDay: 0,
                         days: [],
                         startDate: (0, moment_1.default)(items[0].start_date).format('YYYY-MM-DD'),
@@ -223,10 +224,16 @@ class IndexController {
                         for (let date = (0, moment_1.default)(product.startDate); date.isSameOrBefore(product.endDate); date.add(1, 'day')) {
                             let today = date.isSame(product.today, 'day');
                             if (product.items[index].delay_date && date.isBetween((0, moment_1.default)(product.items[index].end_date).add(1, 'day'), product.items[index].delay_date, null, '[]')) {
-                                range.push({ date: date.format('YYYY-MM-DD'), flag: 2, today, day: product.currentDay += 1 });
+                                range.push({ date: date.format('YYYY-MM-DD'), flag: 2, today, day: product.totalDay += 1 });
+                                if (date.isSameOrBefore(product.today)) {
+                                    product.currentDay += 1;
+                                }
                             }
                             else if (date.isBetween(product.items[index].start_date, product.items[index].end_date, null, '[]')) {
-                                range.push({ date: date.format('YYYY-MM-DD'), flag: 1, today, day: product.currentDay += 1 });
+                                range.push({ date: date.format('YYYY-MM-DD'), flag: 1, today, day: product.totalDay += 1 });
+                                if (date.isSameOrBefore(product.today)) {
+                                    product.currentDay += 1;
+                                }
                             }
                             else {
                                 range.push({ date: date.format('YYYY-MM-DD'), flag: 0, today });
@@ -234,7 +241,7 @@ class IndexController {
                         }
                         product.items[index].index = index;
                         product.items[index].range = range;
-                        product.day += product.items[index].day + 1;
+                        product.day += product.items[index].day;
                     }
                     let startDate = (0, moment_1.default)(product.startDate), endDate = (0, moment_1.default)(product.endDate);
                     let currentDate = startDate.clone(), days = [];
@@ -243,7 +250,6 @@ class IndexController {
                         currentDate.add(1, 'days');
                     }
                     product.days = days;
-                    console.log(product.items[0]);
                     break;
                 default:
                     break;
@@ -329,7 +335,7 @@ class IndexController {
                             start_date: all.start_date[index],
                             end_date: all.end_date[index],
                             delay_date: all.delay_date[index],
-                            day: (0, moment_1.default)(all.delay_date[index] || all.end_date[index]).diff(all.start_date[index], 'days') + 1
+                            day: (0, moment_1.default)(all.delay_date[index] || all.end_date[index]).diff(all.start_date[index], 'days')
                         });
                     }
                     await Database_1.default.from('land_products').where('product_id', product.product_id).update({ progress: JSON.stringify(items) });

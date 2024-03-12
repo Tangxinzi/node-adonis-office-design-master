@@ -20,15 +20,15 @@
     </div>
     <div class="ui segment step04">
       <div class="flex-between">
-        <div class="ui blue progress" data-percent="{{ (data.product.currentDay / data.product.day * 100).toFixed(2) }}" style="margin: 0; width: 50%;">
+        <div class="ui blue progress" data-percent="{{ (data.product.currentDay / data.product.totalDay * 100).toFixed(2) }}" style="margin: 0; width: 50%;">
           <div class="bar">
             <div class="progress"></div>
           </div>
         </div>
         <div class="ui labels">
-          <span class="ui label">当前 {{ data.product.currentDay }} 天&nbsp;&nbsp;/&nbsp;&nbsp;周期 {{ data.product.day }} 天&nbsp;&nbsp;≈&nbsp;&nbsp;{{ (data.product.currentDay / data.product.day * 100).toFixed(2) }}%</span>
+          <span class="ui label">当前 {{ data.product.currentDay }} 天&nbsp;&nbsp;/&nbsp;&nbsp;周期 {{ data.product.totalDay }} 天&nbsp;&nbsp;≈&nbsp;&nbsp;{{ (data.product.currentDay / data.product.totalDay * 100).toFixed(2) }}%</span>
           <span class="ui label">{{ data.product.startDate }} ~ {{ data.product.endDate}}（{{ data.product.days.length }} 天）</span>
-          <span class="ui label">每日 {{ (100 / data.product.day).toFixed(2) }}%</span>
+          <span class="ui label">每日 {{ (data.product.currentDay / data.product.totalDay).toFixed(2) }}%</span>
         </div>
       </div>
       <div class="scroll-container" style="margin-top: 1em; width: 100%; overflow-x: scroll;">
@@ -57,7 +57,8 @@
               <tr>
                 <td>&nbsp;&nbsp;&nbsp;{{ index + 1 }}. {{ items.work }}&nbsp;&nbsp;&nbsp;</td>
                 @each(range in items.range)
-                <td class="value" title="{{ range.date }}" data-day="{{ range.day || '' }}" style="background-color: {{ range.flag == 1 ? '#2196f3' : (range.flag == 2 ? '#03a9f4' : '') }}">
+                <td class="value" title="{{ range.date }}" data-day="{{ range.day || '' }}" style="color: {{ range.flag == 1 ? '#2196f3' : (range.flag == 2 ? '#03a9f4' : '') }}; background-color: {{ range.flag == 1 ? '#2196f3' : (range.flag == 2 ? '#03a9f4' : '') }};">
+                  {{ range.day || '' }}
                   @if(range.today)
                   <span></span>
                   @endif
@@ -112,7 +113,7 @@
   <i class="close icon"></i>
   <h3 class="header">施工进度</h3>
   <div class="content">
-    <div class="ui message">1.工作项内容填写后，系统自动计算工作周期；2.工作项内容填写后，请维护实际完成天数；3.工作项进度，100 / 项目天数 ≈ 以日计量单位。</div>
+    <div class="ui message">1.工作项内容填写后，系统自动计算工作项周期；2.工作项内容填写后，请按实际维护延期日期；3.工作项进度，当前天数 / 项目总天数 ≈ 以日计量单位。</div>
     <div class="ui segments">
       @each((item, index) in data.product.items)
         <div class="ui segment">
@@ -163,8 +164,6 @@
   {{ csrfField() }}
   <div class="actions">
     <div class="ui left floated button" onclick="addProgress()">添加工期</div>
-    <div class="ui left floated button">查看进度</div>
-
     <div class="ui deny button">取消</div>
     <button class="ui grey right labeled icon button" name="button" value="progress">
       确认添加

@@ -230,6 +230,7 @@ export default class IndexController {
             items,
             today: Moment().format('YYYY-MM-DD'),
             day: 0,
+            totalDay: 0,
             currentDay: 0,
             days: [],
             startDate: Moment(items[0].start_date).format('YYYY-MM-DD'),
@@ -256,9 +257,15 @@ export default class IndexController {
               let today = date.isSame(product.today, 'day')
 
               if (product.items[index].delay_date && date.isBetween(Moment(product.items[index].end_date).add(1, 'day'), product.items[index].delay_date, null, '[]')) {
-                range.push({ date: date.format('YYYY-MM-DD'), flag: 2, today, day: product.currentDay += 1 })
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 2, today, day: product.totalDay += 1 })
+                if (date.isSameOrBefore(product.today)) {
+                  product.currentDay += 1
+                }
               } else if (date.isBetween(product.items[index].start_date, product.items[index].end_date, null, '[]')) {
-                range.push({ date: date.format('YYYY-MM-DD'), flag: 1, today, day: product.currentDay += 1 })
+                range.push({ date: date.format('YYYY-MM-DD'), flag: 1, today, day: product.totalDay += 1 })
+                if (date.isSameOrBefore(product.today)) {
+                  product.currentDay += 1
+                }
               } else {
                 range.push({ date: date.format('YYYY-MM-DD'), flag: 0, today })
               }
@@ -266,7 +273,7 @@ export default class IndexController {
 
             product.items[index].index = index
             product.items[index].range = range
-            product.day += product.items[index].day + 1
+            product.day += product.items[index].day
           }
 
           let startDate = Moment(product.startDate), endDate = Moment(product.endDate);
@@ -279,7 +286,7 @@ export default class IndexController {
 
           product.days = days
 
-          console.log(product.items[0]);
+          // console.log(product);
           break;
         default:
           break;
@@ -371,7 +378,7 @@ export default class IndexController {
               start_date: all.start_date[index],
               end_date: all.end_date[index],
               delay_date: all.delay_date[index],
-              day: Moment(all.delay_date[index] || all.end_date[index]).diff(all.start_date[index], 'days') + 1
+              day: Moment(all.delay_date[index] || all.end_date[index]).diff(all.start_date[index], 'days')
             })
           }
 
