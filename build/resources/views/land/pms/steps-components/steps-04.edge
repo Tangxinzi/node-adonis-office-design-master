@@ -18,28 +18,57 @@
         <a class="ui small green label" onclick="nodeNotifications()">节点推送</a>
       </div>
     </div>
-    <style> table, th, td { border: 1px solid rgba(0, 0, 0, .3); border-collapse: collapse; } td, td { padding: 2px; text-align: center; min-width: 24px; min-height: 24px; } </style>
-    <div class="ui segment">
-      <table>
-        <thead>
-          <tr>
-            <th>项目</th>
-            @each(day in data.product.days)
-            <th>{{ day[8] }}{{ day[9] }}</th>
-            @endeach
-          </tr>
-        </thead>
-        <tbody>
-          @each((items, index) in data.product.items)
-          <tr>
-            <td>&nbsp;&nbsp;&nbsp;{{ index + 1 }}. {{ items.work }}&nbsp;&nbsp;&nbsp;</td>
-            @each(range in items.range)
-            <td class="value" title="{{ range.date }}" style="background-color: {{ range.flag == 1 ? 'skyblue' : '' }}"></td>
-            @endeach
-          </tr>
-          @endeach
-        </tbody>
-      </table>
+    <div class="ui segment step04">
+      <div class="flex-between">
+        <div class="ui blue progress" data-percent="{{ (data.product.currentDay / data.product.day * 100).toFixed(2) }}" style="margin: 0; width: 50%;">
+          <div class="bar">
+            <div class="progress"></div>
+          </div>
+        </div>
+        <div class="ui labels">
+          <span class="ui label">当前 {{ data.product.currentDay }} 天&nbsp;&nbsp;/&nbsp;&nbsp;周期 {{ data.product.day }} 天&nbsp;&nbsp;≈&nbsp;&nbsp;{{ (data.product.currentDay / data.product.day * 100).toFixed(2) }}%</span>
+          <span class="ui label">{{ data.product.startDate }} ~ {{ data.product.endDate}}（{{ data.product.days.length }} 天）</span>
+          <span class="ui label">每日 {{ (100 / data.product.day).toFixed(2) }}%</span>
+        </div>
+      </div>
+      <div class="scroll-container" style="margin-top: 1em; width: 100%; overflow-x: scroll;">
+        <div style="width: 300%; overflow: hidden;">
+          <table>
+            <thead>
+              <tr>
+                <th rowspan="2">项目</th>
+                @each(day in data.product.days)
+                <th data-day="{{ day[0] }}{{ day[1] }}{{ day[2] }}{{ day[3] }}{{ day[5] }}{{ day[6] }}">{{ day[5] }}{{ day[6] }}</th>
+                @endeach
+              </tr>
+              <tr>
+                @each(day in data.product.days)
+                <th>
+                  @if(data.product.today == day)
+                  <span></span>
+                  @endif
+                  {{ day[8] }}{{ day[9] }}
+                </th>
+                @endeach
+              </tr>
+            </thead>
+            <tbody>
+              @each((items, index) in data.product.items)
+              <tr>
+                <td>&nbsp;&nbsp;&nbsp;{{ index + 1 }}. {{ items.work }}&nbsp;&nbsp;&nbsp;</td>
+                @each(range in items.range)
+                <td class="value" title="{{ range.date }}" data-day="{{ range.day || '' }}" style="background-color: {{ range.flag == 1 ? '#2196f3' : (range.flag == 2 ? '#03a9f4' : '') }}">
+                  @if(range.today)
+                  <span></span>
+                  @endif
+                </td>
+                @endeach
+              </tr>
+              @endeach
+            </tbody>
+          </table>
+        </div>
+      </div>
     </div>
   </div>
   {{--  <div class="ui segments">
@@ -81,11 +110,7 @@
 
 <form class="ui full modal form con-scheduling" action="{{ route('land/pms/IndexController.products') }}" method="post" style="width: 1100px;">
   <i class="close icon"></i>
-  <h3 class="header">施工进度 
-    <span class="ui label">{{ data.product.days.length }} 天：{{ data.product.startDate }} ~ {{ data.product.endDate}}</span>
-    <span class="ui label">周期 {{ data.product.day }} 天</span>
-    <span class="ui label">每日 {{ (100 / data.product.day).toFixed(2) }}%</span>
-  </h3>
+  <h3 class="header">施工进度</h3>
   <div class="content">
     <div class="ui message">1.工作项内容填写后，系统自动计算工作周期；2.工作项内容填写后，请维护实际完成天数；3.工作项进度，100 / 项目天数 ≈ 以日计量单位。</div>
     <div class="ui segments">
@@ -147,3 +172,21 @@
     </button>
   </div>
 </form>
+
+@section('scriptSteps')
+<script src="/scripts/jquery.min.js"></script>
+<script>
+  $(document).ready(function(){
+    // 将具有相同 data-day 的 th 元素进行合并，并设置 rowspan
+    $('th[data-day]').each(function() {
+      const currentDate = $(this).attr('data-day');
+      const colCount = $('[data-day="' + currentDate + '"]').length;
+
+      if (colCount > 1) {
+        $('[data-day="' + currentDate + '"]').first().attr('colspan', colCount);
+        $('[data-day="' + currentDate + '"]').not(':first').remove();
+      }
+    });
+  });
+</script>
+@endsection
