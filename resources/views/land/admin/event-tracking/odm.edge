@@ -1,0 +1,96 @@
+@layout('land/components/layouts/main')
+
+@section('title')
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<title>{{ data.title }} - LandTower</title>
+@endsection
+
+@section('style')
+<style media="screen">
+
+</style>
+@endsection
+
+@section('content')
+  <div class="ui stackable four column grid">
+    <div class="three wide column">
+      @!component('land/components/navbar-menus', data=data, csrf=csrfField())
+    </div>
+    <div class="thirteen wide column">
+      <div class="flex-between">
+        <b>{{ data.title }}</b>
+      </div>
+      
+      <table class="ui celled center aligned rounded table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>用户</th>
+            <th>装修</th>
+            <th>风格</th>
+            <th>面积</th>
+            <th>空间</th>
+            <th>服务</th>
+            <th>时间</th>
+          </tr>
+        </thead>
+        <tbody>
+          @each(tracking in data.tracking)
+          <tr>
+            <td>{{ tracking.id }}{{ tracking.currentItemId ? ' - ' + tracking.currentItemId : '' }}</td>
+            <td>
+              {{ tracking.content.form.name || '' }} 
+              {{ tracking.content.form.number ? tracking.content.form.number : (tracking.content.userinfo.phone ? tracking.content.userinfo.phone.purePhoneNumber : '') }}
+            </td>
+            <td>
+              @each(item in tracking.content.contents.renovation.items)
+                @if(item.checked)
+                  {{ item.text }}
+                @endif
+              @endeach
+            </td>
+            <td>
+              @each(item in tracking.content.contents.style.items)
+                @if(item.checked)
+                  {{ item.text }}
+                @endif
+              @endeach
+            </td>
+            <td>
+              @each(item in tracking.content.contents.area.items)
+                @if(item.checked)
+                  {{ item.text }}
+                @endif
+              @endeach
+            </td>
+            <td>
+              @each(item in tracking.content.contents.space.items)
+                @if(item.checked)
+                  {{ item.text }}
+                @endif
+              @endeach
+            </td>
+            <td>
+              @each(item in tracking.content.contents.service.items)
+                @if(item.checked)
+                  {{ item.text }}
+                @endif
+              @endeach
+            </td>
+            <td>{{ tracking.created_at }}</td>
+          </tr>
+          @endeach
+        </tbody>
+      </table>
+    </div>
+  </div>
+@endsection
+
+@section('script')
+<script type="text/javascript">
+  $('.activating').popup({
+    on: 'click'
+  })
+</script>
+@endsection

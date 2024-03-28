@@ -60,6 +60,8 @@ Route_1.default.group(() => {
     Route_1.default.get('/good/edit/:id', 'land/admin/GoodController.edit');
     Route_1.default.post('/good/save', 'land/admin/GoodController.save');
     Route_1.default.post('/good/delete', 'land/admin/GoodController.delete');
+    Route_1.default.get('/datas/tracking/eventTracking', 'land/admin/TrackingController.eventTracking');
+    Route_1.default.post('/datas/tracking/odm', 'land/admin/TrackingController.odm');
     Route_1.default.get('/pms', 'land/pms/IndexController.index');
     Route_1.default.post('/pms/save', 'land/pms/IndexController.save');
     Route_1.default.post('/pms/file', 'land/pms/IndexController.file');

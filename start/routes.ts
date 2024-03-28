@@ -87,7 +87,8 @@ Route.group(() => {
   Route.post('/good/delete', 'land/admin/GoodController.delete')
 
   // datas event-tracking
-  Route.post('/datas/tracking/odm', 'land/admin/TrackingController.informationImprovementProcess')
+  Route.get('/datas/tracking/eventTracking', 'land/admin/TrackingController.eventTracking')
+  Route.post('/datas/tracking/odm', 'land/admin/TrackingController.odm')
 
   Route.get('/pms', 'land/pms/IndexController.index')
   Route.post('/pms/save', 'land/pms/IndexController.save')

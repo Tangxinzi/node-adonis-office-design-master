@@ -13,6 +13,10 @@
   <a class="{{ data.active == 'catalog' ? 'item active' : 'item' }}" href="{{ route('land/admin/GoodController.catalog') }}">目录</a>
   <a class="{{ data.active == 'supplier' ? 'item active' : 'item' }}" href="{{ route('land/admin/GoodController.supplier') }}">供应商</a>
 </div>
+<b>营销</b>
+<div class="ui vertical pointing menu">
+  <a class="{{ data.active == 'odm' ? 'item active' : 'item' }}" href="{{ route('land/admin/TrackingController.eventTracking') }}">营销表单信息</a>
+</div>
 <b>系统设置</b>
 <div class="ui vertical pointing menu">
   <a class="item" href="">退出</a>
