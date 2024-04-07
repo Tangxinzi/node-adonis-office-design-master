@@ -5,7 +5,8 @@ Moment.locale('zh-cn')
 export default class TrackingController {
   public async eventTracking({ request, response, view, session }: HttpContextContract) {
     try {
-      const tracking = await Database.from('land_tracking').where({ type: 'odm' })
+      const all = request.all()
+      const tracking = await Database.from('land_tracking').where({ type: 'odm' }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20)
       
       for (let index = 0; index < tracking.length; index++) {
         tracking[index].content = JSON.parse(tracking[index].content)
@@ -16,7 +17,8 @@ export default class TrackingController {
         data: {
           title: '[ODM] 营销表单信息流程',
           active: 'odm',
-          tracking
+          tracking,
+          all
         }
       })
     } catch (error) {

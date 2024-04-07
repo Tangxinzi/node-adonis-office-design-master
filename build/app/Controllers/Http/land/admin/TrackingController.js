@@ -9,7 +9,8 @@ moment_1.default.locale('zh-cn');
 class TrackingController {
     async eventTracking({ request, response, view, session }) {
         try {
-            const tracking = await Database_1.default.from('land_tracking').where({ type: 'odm' });
+            const all = request.all();
+            const tracking = await Database_1.default.from('land_tracking').where({ type: 'odm' }).orderBy('created_at', 'desc').forPage(request.input('page', 1), 20);
             for (let index = 0; index < tracking.length; index++) {
                 tracking[index].content = JSON.parse(tracking[index].content);
                 tracking[index].created_at = (0, moment_1.default)(tracking[index].created_at).format('YYYY-MM-DD HH:mm:ss');
@@ -18,7 +19,8 @@ class TrackingController {
                 data: {
                     title: '[ODM] 营销表单信息流程',
                     active: 'odm',
-                    tracking
+                    tracking,
+                    all
                 }
             });
         }
